@@ -3,29 +3,30 @@ package com.aaronhowser1.ariadnesthread.item;
 import com.aaronhowser1.ariadnesthread.config.ServerConfigs;
 import com.aaronhowser1.ariadnesthread.utils.ModScheduler;
 import com.aaronhowser1.ariadnesthread.utils.Position;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ThreadItem extends Item {
 
     private Boolean isRecording;
-    private final ArrayList<Position> positions;
+//    private final ArrayList<Position> positions;
 
     public ThreadItem() {
-        super(new Item.Properties().stacksTo(1));
+        super(new Item.Properties().tab(CreativeModeTab.TAB_MISC).stacksTo(1));
         this.isRecording = false;
-        this.positions = new ArrayList<>();
+//        this.positions = new ArrayList<>();
     }
 
     @Override
@@ -42,7 +43,7 @@ public class ThreadItem extends Item {
             if (isRecording) {
                 return InteractionResultHolder.fail(thisItemStack);
             } else {
-                startRecording(pPlayer);
+                startRecording(pPlayer, thisItemStack);
             }
         }
         return InteractionResultHolder.success(thisItemStack);
@@ -62,35 +63,57 @@ public class ThreadItem extends Item {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 
-    private void startRecording(Player player) {
+    private void startRecording(Player player, ItemStack itemStack) {
         this.isRecording = true;
-        recordPosition(player);
+        recordPosition(player, itemStack);
     }
 
     private void stopRecording() {
         this.isRecording = false;
     }
 
-    private void recordPosition(Player player) {
+    private void recordPosition(Player player, ItemStack itemStack) {
         Position currentPos = new Position((int)player.getX(), (int)player.getY(), (int)player.getZ(), player.getLevel().dimension());
 
-        if (farEnough(currentPos)) {
-            positions.add(currentPos);
-        }
+        //TODO: figure out how to add nbt
+
+//        if (farEnough(currentPos)) {
+            //TODO: add new location to nbt array
+            // NBT Json would look like:
+            // [
+            //  {
+            //   "x":0
+            //   "y":0
+            //   "z":0
+            //   "dim":"minecraft:overworld
+            //  },
+            //  {
+            //   "x":10
+            //   "y":0
+            //   "z":0
+            //   "dim":"minecraft:overworld
+            //  }
+            // ]
+//        }
 
         if (this.isRecording) {
-            ModScheduler.scheduleSynchronisedTask(() -> recordPosition(player), ServerConfigs.WAIT_TIME.get());
+            ModScheduler.scheduleSynchronisedTask(() -> recordPosition(player, itemStack), ServerConfigs.WAIT_TIME.get());
         }
     }
 
-    private boolean farEnough(Position position) {
-        if (positions.isEmpty()) return true;
+//    private boolean farEnough(Position position) {
+//        if (positions.isEmpty()) return true;
+//
+//        Position mostRecent = positions.get(positions.size()-1);
+//
+//        if (position.getDimension() != mostRecent.getDimension()) return true;
+//
+//        double distance = position.toVec3().distanceTo(mostRecent.toVec3());
+//        return distance > ServerConfigs.MIN_DISTANCE.get();
+//    }
 
-        Position mostRecent = positions.get(positions.size()-1);
+    private void getNBT(ItemStack itemStack) {
 
-        if (position.getDimension() != mostRecent.getDimension()) return true;
-
-        double distance = position.toVec3().distanceTo(mostRecent.toVec3());
-        return distance > ServerConfigs.MIN_DISTANCE.get();
     }
+
 }
