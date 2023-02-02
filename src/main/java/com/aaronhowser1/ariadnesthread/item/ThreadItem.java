@@ -32,21 +32,21 @@ public class ThreadItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
 
-        ItemStack thisIS = pPlayer.getItemInHand(pUsedHand);
+        ItemStack thisItemStack = pPlayer.getItemInHand(pUsedHand);
         if (pPlayer.isShiftKeyDown()) {
             if (isRecording) {
                 stopRecording();
             } else {
-                return InteractionResultHolder.fail(thisIS);
+                return InteractionResultHolder.fail(thisItemStack);
             }
         } else {
             if (isRecording) {
-                return InteractionResultHolder.fail(thisIS);
+                return InteractionResultHolder.fail(thisItemStack);
             } else {
                 startRecording(pPlayer);
             }
         }
-        return InteractionResultHolder.success(thisIS);
+        return InteractionResultHolder.success(thisItemStack);
     }
 
     @Override
