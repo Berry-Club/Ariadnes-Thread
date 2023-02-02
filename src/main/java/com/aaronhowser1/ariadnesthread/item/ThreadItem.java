@@ -5,6 +5,7 @@ import com.aaronhowser1.ariadnesthread.utils.ModScheduler;
 import com.aaronhowser1.ariadnesthread.utils.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -55,7 +56,6 @@ public class ThreadItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-
         pTooltipComponents.add(new TextComponent(isRecording ? "Recording!" : "Not recording!"));
         pTooltipComponents.add(new TextComponent(isRecording ? "Stop with a shift right-click" : "Start with a right-click"));
 
@@ -72,7 +72,12 @@ public class ThreadItem extends Item {
     }
 
     private void recordPosition(Player player) {
-        Position currentPos = new Position((int)player.getX(), (int)player.getY(), (int)player.getZ(), player.getLevel().dimension());
+        Position currentPos = new Position(
+                Mth.floor(player.getX()),
+                Mth.floor(player.getY()),
+                Mth.floor(player.getZ()),
+                player.getLevel().dimension()
+        );
 
         if (farEnough(currentPos)) {
             positions.add(currentPos);
