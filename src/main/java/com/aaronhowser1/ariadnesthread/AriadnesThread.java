@@ -1,6 +1,7 @@
 package com.aaronhowser1.ariadnesthread;
 
 import com.aaronhowser1.ariadnesthread.config.ClientConfigs;
+import com.aaronhowser1.ariadnesthread.config.ServerConfigs;
 import com.aaronhowser1.ariadnesthread.item.ModItems;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -24,5 +25,6 @@ public class AriadnesThread
         ModItems.register(eventBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfigs.SPEC, "ariadnesthread-client.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfigs.SPEC, "ariadnesthread-server.toml");
     }
 }

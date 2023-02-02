@@ -1,5 +1,8 @@
 package com.aaronhowser1.ariadnesthread.item;
 
+import com.aaronhowser1.ariadnesthread.config.ClientConfigs;
+import com.aaronhowser1.ariadnesthread.config.ServerConfigs;
+import com.mojang.math.Vector3d;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -15,6 +18,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -45,7 +49,7 @@ public class ThreadItem extends Item {
             if (isRecording) {
                 return InteractionResultHolder.fail(thisIS);
             } else {
-                startRecording();
+                startRecording(pPlayer);
             }
         }
         return InteractionResultHolder.success(thisIS);
@@ -65,11 +69,23 @@ public class ThreadItem extends Item {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 
-    private void startRecording() {
+    private void startRecording(Player player) {
         this.isRecording = true;
     }
 
     private void stopRecording() {
         this.isRecording = false;
+    }
+
+    private boolean farEnough(Vec3 position) {
+
+        if (positions.isEmpty()) {
+            return true;
+        }
+
+        BlockPos mostRecentPos = positions.get(positions.size()-1);
+        Vec3 mostRecentVec = new Vec3(mostRecentPos.getX(),mostRecentPos.getY(), mostRecentPos.getZ());
+
+        return position.distanceTo(mostRecentVec) <= ServerConfigs.MIN_DISTANCE.get();
     }
 }
