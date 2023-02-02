@@ -4,6 +4,8 @@ import com.aaronhowser1.ariadnesthread.AriadnesThread;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -37,12 +39,13 @@ public class FileUtils {
         }
     }
 
-    public static void addLine() {
-//        try {
-//
-//        } else (Exception e) {
-//            System.out.println(e);
-//        }
+    public static void addLine(Path path, String line) {
+        try {
+            FileWriter fileWriter = new FileWriter(path);
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
 }

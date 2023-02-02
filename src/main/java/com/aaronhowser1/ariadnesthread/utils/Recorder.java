@@ -39,10 +39,8 @@ public class Recorder {
         );
 
         if (farEnough(currentPosition, mostRecentPosition)) {
-            playerFile.
+            FileUtils.addLine(playerFile, currentPosition);
         }
-
-//        playerFile
     }
 
     private static boolean farEnough(String pos1, String pos2) {
