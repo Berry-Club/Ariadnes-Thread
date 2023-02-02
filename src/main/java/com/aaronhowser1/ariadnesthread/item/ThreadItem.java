@@ -2,7 +2,7 @@ package com.aaronhowser1.ariadnesthread.item;
 
 import com.aaronhowser1.ariadnesthread.config.ServerConfigs;
 import com.aaronhowser1.ariadnesthread.utils.ModScheduler;
-import net.minecraft.core.BlockPos;
+import com.aaronhowser1.ariadnesthread.utils.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
@@ -12,7 +12,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ import java.util.List;
 public class ThreadItem extends Item {
 
     private Boolean isRecording;
-    private ArrayList<Vec3> positions;
+    private final ArrayList<Position> positions;
 
     public ThreadItem() {
         super(new Item.Properties().stacksTo(1));
@@ -73,7 +72,7 @@ public class ThreadItem extends Item {
     }
 
     private void recordPosition(Player player) {
-        Vec3 currentPos = new Vec3(player.getX(), player.getY(), player.getZ());
+        Position currentPos = new Position((int)player.getX(), (int)player.getY(), (int)player.getZ(), player.getLevel().dimension());
 
         if (farEnough(currentPos)) {
             positions.add(currentPos);
@@ -84,17 +83,14 @@ public class ThreadItem extends Item {
         }
     }
 
-    private boolean farEnough(Vec3 position) {
+    private boolean farEnough(Position position) {
+        if (positions.isEmpty()) return true;
 
-        if (positions.isEmpty()) {
-            return true;
-        }
+        Position mostRecent = positions.get(positions.size()-1);
 
-        Vec3 mostRecent = positions.get(positions.size()-1);
+        if (position.getDimension() != mostRecent.getDimension()) return true;
 
-        double distance = position.distanceTo(mostRecent);
-
+        double distance = position.toVec3().distanceTo(mostRecent.toVec3());
         return distance > ServerConfigs.MIN_DISTANCE.get();
-
     }
 }
