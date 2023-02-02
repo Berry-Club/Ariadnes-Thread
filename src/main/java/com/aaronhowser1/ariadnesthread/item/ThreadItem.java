@@ -1,16 +1,10 @@
 package com.aaronhowser1.ariadnesthread.item;
 
-import com.aaronhowser1.ariadnesthread.config.ClientConfigs;
 import com.aaronhowser1.ariadnesthread.config.ServerConfigs;
-import com.mojang.math.Vector3d;
-import net.minecraft.Util;
+import com.aaronhowser1.ariadnesthread.utils.ModScheduler;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -27,7 +21,7 @@ import java.util.List;
 public class ThreadItem extends Item {
 
     private Boolean isRecording;
-    private ArrayList<BlockPos> positions;
+    private ArrayList<Vec3> positions;
 
     public ThreadItem() {
         super(new Item.Properties().stacksTo(1));
@@ -71,10 +65,23 @@ public class ThreadItem extends Item {
 
     private void startRecording(Player player) {
         this.isRecording = true;
+        recordPosition(player);
     }
 
     private void stopRecording() {
         this.isRecording = false;
+    }
+
+    private void recordPosition(Player player) {
+        Vec3 currentPos = new Vec3(player.getX(), player.getY(), player.getZ());
+
+        if (farEnough(currentPos)) {
+            positions.add(currentPos);
+        }
+
+        if (this.isRecording) {
+            ModScheduler.scheduleSynchronisedTask(() -> recordPosition(player), ServerConfigs.WAIT_TIME.get());
+        }
     }
 
     private boolean farEnough(Vec3 position) {
@@ -83,9 +90,11 @@ public class ThreadItem extends Item {
             return true;
         }
 
-        BlockPos mostRecentPos = positions.get(positions.size()-1);
-        Vec3 mostRecentVec = new Vec3(mostRecentPos.getX(),mostRecentPos.getY(), mostRecentPos.getZ());
+        Vec3 mostRecent = positions.get(positions.size()-1);
 
-        return position.distanceTo(mostRecentVec) <= ServerConfigs.MIN_DISTANCE.get();
+        double distance = position.distanceTo(mostRecent);
+
+        return distance > ServerConfigs.MIN_DISTANCE.get();
+
     }
 }
