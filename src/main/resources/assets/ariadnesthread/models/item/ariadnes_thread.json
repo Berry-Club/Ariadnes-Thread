@@ -1,6 +1,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "ariadnesthread:item/thread"
+    "layer0": "minecraft:item/string"
   }
 }
