@@ -61,17 +61,17 @@ class ThreadItem(
     ) {
         pTooltipComponents.add(TranslatableComponent(if (isRecording(pStack)) "tooltip.ariadnesthread.recording1" else "tooltip.ariadnesthread.not_recording1"))
         pTooltipComponents.add(TranslatableComponent(if (isRecording(pStack)) "tooltip.ariadnesthread.recording2" else "tooltip.ariadnesthread.not_recording2"))
-        if (isRecording(pStack)) pTooltipComponents.add(TranslatableComponent("tooltip.ariadnesthread.clear").withStyle(ChatFormatting.RED))
+        if (!isRecording(pStack)) pTooltipComponents.add(TranslatableComponent("tooltip.ariadnesthread.clear").withStyle(ChatFormatting.RED))
 
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced)
     }
 
     private fun startRecording(itemStack: ItemStack) {
-//        itemStack.setTag()
+        itemStack.tag?.putBoolean("ariadnesthread.isRecording", true)
     }
 
     private fun stopRecording(itemStack: ItemStack) {
-
+        itemStack.tag?.putBoolean("ariadnesthread.isRecording", false)
     }
 
     private fun recordPosition(player: Player, itemStack: ItemStack) {
