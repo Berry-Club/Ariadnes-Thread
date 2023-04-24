@@ -101,7 +101,8 @@ class ThreadItem(
 
         if (startingDimension != dimensionString) {
             println("Changed dimensions, stopping")
-            stopRecording(itemStack)
+            itemStack.tag?.putBoolean("ariadnesthread.isRecording", false)
+            itemStack.tag?.remove("ariadnesthread.startingDimension")
             return
         }
 
