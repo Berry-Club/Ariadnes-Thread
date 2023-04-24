@@ -1,6 +1,7 @@
 package com.aaronhowser1.ariadnesthread
 
-import com.aaronhowser1.ariadnesthread.config.ClientConfigs
+import com.aaronhowser1.ariadnesthread.config.ClientConfig
+import com.aaronhowser1.ariadnesthread.config.ServerConfig
 import com.aaronhowser1.ariadnesthread.item.ModItems
 import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.ModLoadingContext
@@ -25,8 +26,8 @@ object AriadnesThread {
 
         ModItems.REGISTRY.register(MOD_BUS)
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfigs.SPEC, "ariadnesthread-client.toml");
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ClientConfigs.SPEC, "ariadnesthread-server.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC, "ariadnesthread-client.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC, "ariadnesthread-server.toml");
 
         val obj = runForDist(
             clientTarget = {

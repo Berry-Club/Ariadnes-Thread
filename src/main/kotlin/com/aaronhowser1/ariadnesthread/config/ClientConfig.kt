@@ -2,7 +2,7 @@ package com.aaronhowser1.ariadnesthread.config
 
 import net.minecraftforge.common.ForgeConfigSpec
 
-object ClientConfigs {
+object ClientConfig {
     private val BUILDER = ForgeConfigSpec.Builder()
 
     lateinit var SPEC : ForgeConfigSpec

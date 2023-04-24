@@ -31,7 +31,7 @@ class ThreadItem(
         //Sneak click to stop recording, fail if already not
         if (pPlayer.isShiftKeyDown) {
             return if (isRecording(itemStack)) {
-                if (!pLevel.isClientSide) stopRecording(pPlayer, itemStack)
+                if (!pLevel.isClientSide) stopRecording(itemStack)
                 InteractionResultHolder.pass(itemStack)
             } else {
                 InteractionResultHolder.fail(itemStack)
@@ -61,40 +61,49 @@ class ThreadItem(
         pTooltipComponents.add(Component.translatable(if (isRecording(pStack)) "tooltip.ariadnesthread.recording2" else "tooltip.ariadnesthread.not_recording2"))
         if (!isRecording(pStack)) pTooltipComponents.add(Component.translatable("tooltip.ariadnesthread.clear").withStyle(ChatFormatting.RED))
 
+        pTooltipComponents.add(Component.literal(pStack.tag.toString()))
+
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced)
     }
 
     private fun startRecording(player: Player, itemStack: ItemStack) {
+
+        if (!itemStack.hasTag()) itemStack.tag = CompoundTag()
+
         itemStack.tag?.putBoolean("ariadnesthread.isRecording", true)
+
+
         recordPosition(player, itemStack)
     }
 
-    private fun stopRecording(player: Player, itemStack: ItemStack) {
+    private fun stopRecording(itemStack: ItemStack) {
         println("Stopped recording")
         itemStack.tag?.putBoolean("ariadnesthread.isRecording", false)
         itemStack.tag?.remove("ariadnesthread.startingDimension")
     }
 
     private fun recordPosition(player: Player, itemStack: ItemStack) {
+
+        if (!isRecording(itemStack)) return
+
         val dimension = player.level.dimension()
         val dimensionString = dimension.location().toString()
 
-        val startingDimension = itemStack.tag?.getString("ariadnesthread.startingDimension")
+        var startingDimension = itemStack.tag?.getString("ariadnesthread.startingDimension")
 
-        if (startingDimension == null) {
+        if (startingDimension.isNullOrBlank()) {
             println("Setting starting dimension to $dimensionString")
             itemStack.tag?.putString("ariadnesthread.startingDimension",dimensionString)
+            startingDimension = dimensionString
         }
 
         println("$startingDimension $dimensionString")
 
-//        if (startingDimension != dimensionString) {
-//            println("Changed dimensions, stopping")
-//            stopRecording(player, itemStack)
-//            return
-//        }
-
-        //TODO: figure out how to add nbt
+        if (startingDimension != dimensionString) {
+            println("Changed dimensions, stopping")
+            stopRecording(itemStack)
+            return
+        }
 
         //if (farEnough(currentPos)) {
         //TODO: add new location to nbt array
@@ -114,12 +123,13 @@ class ThreadItem(
         //  }
         // ]
 //        }
-//        if (isRecording(itemStack)) {
-//            ModScheduler.scheduleSynchronisedTask(
-//                { recordPosition(player, itemStack) },
-//                ServerConfig.WAIT_TIME.get()
-//            )
-//        }
+
+        if (isRecording(itemStack)) {
+            ModScheduler.scheduleSynchronisedTask(
+                { recordPosition(player, itemStack) },
+                ServerConfig.WAIT_TIME.get()
+            )
+        }
     }
 
     private fun clearHistory(itemStack: ItemStack) {
