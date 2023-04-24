@@ -3,5 +3,6 @@
   "tooltip.ariadnesthread.recording1": "Recording!",
   "tooltip.ariadnesthread.recording2": "Stop with a shift right-click",
   "tooltip.ariadnesthread.not_recording1": "Not recording!",
-  "tooltip.ariadnesthread.not_recording2": "Start with a right-click"
+  "tooltip.ariadnesthread.not_recording2": "Start with a right-click",
+  "tooltip.ariadnesthread.clear": "Clear history with a sneak right-click"
 }
