@@ -1,7 +1,8 @@
 package com.aaronhowser1.ariadnesthread.item
 
+import com.aaronhowser1.ariadnesthread.config.ServerConfig
+import com.aaronhowser1.ariadnesthread.utils.ModScheduler
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.TextComponent
 import net.minecraft.network.chat.TranslatableComponent
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
@@ -62,6 +63,37 @@ class ThreadItem(
 
     private fun stopRecording() {
         this.isRecording = false
+    }
+
+    private fun recordPosition(player: Player, itemStack: ItemStack) {
+        val currentPos = player.eyePosition
+
+        //TODO: figure out how to add nbt
+
+        //if (farEnough(currentPos)) {
+        //TODO: add new location to nbt array
+        // NBT Json would look like:
+        // [
+        //  {
+        //   "x":0
+        //   "y":0
+        //   "z":0
+        //   "dim":"minecraft:overworld
+        //  },
+        //  {
+        //   "x":10
+        //   "y":0
+        //   "z":0
+        //   "dim":"minecraft:overworld
+        //  }
+        // ]
+//        }
+        if (isRecording) {
+            ModScheduler.scheduleSynchronisedTask(
+                { recordPosition(player, itemStack) },
+                ServerConfig.WAIT_TIME.get()
+            )
+        }
     }
 
 }
