@@ -1,23 +1,23 @@
 package com.aaronhowser1.ariadnesthread
 
-import com.aaronhowser1.ariadnesthread.config.Configs
-import com.mojang.logging.LogUtils
-import net.minecraftforge.fml.ModLoadingContext
+import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.config.ModConfig
-import org.slf4j.Logger
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
+import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
+import thedarkcolour.kotlinforforge.forge.MOD_BUS
+import thedarkcolour.kotlinforforge.forge.runForDist
 
 @Mod(AriadnesThread.MOD_ID)
 object AriadnesThread {
 
     const val MOD_ID = "ariadnesthread"
-    val LOGGER: Logger = LogUtils.getLogger()
+    val LOGGER: Logger = LogManager.getLogger(MOD_ID)
 
     init {
-
-        LOGGER.log()
-
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configs.CLIENT_SPEC)
+        LOGGER.log(Level.INFO, "Ariadne's Thread loaded!")
     }
 
 }
