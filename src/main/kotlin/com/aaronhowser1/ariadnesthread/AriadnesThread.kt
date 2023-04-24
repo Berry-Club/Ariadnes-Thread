@@ -1,5 +1,6 @@
 package com.aaronhowser1.ariadnesthread
 
+import com.aaronhowser1.ariadnesthread.item.ModItems
 import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
@@ -18,6 +19,28 @@ object AriadnesThread {
 
     init {
         LOGGER.log(Level.INFO, "Ariadne's Thread loaded!")
+
+        ModItems.REGISTRY.register(MOD_BUS)
+
+        val obj = runForDist(
+            clientTarget = {
+                MOD_BUS.addListener(::onClientSetup)
+                Minecraft.getInstance()
+            },
+            serverTarget = {
+                MOD_BUS.addListener(::onServerSetup)
+                "test"
+            })
+
+        println(obj)
+    }
+
+    private fun onClientSetup(event: FMLClientSetupEvent) {
+        LOGGER.log(Level.INFO, "Initializing client...")
+    }
+
+    private fun onServerSetup(event: FMLDedicatedServerSetupEvent) {
+        LOGGER.log(Level.INFO, "Server starting...")
     }
 
 }
