@@ -1,7 +1,5 @@
 package com.aaronhowser1.ariadnesthread.item
 
-import com.aaronhowser1.ariadnesthread.config.ServerConfig
-import com.aaronhowser1.ariadnesthread.utils.ModScheduler
 import net.minecraft.ChatFormatting
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
@@ -20,134 +18,82 @@ class ThreadItem : Item(
 ) {
 
     private fun isRecording(itemStack: ItemStack): Boolean {
-        if (!itemStack.hasTag()) return false
-        val tag = itemStack.tag!!
-        if (!tag.contains("ariadnesthread.isRecording")) return false
+        val tag = itemStack.tag ?: return false
+
         return tag.getBoolean("ariadnesthread.isRecording")
     }
 
-    override fun use(pLevel: Level, pPlayer: Player, pUsedHand: InteractionHand): InteractionResultHolder<ItemStack> {
-        val itemStack = pPlayer.getItemInHand(pUsedHand)
+    override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
 
-        //Sneak click to stop recording, fail if already not
-        if (pPlayer.isShiftKeyDown) {
-            return if (isRecording(itemStack)) {
-                if (!pLevel.isClientSide) stopRecording(itemStack)
-                InteractionResultHolder.pass(itemStack)
-            } else {
-                InteractionResultHolder.fail(itemStack)
+        if (level.isClientSide) return InteractionResultHolder.pass(player.getItemInHand(hand))
+
+        val itemStack = player.getItemInHand(hand)
+
+        val isSneaking = player.isShiftKeyDown
+        val isRecording = isRecording(itemStack)
+
+        if (!isRecording) {
+            if (isSneaking) {
+                clearHistory(itemStack)
+                return InteractionResultHolder.success(itemStack)
             }
-            //Normal click to start recording, fail if already
-        } else {
-            return if (isRecording(itemStack)) {
-                InteractionResultHolder.fail(itemStack)
-            } else {
-                if (!pLevel.isClientSide) startRecording(pPlayer, itemStack)
-                InteractionResultHolder.pass(itemStack)
-            }
+            startRecording(itemStack)
+            return InteractionResultHolder.success(itemStack)
         }
+
+        if (isSneaking) {
+            stopRecording(itemStack)
+            return InteractionResultHolder.success(itemStack)
+        }
+
+        return InteractionResultHolder.pass(itemStack)
     }
 
-    override fun isFoil(pStack: ItemStack): Boolean {
-        return isRecording(pStack)
+    private fun startRecording(itemStack: ItemStack) {
+        itemStack.tag = itemStack.tag ?: CompoundTag()
+        itemStack.tag?.putBoolean("ariadnesthread.isRecording", true)
+    }
+
+    private fun stopRecording(itemStack: ItemStack) {
+        itemStack.tag = itemStack.tag ?: CompoundTag()
+        itemStack.tag?.putBoolean("ariadnesthread.isRecording", false)
+    }
+
+    private fun clearHistory(itemStack: ItemStack) {
+        itemStack.tag = itemStack.tag ?: CompoundTag()
+
+        itemStack.tag?.remove("ariadnesthread.isRecording")
+    }
+
+    override fun isFoil(itemStack: ItemStack): Boolean {
+        return isRecording(itemStack)
     }
 
     override fun appendHoverText(
-        pStack: ItemStack,
-        pLevel: Level?,
-        pTooltipComponents: MutableList<Component>,
-        pIsAdvanced: TooltipFlag
+        itemStack: ItemStack,
+        level: Level?,
+        tooltipComponents: MutableList<Component>,
+        tooltipFlag: TooltipFlag
     ) {
 
-        fun addTooltip(translatable: String, block: (MutableComponent) -> Unit = {}) {
-            pTooltipComponents.add(
+        fun tooltipTranslatable(translatable: String, block: (MutableComponent) -> Unit = {}) {
+            tooltipComponents.add(
                 Component.translatable(translatable).apply {
                     block(this)
                 }
             )
         }
 
-        addTooltip(if (isRecording(pStack)) "tooltip.ariadnesthread.recording1" else "tooltip.ariadnesthread.not_recording1")
-        addTooltip(if (isRecording(pStack)) "tooltip.ariadnesthread.recording2" else "tooltip.ariadnesthread.not_recording2")
+        tooltipTranslatable(if (isRecording(itemStack)) "tooltip.ariadnesthread.recording1" else "tooltip.ariadnesthread.not_recording1")
+        tooltipTranslatable(if (isRecording(itemStack)) "tooltip.ariadnesthread.recording2" else "tooltip.ariadnesthread.not_recording2")
 
-        if (!isRecording(pStack)) {
-            addTooltip("tooltip.ariadnesthread.clear") {
-                it.withStyle(ChatFormatting.RED)
-            }
+        if (!isRecording(itemStack)) tooltipTranslatable("tooltip.ariadnesthread.clear") {
+            it.withStyle(ChatFormatting.RED)
         }
 
-        pTooltipComponents.add(Component.literal(pStack.tag.toString()))
+        tooltipComponents.add(Component.literal(itemStack.tag.toString()))
 
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced)
-    }
-
-    private fun startRecording(player: Player, itemStack: ItemStack) {
-
-        if (!itemStack.hasTag()) itemStack.tag = CompoundTag()
-
-        itemStack.tag?.putBoolean("ariadnesthread.isRecording", true)
-
-
-        recordPosition(player, itemStack)
-    }
-
-    private fun stopRecording(itemStack: ItemStack) {
-        println("Stopped recording")
-        itemStack.tag?.putBoolean("ariadnesthread.isRecording", false)
-        itemStack.tag?.remove("ariadnesthread.startingDimension")
-    }
-
-    private fun recordPosition(player: Player, itemStack: ItemStack) {
-
-        if (!isRecording(itemStack)) return
-
-        val dimension = player.level.dimension()
-        val dimensionString = dimension.location().toString()
-
-        var startingDimension = itemStack.tag?.getString("ariadnesthread.startingDimension")
-
-        if (startingDimension.isNullOrBlank()) {
-            println("Setting starting dimension to $dimensionString")
-            itemStack.tag?.putString("ariadnesthread.startingDimension", dimensionString)
-            startingDimension = dimensionString
-        }
-
-        if (startingDimension != dimensionString) {
-            println("Changed dimensions, stopping")
-            itemStack.tag?.putBoolean("ariadnesthread.isRecording", false)
-            itemStack.tag?.remove("ariadnesthread.startingDimension")
-            return
-        }
-
-        //if (farEnough(currentPos)) {
-        //TODO: add new location to nbt array
-        // NBT Json would look like:
-        // [
-        //  {
-        //   "x":0
-        //   "y":0
-        //   "z":0
-        //   "dim":"minecraft:overworld
-        //  },
-        //  {
-        //   "x":10
-        //   "y":0
-        //   "z":0
-        //   "dim":"minecraft:overworld
-        //  }
-        // ]
-//        }
-
-        if (isRecording(itemStack)) {
-            ModScheduler.scheduleSynchronisedTask(
-                { recordPosition(player, itemStack) },
-                ServerConfig.WAIT_TIME
-            )
-        }
-    }
-
-    private fun clearHistory(itemStack: ItemStack) {
-        if (itemStack.hasTag()) itemStack.tag = CompoundTag()
+        super.appendHoverText(itemStack, level, tooltipComponents, tooltipFlag)
     }
 
 }
