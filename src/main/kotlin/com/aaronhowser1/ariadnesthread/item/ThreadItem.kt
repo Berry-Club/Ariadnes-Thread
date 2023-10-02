@@ -5,6 +5,7 @@ import com.aaronhowser1.ariadnesthread.utils.ModScheduler
 import net.minecraft.ChatFormatting
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.player.Player
@@ -57,11 +58,23 @@ class ThreadItem : Item(
         pTooltipComponents: MutableList<Component>,
         pIsAdvanced: TooltipFlag
     ) {
-        pTooltipComponents.add(Component.translatable(if (isRecording(pStack)) "tooltip.ariadnesthread.recording1" else "tooltip.ariadnesthread.not_recording1"))
-        pTooltipComponents.add(Component.translatable(if (isRecording(pStack)) "tooltip.ariadnesthread.recording2" else "tooltip.ariadnesthread.not_recording2"))
-        if (!isRecording(pStack)) pTooltipComponents.add(
-            Component.translatable("tooltip.ariadnesthread.clear").withStyle(ChatFormatting.RED)
-        )
+
+        fun addTooltip(translatable: String, block: (MutableComponent) -> Unit = {}) {
+            pTooltipComponents.add(
+                Component.translatable(translatable).apply {
+                    block(this)
+                }
+            )
+        }
+
+        addTooltip(if (isRecording(pStack)) "tooltip.ariadnesthread.recording1" else "tooltip.ariadnesthread.not_recording1")
+        addTooltip(if (isRecording(pStack)) "tooltip.ariadnesthread.recording2" else "tooltip.ariadnesthread.not_recording2")
+
+        if (!isRecording(pStack)) {
+            addTooltip("tooltip.ariadnesthread.clear") {
+                it.withStyle(ChatFormatting.RED)
+            }
+        }
 
         pTooltipComponents.add(Component.literal(pStack.tag.toString()))
 
