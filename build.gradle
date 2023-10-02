@@ -161,7 +161,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.19.2-43.3.2'
 
     // Adds KFF as dependency and Kotlin libs
-    implementation 'thedarkcolour:kotlinforforge:4.4.0'
+    implementation 'thedarkcolour:kotlinforforge:3.12.0'
 
     // compile against the JEI API but do not include it at runtime
     compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}"))
