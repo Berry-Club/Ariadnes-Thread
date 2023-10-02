@@ -11,12 +11,12 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.*
 import net.minecraft.world.level.Level
 
-class ThreadItem(
-    properties : Properties = Properties()
+class ThreadItem : Item(
+    Properties()
         .tab(CreativeModeTab.TAB_MISC)
         .stacksTo(1)
         .rarity(Rarity.UNCOMMON)
-) : Item(properties) {
+) {
 
     private fun isRecording(itemStack: ItemStack): Boolean {
         if (!itemStack.hasTag()) return false
@@ -36,10 +36,10 @@ class ThreadItem(
             } else {
                 InteractionResultHolder.fail(itemStack)
             }
-        //Normal click to start recording, fail if already
+            //Normal click to start recording, fail if already
         } else {
             return if (isRecording(itemStack)) {
-                InteractionResultHolder.fail(itemStack);
+                InteractionResultHolder.fail(itemStack)
             } else {
                 if (!pLevel.isClientSide) startRecording(pPlayer, itemStack)
                 InteractionResultHolder.pass(itemStack)
@@ -59,7 +59,9 @@ class ThreadItem(
     ) {
         pTooltipComponents.add(Component.translatable(if (isRecording(pStack)) "tooltip.ariadnesthread.recording1" else "tooltip.ariadnesthread.not_recording1"))
         pTooltipComponents.add(Component.translatable(if (isRecording(pStack)) "tooltip.ariadnesthread.recording2" else "tooltip.ariadnesthread.not_recording2"))
-        if (!isRecording(pStack)) pTooltipComponents.add(Component.translatable("tooltip.ariadnesthread.clear").withStyle(ChatFormatting.RED))
+        if (!isRecording(pStack)) pTooltipComponents.add(
+            Component.translatable("tooltip.ariadnesthread.clear").withStyle(ChatFormatting.RED)
+        )
 
         pTooltipComponents.add(Component.literal(pStack.tag.toString()))
 
@@ -93,7 +95,7 @@ class ThreadItem(
 
         if (startingDimension.isNullOrBlank()) {
             println("Setting starting dimension to $dimensionString")
-            itemStack.tag?.putString("ariadnesthread.startingDimension",dimensionString)
+            itemStack.tag?.putString("ariadnesthread.startingDimension", dimensionString)
             startingDimension = dimensionString
         }
 
