@@ -97,8 +97,6 @@ class ThreadItem(
             startingDimension = dimensionString
         }
 
-        println("$startingDimension $dimensionString")
-
         if (startingDimension != dimensionString) {
             println("Changed dimensions, stopping")
             itemStack.tag?.putBoolean("ariadnesthread.isRecording", false)
@@ -128,7 +126,7 @@ class ThreadItem(
         if (isRecording(itemStack)) {
             ModScheduler.scheduleSynchronisedTask(
                 { recordPosition(player, itemStack) },
-                ServerConfig.WAIT_TIME.get()
+                ServerConfig.WAIT_TIME
             )
         }
     }

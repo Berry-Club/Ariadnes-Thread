@@ -6,24 +6,32 @@ import net.minecraftforge.common.ForgeConfigSpec.ConfigValue
 
 object ServerConfig {
 
-    val BUILDER = ForgeConfigSpec.Builder()
-    lateinit var SPEC: ForgeConfigSpec
-    lateinit var WAIT_TIME: ConfigValue<Int>
-    lateinit var MIN_DISTANCE: ConfigValue<Float>
-    lateinit var TELEPORT_DISTANCE: ConfigValue<Float>
+    private val BUILDER = ForgeConfigSpec.Builder()
+    val SPEC: ForgeConfigSpec
+
+    private val waitTime: ConfigValue<Int>
+    private val minDistance: ConfigValue<Float>
+    private val teleportDistance: ConfigValue<Float>
+
+    val WAIT_TIME: Int
+        get() = waitTime.get()
+    val MIN_DISTANCE: Float
+        get() = minDistance.get()
+    val TELEPORT_DISTANCE: Float
+        get() = teleportDistance.get()
 
     init {
         BUILDER.push(" Server configs for Ariadne's Thread")
 
-        WAIT_TIME = BUILDER
+        waitTime = BUILDER
             .comment(" The time in ticks to wait between checking location.")
             .define("Wait time", 60)
 
-        MIN_DISTANCE = BUILDER
+        minDistance = BUILDER
             .comment(" The minimum distance between points.\nIf you haven't moved more than this distance from your last point, it isn't saved.")
             .define("Minimum Distance", 10F)
 
-        TELEPORT_DISTANCE = BUILDER
+        teleportDistance = BUILDER
             .comment(" The minimum distance between points to count as a teleport.")
             .define("Teleport Distance", 100F)
 
