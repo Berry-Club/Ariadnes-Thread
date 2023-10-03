@@ -1,13 +1,14 @@
 package com.aaronhowser1.ariadnesthread.item
 
+import com.aaronhowser1.ariadnesthread.config.ServerConfig
 import com.aaronhowser1.ariadnesthread.utils.Location
-import com.aaronhowser1.ariadnesthread.utils.ModScheduler
 import net.minecraft.ChatFormatting
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.*
 import net.minecraft.world.level.Level
@@ -39,7 +40,7 @@ class ThreadItem : Item(
                 clearHistory(itemStack)
                 return InteractionResultHolder.success(itemStack)
             }
-            startRecording(itemStack, player)
+            startRecording(itemStack)
             return InteractionResultHolder.success(itemStack)
         }
 
@@ -51,11 +52,9 @@ class ThreadItem : Item(
         return InteractionResultHolder.pass(itemStack)
     }
 
-    private fun startRecording(itemStack: ItemStack, player: Player) {
+    private fun startRecording(itemStack: ItemStack) {
         itemStack.tag = itemStack.tag ?: CompoundTag()
         itemStack.tag?.putBoolean("ariadnesthread.isRecording", true)
-
-        addLocation(itemStack, player)
     }
 
     override fun onDroppedByPlayer(item: ItemStack?, player: Player?): Boolean {
@@ -63,27 +62,28 @@ class ThreadItem : Item(
         return super.onDroppedByPlayer(item, player)
     }
 
-    private fun addLocation(itemStack: ItemStack, player: Player) {
-        val blockPos = player.blockPosition()
-        val dimension = player.level.dimension().location()
+    override fun inventoryTick(itemStack: ItemStack, level: Level, entity: Entity, slotId: Int, isSelected: Boolean) {
+
+        if (level.isClientSide) return
+        if (level.gameTime % ServerConfig.WAIT_TIME != 0L) return
+
+        if (!isRecording(itemStack)) return
+
+        val blockPos = entity.blockPosition()
+        val dimension = entity.level.dimension().location()
 
         val location = Location(dimension, blockPos)
 
         println(
             """
-            Is recording: ${isRecording(itemStack)}
-            Tag: ${itemStack.tag}
-            Pos: $blockPos
-            Dimension: $dimension
+            Location: $location
+            Location json: ${location.toJson()}
             """.trimIndent()
         )
 
-        if (isRecording(itemStack)) {
-            ModScheduler.scheduleSynchronisedTask(20) {
-                addLocation(itemStack, player)
-            }
-        }
+        super.inventoryTick(itemStack, level, entity, slotId, isSelected)
     }
+
 
     private fun stopRecording(itemStack: ItemStack) {
         itemStack.tag = itemStack.tag ?: CompoundTag()
