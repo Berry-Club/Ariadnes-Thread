@@ -1,6 +1,5 @@
 package com.aaronhowser1.ariadnesthread.utils
 
-import com.google.gson.Gson
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.IntTag
@@ -26,26 +25,17 @@ data class Location(
         return "Location(dimension=$dimension, blockPos=$blockPos)"
     }
 
-    fun distanceSqr(other: Location): Double {
+    fun distanceSqr(other: Location): Double? {
+        if (other.dimension != dimension) return null
+
         return blockPos.distSqr(other.blockPos)
     }
 
     fun isCloserThan(other: Location, distance: Float): Boolean {
-        return distanceSqr(other) < distance * distance
-    }
+        if (other.dimension != dimension) return false
 
-    fun toJson(): String {
-        val gson = Gson()
-        return gson.toJson(
-            mapOf(
-                "dimension" to dimension.toString(),
-                "blockPos" to mapOf(
-                    "x" to blockPos.x,
-                    "y" to blockPos.y,
-                    "z" to blockPos.z
-                )
-            )
-        )
+        val distSqr = distanceSqr(other) ?: return false
+        return distSqr < distance * distance
     }
 
     fun toTag(): Tag {
