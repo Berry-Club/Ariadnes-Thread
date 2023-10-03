@@ -1,5 +1,6 @@
 package com.aaronhowser1.ariadnesthread.item
 
+import com.aaronhowser1.ariadnesthread.utils.Location
 import com.aaronhowser1.ariadnesthread.utils.ModScheduler
 import net.minecraft.ChatFormatting
 import net.minecraft.nbt.CompoundTag
@@ -65,6 +66,8 @@ class ThreadItem : Item(
     private fun addLocation(itemStack: ItemStack, player: Player) {
         val blockPos = player.blockPosition()
         val dimension = player.level.dimension().location()
+
+        val location = Location(dimension, blockPos)
 
         println(
             """
