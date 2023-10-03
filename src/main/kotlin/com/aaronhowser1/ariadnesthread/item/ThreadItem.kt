@@ -4,6 +4,7 @@ import com.aaronhowser1.ariadnesthread.config.ServerConfig
 import com.aaronhowser1.ariadnesthread.utils.Location
 import net.minecraft.ChatFormatting
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.InteractionHand
@@ -20,10 +21,15 @@ class ThreadItem : Item(
         .rarity(Rarity.UNCOMMON)
 ) {
 
+    companion object {
+        const val IS_RECORDING = "ariadnesthread.isRecording"
+        const val HISTORY = "ariadnesthread.history"
+    }
+
     private fun isRecording(itemStack: ItemStack): Boolean {
         val tag = itemStack.tag ?: return false
 
-        return tag.getBoolean("ariadnesthread.isRecording")
+        return tag.getBoolean(IS_RECORDING)
     }
 
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
@@ -54,7 +60,16 @@ class ThreadItem : Item(
 
     private fun startRecording(itemStack: ItemStack) {
         itemStack.tag = itemStack.tag ?: CompoundTag()
-        itemStack.tag?.putBoolean("ariadnesthread.isRecording", true)
+        itemStack.tag?.apply {
+            putBoolean(IS_RECORDING, true)
+
+            val hasHistory = itemStack.tag?.contains(HISTORY) ?: false
+            if (!hasHistory) {
+                val emptyList = ListTag()
+                put(HISTORY, emptyList)
+            }
+
+        }
     }
 
     override fun onDroppedByPlayer(item: ItemStack?, player: Player?): Boolean {
@@ -84,16 +99,15 @@ class ThreadItem : Item(
         super.inventoryTick(itemStack, level, entity, slotId, isSelected)
     }
 
-
     private fun stopRecording(itemStack: ItemStack) {
         itemStack.tag = itemStack.tag ?: CompoundTag()
-        itemStack.tag?.putBoolean("ariadnesthread.isRecording", false)
+        itemStack.tag?.putBoolean(IS_RECORDING, false)
     }
 
     private fun clearHistory(itemStack: ItemStack) {
         itemStack.tag = itemStack.tag ?: CompoundTag()
 
-        itemStack.tag?.remove("ariadnesthread.isRecording")
+        itemStack.tag?.remove(HISTORY)
     }
 
     override fun isFoil(itemStack: ItemStack): Boolean {
