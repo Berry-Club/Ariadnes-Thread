@@ -12,6 +12,16 @@ data class Location(
     val dimension: ResourceLocation,
     val blockPos: BlockPos
 ) {
+
+    constructor(compoundTag: CompoundTag) : this(
+        ResourceLocation(compoundTag.getString("dimension")),
+        BlockPos(
+            (compoundTag.get("blockPos") as ListTag).getInt(0),
+            (compoundTag.get("blockPos") as ListTag).getInt(1),
+            (compoundTag.get("blockPos") as ListTag).getInt(2)
+        )
+    )
+
     override fun toString(): String {
         return "Location(dimension=$dimension, blockPos=$blockPos)"
     }

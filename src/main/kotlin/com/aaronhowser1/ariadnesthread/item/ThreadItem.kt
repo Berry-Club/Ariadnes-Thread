@@ -97,6 +97,14 @@ class ThreadItem : Item(
     private fun addLocation(itemStack: ItemStack, location: Location) {
         val list = itemStack.tag?.getList(HISTORY, 10) ?: return
 
+        if (list.isNotEmpty()) {
+            val mostRecentTag = list.lastOrNull() ?: error("List is not empty, but has no last element.")
+            val mostRecentLocation = Location(mostRecentTag as CompoundTag)
+
+            val tooClose = mostRecentLocation.isCloserThan(location, ServerConfig.MIN_DISTANCE)
+            if (tooClose) return
+        }
+
         list.add(location.toTag())
     }
 
