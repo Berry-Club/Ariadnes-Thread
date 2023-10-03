@@ -63,15 +63,17 @@ class ThreadItem : Item(
     }
 
     private fun addLocation(itemStack: ItemStack, player: Player) {
+        val blockPos = player.blockPosition()
+        val dimension = player.level.dimension().location()
+
         println(
             """
             Is recording: ${isRecording(itemStack)}
             Tag: ${itemStack.tag}
+            Pos: $blockPos
+            Dimension: $dimension
             """.trimIndent()
         )
-
-        val blockPos = player.blockPosition()
-        println(blockPos.toShortString())
 
         if (isRecording(itemStack)) {
             ModScheduler.scheduleSynchronisedTask(20) {
