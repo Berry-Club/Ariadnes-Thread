@@ -10,14 +10,14 @@ object ServerConfig {
     val SPEC: ForgeConfigSpec
 
     private val waitTime: ConfigValue<Int>
-    private val minDistance: ConfigValue<Float>
-    private val teleportDistance: ConfigValue<Float>
+    private val minDistance: ConfigValue<Double>
+    private val teleportDistance: ConfigValue<Double>
 
     val WAIT_TIME: Int
         get() = waitTime.get()
-    val MIN_DISTANCE: Float
+    val MIN_DISTANCE: Double
         get() = minDistance.get()
-    val TELEPORT_DISTANCE: Float
+    val TELEPORT_DISTANCE: Double
         get() = teleportDistance.get()
 
     init {
@@ -29,11 +29,11 @@ object ServerConfig {
 
         minDistance = BUILDER
             .comment(" The minimum distance between points.\nIf you haven't moved more than this distance from your last point, it isn't saved.")
-            .define("Minimum Distance", 10F)
+            .define("Minimum Distance", 10.0)
 
         teleportDistance = BUILDER
             .comment(" The minimum distance between points to count as a teleport.")
-            .define("Teleport Distance", 100F)
+            .define("Teleport Distance", 100.0)
 
 
         BUILDER.pop()
