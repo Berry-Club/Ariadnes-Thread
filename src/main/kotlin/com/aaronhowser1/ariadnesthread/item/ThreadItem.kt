@@ -24,6 +24,7 @@ class ThreadItem : Item(
     companion object {
         const val IS_RECORDING = "ariadnesthread.isRecording"
         const val HISTORY = "ariadnesthread.history"
+        const val STARTING_DIMENSION = "ariadnesthread.startingDimension"
     }
 
     private fun isRecording(itemStack: ItemStack): Boolean {
@@ -46,7 +47,7 @@ class ThreadItem : Item(
                 clearHistory(itemStack)
                 return InteractionResultHolder.success(itemStack)
             }
-            startRecording(itemStack)
+            startRecording(itemStack, dimension = player.level.dimension().location().toString())
             return InteractionResultHolder.success(itemStack)
         }
 
@@ -58,10 +59,11 @@ class ThreadItem : Item(
         return InteractionResultHolder.pass(itemStack)
     }
 
-    private fun startRecording(itemStack: ItemStack) {
+    private fun startRecording(itemStack: ItemStack, dimension: String) {
         itemStack.tag = itemStack.tag ?: CompoundTag()
         itemStack.tag?.apply {
             putBoolean(IS_RECORDING, true)
+            putString(STARTING_DIMENSION, dimension)
 
             val hasHistory = itemStack.tag?.contains(HISTORY) ?: false
             if (!hasHistory) {
@@ -77,18 +79,25 @@ class ThreadItem : Item(
         return super.onDroppedByPlayer(item, player)
     }
 
+    private fun getStartingDimension(itemStack: ItemStack): String {
+        return itemStack.tag?.getString(STARTING_DIMENSION) ?: error("ItemStack has no starting dimension.")
+    }
+
+    private fun inStartingDimension(itemStack: ItemStack, level: Level?): Boolean {
+        return getStartingDimension(itemStack) == level?.dimension()?.location()?.toString()
+    }
+
     override fun inventoryTick(itemStack: ItemStack, level: Level, entity: Entity, slotId: Int, isSelected: Boolean) {
 
         if (level.isClientSide) return
         if (level.gameTime % ServerConfig.WAIT_TIME != 0L) return
-
         if (!isRecording(itemStack)) return
+        if (!inStartingDimension(itemStack, level)) {
+            return
+        }
 
         val blockPos = entity.blockPosition()
-        val dimension = entity.level.dimension().location()
-
-        val location = Location(dimension, blockPos)
-
+        val location = Location(blockPos)
         addLocation(itemStack, location)
 
         super.inventoryTick(itemStack, level, entity, slotId, isSelected)
@@ -113,10 +122,18 @@ class ThreadItem : Item(
         itemStack.tag?.putBoolean(IS_RECORDING, false)
     }
 
+    private fun hasHistory(itemStack: ItemStack): Boolean {
+        return itemStack.tag?.contains(HISTORY) ?: false
+    }
+
     private fun clearHistory(itemStack: ItemStack) {
         itemStack.tag = itemStack.tag ?: CompoundTag()
 
-        itemStack.tag?.remove(HISTORY)
+        itemStack.tag?.apply {
+            remove(IS_RECORDING)
+            remove(HISTORY)
+            remove(STARTING_DIMENSION)
+        }
     }
 
     override fun isFoil(itemStack: ItemStack): Boolean {
@@ -138,19 +155,21 @@ class ThreadItem : Item(
             )
         }
 
-        tooltipTranslatable(if (isRecording(itemStack)) "tooltip.ariadnesthread.recording1" else "tooltip.ariadnesthread.not_recording1")
-        tooltipTranslatable(if (isRecording(itemStack)) "tooltip.ariadnesthread.recording2" else "tooltip.ariadnesthread.not_recording2")
+        tooltipTranslatable(if (isRecording(itemStack)) "tooltip.ariadnesthread.recording_1" else "tooltip.ariadnesthread.not_recording_1")
+        tooltipTranslatable(if (isRecording(itemStack)) "tooltip.ariadnesthread.recording_2" else "tooltip.ariadnesthread.not_recording_2")
 
-        if (!isRecording(itemStack)) tooltipTranslatable("tooltip.ariadnesthread.clear") {
+        if (!isRecording(itemStack) && hasHistory(itemStack)) tooltipTranslatable("tooltip.ariadnesthread.clear") {
             it.withStyle(ChatFormatting.RED)
         }
 
+        if (isRecording(itemStack) && !inStartingDimension(itemStack, level)) {
+            tooltipTranslatable("tooltip.ariadnesthread.not_in_starting_dimension") {
+                it.withStyle(ChatFormatting.RED)
+            }
+        }
+
         tooltipComponents.add(
-            Component.literal(
-                itemStack.tag.toString()
-                    .replace("{", "{\n")
-                    .replace("}", "\n}")
-            )
+            Component.literal(itemStack.tag.toString())
         )
 
         super.appendHoverText(itemStack, level, tooltipComponents, tooltipFlag)
