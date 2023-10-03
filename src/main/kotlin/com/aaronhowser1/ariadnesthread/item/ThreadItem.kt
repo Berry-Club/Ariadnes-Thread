@@ -89,14 +89,15 @@ class ThreadItem : Item(
 
         val location = Location(dimension, blockPos)
 
-        println(
-            """
-            Location: $location
-            Location json: ${location.toJson()}
-            """.trimIndent()
-        )
+        addLocation(itemStack, location)
 
         super.inventoryTick(itemStack, level, entity, slotId, isSelected)
+    }
+
+    private fun addLocation(itemStack: ItemStack, location: Location) {
+        val list = itemStack.tag?.getList(HISTORY, 10) ?: return
+
+        list.add(location.toTag())
     }
 
     private fun stopRecording(itemStack: ItemStack) {
@@ -136,7 +137,13 @@ class ThreadItem : Item(
             it.withStyle(ChatFormatting.RED)
         }
 
-        tooltipComponents.add(Component.literal(itemStack.tag.toString()))
+        tooltipComponents.add(
+            Component.literal(
+                itemStack.tag.toString()
+                    .replace("{", "{\n")
+                    .replace("}", "\n}")
+            )
+        )
 
         super.appendHoverText(itemStack, level, tooltipComponents, tooltipFlag)
     }

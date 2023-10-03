@@ -2,6 +2,8 @@ package com.aaronhowser1.ariadnesthread.utils
 
 import com.google.gson.Gson
 import net.minecraft.core.BlockPos
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.Tag
 import net.minecraft.resources.ResourceLocation
 
 data class Location(
@@ -32,5 +34,21 @@ data class Location(
                 )
             )
         )
+    }
+
+    fun toTag(): Tag {
+
+        val compoundTag = CompoundTag()
+        compoundTag.putString("dimension", dimension.toString())
+
+        val blockPosTag = CompoundTag()
+        blockPosTag.putInt("x", blockPos.x)
+        blockPosTag.putInt("y", blockPos.y)
+        blockPosTag.putInt("z", blockPos.z)
+
+        compoundTag.put("blockPos", blockPosTag)
+
+        return compoundTag
+
     }
 }
