@@ -8,7 +8,7 @@ import net.minecraft.nbt.Tag
 
 data class Location(
     val blockPos: BlockPos
-) {
+) : BlockPos(blockPos.x, blockPos.y, blockPos.z) {
 
     constructor(compoundTag: CompoundTag) : this(
         BlockPos(
@@ -20,14 +20,6 @@ data class Location(
 
     override fun toString(): String {
         return "Location(${blockPos.x}, ${blockPos.y}, ${blockPos.z})"
-    }
-
-    fun distanceSqr(other: Location): Double {
-        return blockPos.distSqr(other.blockPos)
-    }
-
-    fun isCloserThan(other: Location, distance: Float): Boolean {
-        return distanceSqr(other) < distance * distance
     }
 
     fun toTag(): Tag {

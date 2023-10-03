@@ -110,7 +110,7 @@ class ThreadItem : Item(
             val mostRecentTag = list.lastOrNull() ?: error("List is not empty, but has no last element.")
             val mostRecentLocation = Location(mostRecentTag as CompoundTag)
 
-            val tooClose = mostRecentLocation.isCloserThan(location, ServerConfig.MIN_DISTANCE)
+            val tooClose = mostRecentLocation.closerThan(location, ServerConfig.MIN_DISTANCE)
             if (tooClose) return
         }
 
