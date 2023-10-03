@@ -13,6 +13,4 @@ object ModItems {
         ThreadItem()
     }
 
-
-
 }

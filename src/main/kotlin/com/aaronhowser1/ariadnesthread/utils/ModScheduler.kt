@@ -8,12 +8,12 @@ import java.util.concurrent.TimeUnit
 
 object ModScheduler {
     private var scheduler: ScheduledExecutorService? = null
-    private val scheduledSynchTasks = HashMultimap.create<Int, Runnable>()
-    fun scheduleSynchronisedTask(run: Runnable, ticks: Int) {
-        scheduledSynchTasks.put(ModEvents.tick + ticks, run)
+    private val scheduledSyncTasks = HashMultimap.create<Int, Runnable>()
+    fun scheduleSynchronisedTask(ticks: Int, run: Runnable) {
+        scheduledSyncTasks.put(ModEvents.tick + ticks, run)
     }
 
-    fun scheduleAsyncTask(run: Runnable?, time: Int, unit: TimeUnit?) {
+    fun scheduleAsyncTask(time: Int, unit: TimeUnit?, run: Runnable) {
         if (scheduler == null) serverStartupTasks()
         scheduler!!.schedule(run, time.toLong(), unit)
     }
@@ -31,9 +31,9 @@ object ModScheduler {
     }
 
     fun handleSyncScheduledTasks(tick: Int?) {
-        if (scheduledSynchTasks.containsKey(tick)) {
+        if (scheduledSyncTasks.containsKey(tick)) {
             val tasks =
-                if (tick == null) scheduledSynchTasks.values().iterator() else scheduledSynchTasks[tick].iterator()
+                if (tick == null) scheduledSyncTasks.values().iterator() else scheduledSyncTasks[tick].iterator()
             while (tasks.hasNext()) {
                 try {
                     tasks.next().run()

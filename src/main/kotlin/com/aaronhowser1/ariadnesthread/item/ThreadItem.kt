@@ -1,5 +1,6 @@
 package com.aaronhowser1.ariadnesthread.item
 
+import com.aaronhowser1.ariadnesthread.utils.ModScheduler
 import net.minecraft.ChatFormatting
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
@@ -37,7 +38,7 @@ class ThreadItem : Item(
                 clearHistory(itemStack)
                 return InteractionResultHolder.success(itemStack)
             }
-            startRecording(itemStack)
+            startRecording(itemStack, player)
             return InteractionResultHolder.success(itemStack)
         }
 
@@ -49,9 +50,34 @@ class ThreadItem : Item(
         return InteractionResultHolder.pass(itemStack)
     }
 
-    private fun startRecording(itemStack: ItemStack) {
+    private fun startRecording(itemStack: ItemStack, player: Player) {
         itemStack.tag = itemStack.tag ?: CompoundTag()
         itemStack.tag?.putBoolean("ariadnesthread.isRecording", true)
+
+        addLocation(itemStack, player)
+    }
+
+    override fun onDroppedByPlayer(item: ItemStack?, player: Player?): Boolean {
+        stopRecording(item!!)
+        return super.onDroppedByPlayer(item, player)
+    }
+
+    private fun addLocation(itemStack: ItemStack, player: Player) {
+        println(
+            """
+            Is recording: ${isRecording(itemStack)}
+            Tag: ${itemStack.tag}
+            """.trimIndent()
+        )
+
+        val blockPos = player.blockPosition()
+        println(blockPos.toShortString())
+
+        if (isRecording(itemStack)) {
+            ModScheduler.scheduleSynchronisedTask(20) {
+                addLocation(itemStack, player)
+            }
+        }
     }
 
     private fun stopRecording(itemStack: ItemStack) {
