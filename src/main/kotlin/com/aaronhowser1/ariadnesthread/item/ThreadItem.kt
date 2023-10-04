@@ -1,5 +1,6 @@
 package com.aaronhowser1.ariadnesthread.item
 
+import com.aaronhowser1.ariadnesthread.client.LineSegment
 import com.aaronhowser1.ariadnesthread.config.ServerConfig
 import com.aaronhowser1.ariadnesthread.utils.Location
 import net.minecraft.ChatFormatting
@@ -89,7 +90,24 @@ class ThreadItem : Item(
 
     override fun inventoryTick(itemStack: ItemStack, level: Level, entity: Entity, slotId: Int, isSelected: Boolean) {
 
-        if (level.isClientSide) return
+        if (level.isClientSide) {
+
+            LineSegment.lineSegments.clear()
+
+            val history = getHistory(itemStack)
+            val iterator = history.iterator()
+
+            while (iterator.hasNext()) {
+                val first = iterator.next()
+                if (!iterator.hasNext()) break
+                val second = iterator.next()
+
+                LineSegment(first, second, level, "#ff0000")
+            }
+
+
+            return
+        }
         if (level.gameTime % ServerConfig.WAIT_TIME != 0L) return
         if (!isRecording(itemStack)) return
         if (!inStartingDimension(itemStack, level)) {
@@ -120,6 +138,12 @@ class ThreadItem : Item(
     private fun stopRecording(itemStack: ItemStack) {
         itemStack.tag = itemStack.tag ?: CompoundTag()
         itemStack.tag?.putBoolean(IS_RECORDING, false)
+    }
+
+    private fun getHistory(itemStack: ItemStack): List<Location> {
+        val list = itemStack.tag?.getList(HISTORY, 10) ?: return emptyList()
+
+        return list.map { Location(it as CompoundTag) }
     }
 
     private fun hasHistory(itemStack: ItemStack): Boolean {
