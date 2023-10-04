@@ -27,7 +27,7 @@ object ModEvents {
         if (event.stage != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return
 
         LineSegment.lineSegments.forEach {
-            it.render()
+            it.render(event)
         }
     }
 

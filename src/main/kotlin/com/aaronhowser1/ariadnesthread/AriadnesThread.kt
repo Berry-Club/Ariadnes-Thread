@@ -1,6 +1,5 @@
 package com.aaronhowser1.ariadnesthread
 
-import com.aaronhowser1.ariadnesthread.client.AriadnesThreadClient
 import com.aaronhowser1.ariadnesthread.config.ClientConfig
 import com.aaronhowser1.ariadnesthread.config.ServerConfig
 import com.aaronhowser1.ariadnesthread.item.ModItems
@@ -44,7 +43,6 @@ object AriadnesThread {
     }
 
     private fun onClientSetup(event: FMLClientSetupEvent) {
-        AriadnesThreadClient.setup()
     }
 
     private fun onServerSetup(event: FMLDedicatedServerSetupEvent) {
