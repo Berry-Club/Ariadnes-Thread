@@ -2,8 +2,11 @@ package com.aaronhowser1.ariadnesthread.client
 
 import com.aaronhowser1.ariadnesthread.utils.Location
 import net.minecraft.world.level.Level
+import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.api.distmarker.OnlyIn
 import net.minecraftforge.client.event.RenderLevelStageEvent
 
+@OnlyIn(Dist.CLIENT)
 data class LineSegment(
     val start: Location,
     val end: Location,
