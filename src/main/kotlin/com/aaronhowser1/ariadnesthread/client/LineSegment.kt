@@ -3,6 +3,7 @@ package com.aaronhowser1.ariadnesthread.client
 import com.aaronhowser1.ariadnesthread.utils.Location
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
+import com.mojang.math.Matrix3f
 import com.mojang.math.Matrix4f
 import net.minecraft.client.Camera
 import net.minecraft.client.Minecraft
@@ -41,15 +42,18 @@ data class LineSegment(
         )
 
         val matrix: Matrix4f = poseStack.last().pose()
+        val normal: Matrix3f = poseStack.last().normal()
 
         val buffer: VertexConsumer = minecraftInstance.renderBuffers().bufferSource().getBuffer(RenderType.lines())
         buffer.apply {
             vertex(matrix, start.x.toFloat(), start.y.toFloat(), start.z.toFloat())
-                .color(0.0f, 0.0f, 0.0f, 0.0f)
+                .color(1, 1, 1, 1)
+                .normal(normal, 0f, 1f, 0f)
                 .endVertex()
 
             vertex(matrix, end.x.toFloat(), end.y.toFloat(), end.z.toFloat())
-                .color(0.0f, 0.0f, 0.0f, 0.0f)
+                .color(1, 1, 1, 1)
+                .normal(normal, 0f, 1f, 0f)
                 .endVertex()
         }
 
