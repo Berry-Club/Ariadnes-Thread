@@ -101,8 +101,8 @@ class ThreadItem : Item(
             return
         }
 
-        val blockPos = entity.blockPosition()
-        val location = Location(blockPos)
+        val pos = entity.eyePosition
+        val location = Location(pos)
         addLocation(itemStack, location)
 
         super.inventoryTick(itemStack, level, entity, slotId, isSelected)
