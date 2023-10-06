@@ -1,11 +1,19 @@
 package com.aaronhowser1.ariadnesthread.client
 
 import com.aaronhowser1.ariadnesthread.utils.Location
+import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.blaze3d.vertex.VertexConsumer
+import com.mojang.math.Matrix3f
+import com.mojang.math.Matrix4f
+import net.minecraft.client.Camera
+import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.RenderType
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.phys.Vec3
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
-import thedarkcolour.kotlinforforge.forge.vectorutil.toVec3
+import kotlin.random.Random
 
 @OnlyIn(Dist.CLIENT)
 data class LineSegment(
@@ -41,6 +49,37 @@ data class LineSegment(
             )
         }
 
+    }
+
+    fun render(poseStack: PoseStack) {
+        val minecraftInstance: Minecraft = Minecraft.getInstance()
+        val camera: Camera = minecraftInstance.entityRenderDispatcher.camera
+        val projectedView: Vec3 = camera.position
+
+        val vertexConsumer: VertexConsumer =
+            minecraftInstance.renderBuffers().bufferSource().getBuffer(RenderType.lines())
+
+        val matrix4f: Matrix4f = poseStack.last().pose()
+        val matrix3f: Matrix3f = poseStack.last().normal()
+
+        vertexConsumer
+            .vertex(
+                matrix4f,
+                start.x.toFloat() - projectedView.x.toFloat(),
+                start.y.toFloat() - projectedView.y.toFloat(),
+                start.z.toFloat() - projectedView.z.toFloat()
+            )
+            .color(Random.nextFloat(), Random.nextFloat(), Random.nextFloat(), 1f)
+            .normal(matrix3f, 0f, 1f, 0f)
+            .endVertex()
+    }
+
+    init {
+        lineSegments.add(this)
+    }
+
+    companion object {
+        val lineSegments = mutableListOf<LineSegment>()
     }
 
 }
