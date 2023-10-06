@@ -3,6 +3,7 @@ package com.aaronhowser1.ariadnesthread.item
 import com.aaronhowser1.ariadnesthread.client.LineSegment
 import com.aaronhowser1.ariadnesthread.config.ServerConfig
 import com.aaronhowser1.ariadnesthread.utils.Location
+import com.aaronhowser1.ariadnesthread.utils.Location.Companion.toLocation
 import net.minecraft.ChatFormatting
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
@@ -48,7 +49,7 @@ class ThreadItem : Item(
                 clearHistory(itemStack)
                 return InteractionResultHolder.success(itemStack)
             }
-            startRecording(itemStack, dimension = player.level.dimension().location().toString())
+            startRecording(itemStack, player)
             return InteractionResultHolder.success(itemStack)
         }
 
@@ -60,19 +61,20 @@ class ThreadItem : Item(
         return InteractionResultHolder.pass(itemStack)
     }
 
-    private fun startRecording(itemStack: ItemStack, dimension: String) {
+    private fun startRecording(itemStack: ItemStack, player: Player) {
         itemStack.tag = itemStack.tag ?: CompoundTag()
         itemStack.tag?.apply {
             putBoolean(IS_RECORDING, true)
-            putString(STARTING_DIMENSION, dimension)
+            putString(STARTING_DIMENSION, player.level.dimension().location().toString())
 
             val hasHistory = itemStack.tag?.contains(HISTORY) ?: false
             if (!hasHistory) {
                 val emptyList = ListTag()
                 put(HISTORY, emptyList)
             }
-
         }
+
+        addLocation(itemStack, player.eyePosition.toLocation())
     }
 
     override fun onDroppedByPlayer(item: ItemStack?, player: Player?): Boolean {
@@ -90,7 +92,9 @@ class ThreadItem : Item(
 
     override fun inventoryTick(itemStack: ItemStack, level: Level, entity: Entity, slotId: Int, isSelected: Boolean) {
 
-        if (level.isClientSide && entity is Player) {
+        if (entity !is Player) return
+
+        if (level.isClientSide) {
             showHistory(itemStack, entity)
             return
         }
@@ -101,9 +105,7 @@ class ThreadItem : Item(
             return
         }
 
-        val pos = entity.eyePosition
-        val location = Location(pos)
-        addLocation(itemStack, location)
+        addLocation(itemStack, entity.eyePosition.toLocation())
 
         super.inventoryTick(itemStack, level, entity, slotId, isSelected)
     }
@@ -135,16 +137,16 @@ class ThreadItem : Item(
 
     private fun getLineSegments(itemStack: ItemStack): List<LineSegment> {
         val history = getHistory(itemStack)
-        val iterator = history.iterator()
-
         val mutable = mutableListOf<LineSegment>()
 
-        while (iterator.hasNext()) {
-            val first = iterator.next()
-            if (!iterator.hasNext()) break
-            val second = iterator.next()
+        val startingDim = getStartingDimension(itemStack)
 
-            mutable.add(LineSegment(first, second, getStartingDimension(itemStack), "#ff0000"))
+        for (i in 0 until history.size - 1) {
+
+            val first = history[i]
+            val second = history[i + 1]
+
+            mutable.add(LineSegment(first, second, startingDim, "#ff0000"))
         }
 
         return mutable
