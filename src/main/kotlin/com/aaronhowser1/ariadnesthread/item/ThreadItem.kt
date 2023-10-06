@@ -90,24 +90,11 @@ class ThreadItem : Item(
 
     override fun inventoryTick(itemStack: ItemStack, level: Level, entity: Entity, slotId: Int, isSelected: Boolean) {
 
-        if (level.isClientSide) {
-
-            LineSegment.lineSegments.clear()
-
-            val history = getHistory(itemStack)
-            val iterator = history.iterator()
-
-            while (iterator.hasNext()) {
-                val first = iterator.next()
-                if (!iterator.hasNext()) break
-                val second = iterator.next()
-
-                LineSegment(first, second, level, "#ff0000")
-            }
-
-
+        if (level.isClientSide && entity is Player) {
+            showHistory(itemStack, entity)
             return
         }
+
         if (level.gameTime % ServerConfig.WAIT_TIME != 0L) return
         if (!isRecording(itemStack)) return
         if (!inStartingDimension(itemStack, level)) {
@@ -144,6 +131,33 @@ class ThreadItem : Item(
         val list = itemStack.tag?.getList(HISTORY, 10) ?: return emptyList()
 
         return list.map { Location(it as CompoundTag) }
+    }
+
+    private fun getLineSegments(itemStack: ItemStack): List<LineSegment> {
+        val history = getHistory(itemStack)
+        val iterator = history.iterator()
+
+        val mutable = mutableListOf<LineSegment>()
+
+        while (iterator.hasNext()) {
+            val first = iterator.next()
+            if (!iterator.hasNext()) break
+            val second = iterator.next()
+
+            mutable.add(LineSegment(first, second, getStartingDimension(itemStack), "#ff0000"))
+        }
+
+        return mutable
+    }
+
+    private fun showHistory(itemStack: ItemStack, player: Player) {
+
+        val lines = getLineSegments(itemStack)
+
+        lines.forEach {
+            it.spawnParticles(player)
+        }
+
     }
 
     private fun hasHistory(itemStack: ItemStack): Boolean {
