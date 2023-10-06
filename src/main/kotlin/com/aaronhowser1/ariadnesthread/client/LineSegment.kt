@@ -3,15 +3,17 @@ package com.aaronhowser1.ariadnesthread.client
 import com.aaronhowser1.ariadnesthread.utils.Location
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
-import com.mojang.math.Matrix3f
-import com.mojang.math.Matrix4f
 import net.minecraft.client.Camera
 import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.LevelRenderer
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Block
 import net.minecraft.world.phys.Vec3
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
+import kotlin.math.max
+import kotlin.math.min
 
 @OnlyIn(Dist.CLIENT)
 data class LineSegment(
@@ -34,31 +36,34 @@ data class LineSegment(
         val camera: Camera = minecraftInstance.entityRenderDispatcher.camera
         val projectedView: Vec3 = camera.position
 
-        poseStack.pushPose()
-        poseStack.translate(
-            start.x - projectedView.x,
-            start.y - projectedView.y,
-            start.z - projectedView.z
-        )
-
-        val matrix: Matrix4f = poseStack.last().pose()
-        val normal: Matrix3f = poseStack.last().normal()
-
         val buffer: VertexConsumer = minecraftInstance.renderBuffers().bufferSource().getBuffer(RenderType.lines())
-        buffer.apply {
-            vertex(matrix, start.x.toFloat(), start.y.toFloat(), start.z.toFloat())
-                .color(1, 1, 1, 1)
-                .normal(normal, 0f, 1f, 0f)
-                .endVertex()
 
-            vertex(matrix, end.x.toFloat(), end.y.toFloat(), end.z.toFloat())
-                .color(1, 1, 1, 1)
-                .normal(normal, 0f, 1f, 0f)
-                .endVertex()
-        }
+        val minX = min(start.x, end.x)
+        val minY = min(start.y, end.y)
+        val minZ = min(start.z, end.z)
+        val maxX = max(start.x, end.x)
+        val maxY = max(start.y, end.y)
+        val maxZ = max(start.z, end.z)
 
-        minecraftInstance.renderBuffers().bufferSource().endBatch(RenderType.lines())
-        poseStack.popPose()
+        LevelRenderer.renderVoxelShape(
+            poseStack,
+            buffer,
+            Block.box(
+                minX.toDouble(),
+                minY.toDouble(),
+                minZ.toDouble(),
+                maxX.toDouble(),
+                maxY.toDouble(),
+                maxZ.toDouble()
+            ),
+            start.x.toDouble() - projectedView.x,
+            start.y.toDouble() - projectedView.y,
+            start.z.toDouble() - projectedView.z,
+            1f,
+            1f,
+            1f,
+            1f
+        )
     }
 
     init {
