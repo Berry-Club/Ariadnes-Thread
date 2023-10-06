@@ -62,6 +62,9 @@ class ThreadItem : Item(
     }
 
     private fun startRecording(itemStack: ItemStack, player: Player) {
+
+        if (itemStack.tag?.contains(IS_RECORDING) == true) return
+
         itemStack.tag = itemStack.tag ?: CompoundTag()
         itemStack.tag?.apply {
             putBoolean(IS_RECORDING, true)
