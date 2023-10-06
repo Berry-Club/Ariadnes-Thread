@@ -37,4 +37,8 @@ data class Location(
         return compoundTag
 
     }
+
+    companion object {
+        fun Vec3.toLocation(): Location = Location(this)
+    }
 }
