@@ -1,25 +1,25 @@
 package com.aaronhowser1.ariadnesthread.utils
 
-import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.IntTag
+import net.minecraft.nbt.DoubleTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
+import net.minecraft.world.phys.Vec3
 
 data class Location(
-    val blockPos: BlockPos
-) : BlockPos(blockPos.x, blockPos.y, blockPos.z) {
+    val vec3: Vec3
+) : Vec3(vec3.x, vec3.y, vec3.z) {
 
     constructor(compoundTag: CompoundTag) : this(
-        BlockPos(
-            (compoundTag.get("blockPos") as ListTag).getInt(0),
-            (compoundTag.get("blockPos") as ListTag).getInt(1),
-            (compoundTag.get("blockPos") as ListTag).getInt(2)
+        Vec3(
+            (compoundTag.get("blockPos") as ListTag).getDouble(0),
+            (compoundTag.get("blockPos") as ListTag).getDouble(1),
+            (compoundTag.get("blockPos") as ListTag).getDouble(2)
         )
     )
 
     override fun toString(): String {
-        return "Location(${blockPos.x}, ${blockPos.y}, ${blockPos.z})"
+        return "Location(${vec3.x}, ${vec3.y}, ${vec3.z})"
     }
 
     fun toTag(): Tag {
@@ -27,9 +27,9 @@ data class Location(
         val compoundTag = CompoundTag()
 
         val blockPosListTag = ListTag().apply {
-            add(IntTag.valueOf(blockPos.x))
-            add(IntTag.valueOf(blockPos.y))
-            add(IntTag.valueOf(blockPos.z))
+            add(DoubleTag.valueOf(vec3.x))
+            add(DoubleTag.valueOf(vec3.y))
+            add(DoubleTag.valueOf(vec3.z))
         }
 
         compoundTag.put("blockPos", blockPosListTag)

@@ -21,14 +21,17 @@ data class LineSegment(
     //  - If the distance between is beyond the configured teleport distance, either don't render at all or render with like a spiral or something
 
     fun spawnParticles(player: Player) {
-        val deltaVector = end.toVec3().vectorTo(start.toVec3())
+        val deltaVector = start.vectorTo(end)
 
         val distance = deltaVector.length().toInt()
 
         repeat(distance) {
-            val position = start.toVec3().add(deltaVector.scale(it.toDouble() / distance))
+
+            val progressPercent = it.toDouble() / distance
+
+            val position = start.add(deltaVector.scale(progressPercent))
             player.level.addParticle(
-                ParticleTypes.BUBBLE,
+                ParticleTypes.ANGRY_VILLAGER,
                 position.x,
                 position.y,
                 position.z,
