@@ -157,15 +157,10 @@ class ThreadItem : Item(
 
     private fun showHistory(itemStack: ItemStack, player: Player) {
 
-        LineSegment.lineSegments.clear()
         val lines = getLineSegments(itemStack)
 
-        println(lines.size)
-        println(LineSegment.lineSegments.size)
-        println()
-
         lines.forEach {
-//            it.spawnParticles(player)
+            it.spawnParticles(player)
         }
 
     }
