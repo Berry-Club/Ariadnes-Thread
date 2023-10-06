@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
+import kotlin.random.Random
 
 @OnlyIn(Dist.CLIENT)
 data class LineSegment(
@@ -41,11 +42,15 @@ data class LineSegment(
         val matrix3f: Matrix3f = poseStack.last().normal()
 
         vertexConsumer
-            .vertex(matrix4f, start.x.toFloat(), start.y.toFloat(), start.z.toFloat())
-            .color(0f, 0f, 0f, 1f)
+            .vertex(
+                matrix4f,
+                start.x.toFloat() - projectedView.x.toFloat(),
+                start.y.toFloat() - projectedView.y.toFloat(),
+                start.z.toFloat() - projectedView.z.toFloat()
+            )
+            .color(Random.nextFloat(), Random.nextFloat(), Random.nextFloat(), 1f)
             .normal(matrix3f, 0f, 1f, 0f)
             .endVertex()
-
     }
 
     init {
