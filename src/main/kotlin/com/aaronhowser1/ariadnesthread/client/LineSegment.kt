@@ -8,8 +8,6 @@ import net.minecraftforge.api.distmarker.OnlyIn
 data class LineSegment(
     val start: Location,
     val end: Location,
-    val level: String,
-    val colorHex: Float
 ) {
     companion object {
         var lineSegments: List<LineSegment> = emptyList()

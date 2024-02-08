@@ -27,6 +27,7 @@ object ModRenderer {
         }
     }
 
+    @Suppress("UnnecessaryVariable")
     private fun refresh() {
         vertexBuffer = VertexBuffer()
         reloadNeeded = false
@@ -36,13 +37,16 @@ object ModRenderer {
 
         buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR)
 
-        for (lineSegment in LineSegment.lineSegments) {
+        LineSegment.lineSegments.forEachIndexed { index, lineSegment ->
             val (x1, y1, z1) = lineSegment.start.vec3
             val (x2, y2, z2) = lineSegment.end.vec3
 
-            val red = 1f
-            val green = 1f
-            val blue = 1f
+            val percentDone = index / LineSegment.lineSegments.size.toFloat()
+
+            val red = 1f - percentDone
+            val green = percentDone
+            val blue = 0f
+
             val opacity = 1f
 
             buffer.vertex(x1, y1, z1).color(red, green, blue, opacity).endVertex()

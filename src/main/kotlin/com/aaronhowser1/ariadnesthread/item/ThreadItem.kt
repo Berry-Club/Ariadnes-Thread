@@ -143,14 +143,12 @@ class ThreadItem : Item(
         val history = getHistory(itemStack)
         val mutable = mutableListOf<LineSegment>()
 
-        val startingDim = getStartingDimension(itemStack)
-
         for (i in 0 until history.size - 1) {
 
             val first = history[i]
             val second = history[i + 1]
 
-            mutable.add(LineSegment(first, second, startingDim, 0F))
+            mutable.add(LineSegment(first, second))
         }
 
         return mutable
