@@ -37,52 +37,16 @@ object ModRenderer {
         buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR)
 
         for (lineSegment in LineSegment.lineSegments) {
-            val (x, y, z) = lineSegment.start.vec3
-            val (x1, y1, z1) = lineSegment.end.vec3
-
-            val sizeX = x1 - x
-            val sizeY = y1 - y
-            val sizeZ = z1 - z
+            val (x1, y1, z1) = lineSegment.start.vec3
+            val (x2, y2, z2) = lineSegment.end.vec3
 
             val red = 1f
             val green = 1f
             val blue = 1f
             val opacity = 1f
 
-            buffer.vertex(x, y + sizeY, z).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x + sizeX, y + sizeY, z).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x + sizeX, y + sizeY, z).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x + sizeX, y + sizeY, z + sizeZ).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x + sizeX, y + sizeY, z + sizeZ).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x, y + sizeY, z + sizeZ).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x, y + sizeY, z + sizeZ).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x, y + sizeY, z).color(red, green, blue, opacity).endVertex();
-
-            // BOTTOM
-            buffer.vertex(x + sizeX, y, z).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x + sizeX, y, z + sizeZ).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x + sizeX, y, z + sizeZ).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x, y, z + sizeZ).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x, y, z + sizeZ).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x + sizeZ, y, z).color(red, green, blue, opacity).endVertex();
-
-            // Edge 1
-            buffer.vertex(x + sizeX, y, z + sizeZ).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x + sizeX, y + sizeY, z + sizeZ).color(red, green, blue, opacity).endVertex();
-
-            // Edge 2
-            buffer.vertex(x + sizeX, y, z).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x + sizeX, y + sizeY, z).color(red, green, blue, opacity).endVertex();
-
-            // Edge 3
-            buffer.vertex(x, y, z + sizeZ).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x, y + sizeY, z + sizeZ).color(red, green, blue, opacity).endVertex();
-
-            // Edge 4
-            buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
-            buffer.vertex(x, y + sizeY, z).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x1, y1, z1).color(red, green, blue, opacity).endVertex()
+            buffer.vertex(x2, y2, z2).color(red, green, blue, opacity).endVertex()
         }
 
         vertexBuffer!!.apply {
