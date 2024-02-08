@@ -19,33 +19,67 @@ object ModRenderer {
         if (LineSegment.lineSegments.isEmpty()) return
 
         if (vertexBuffer == null) {
-            vBuffNull(event)
+            vBuffNull()
         } else {
             vBuffNotNull(event)
         }
     }
 
-    private fun vBuffNull(event: RenderLevelStageEvent) {
+    private fun vBuffNull() {
         vertexBuffer = VertexBuffer()
 
         val tesselator: Tesselator = Tesselator.getInstance()
         val buffer: BufferBuilder = tesselator.builder
 
-        var opacity = 1F
-
         buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR)
 
         for (lineSegment in LineSegment.lineSegments) {
-            val (startX, startY, startZ) = lineSegment.start.vec3
-            val (endX, endY, endZ) = lineSegment.end.vec3
+            val (x, y, z) = lineSegment.start.vec3
+            val (x1, y1, z1) = lineSegment.end.vec3
 
-            val (sizeX, sizeY, sizeZ) = lineSegment.start.vec3.subtract(lineSegment.end.vec3)
+            val sizeX = x1 - x
+            val sizeY = y1 - y
+            val sizeZ = z1 - z
 
-            buffer.vertex(startX, startY, startZ).color(1).endVertex()
-            buffer.vertex(startX + sizeX, startY + sizeY, startZ).color(1).endVertex()
-            buffer.vertex(startX + sizeX, startY + sizeY, startZ + sizeZ).color(1).endVertex()
-            buffer.vertex(startX, startY + sizeY, startZ + sizeZ).color(1).endVertex()
-            buffer.vertex(startX, startY + sizeY, startZ).color(1).endVertex()
+            val red = 1f
+            val green = 1f
+            val blue = 1f
+            val opacity = 1f
+
+            buffer.vertex(x, y + sizeY, z).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x + sizeX, y + sizeY, z).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x + sizeX, y + sizeY, z).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x + sizeX, y + sizeY, z + sizeZ).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x + sizeX, y + sizeY, z + sizeZ).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x, y + sizeY, z + sizeZ).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x, y + sizeY, z + sizeZ).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x, y + sizeY, z).color(red, green, blue, opacity).endVertex();
+
+            // BOTTOM
+            buffer.vertex(x + sizeX, y, z).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x + sizeX, y, z + sizeZ).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x + sizeX, y, z + sizeZ).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x, y, z + sizeZ).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x, y, z + sizeZ).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x + sizeZ, y, z).color(red, green, blue, opacity).endVertex();
+
+            // Edge 1
+            buffer.vertex(x + sizeX, y, z + sizeZ).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x + sizeX, y + sizeY, z + sizeZ).color(red, green, blue, opacity).endVertex();
+
+            // Edge 2
+            buffer.vertex(x + sizeX, y, z).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x + sizeX, y + sizeY, z).color(red, green, blue, opacity).endVertex();
+
+            // Edge 3
+            buffer.vertex(x, y, z + sizeZ).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x, y + sizeY, z + sizeZ).color(red, green, blue, opacity).endVertex();
+
+            // Edge 4
+            buffer.vertex(x, y, z).color(red, green, blue, opacity).endVertex();
+            buffer.vertex(x, y + sizeY, z).color(red, green, blue, opacity).endVertex();
         }
 
         vertexBuffer!!.apply {
