@@ -5,9 +5,9 @@ import com.aaronhowser1.ariadnesthread.utils.ModScheduler.handleSyncScheduledTas
 import net.minecraftforge.event.TickEvent
 import net.minecraftforge.event.TickEvent.ServerTickEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
+import net.minecraftforge.fml.common.Mod
 
-@EventBusSubscriber(modid = AriadnesThread.MOD_ID)
+@Mod.EventBusSubscriber(modid = AriadnesThread.MOD_ID)
 object ModEvents {
 
     var tick = 0
