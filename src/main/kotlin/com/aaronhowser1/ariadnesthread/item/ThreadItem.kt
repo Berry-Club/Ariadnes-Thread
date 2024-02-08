@@ -4,11 +4,11 @@ import com.aaronhowser1.ariadnesthread.client.ModRenderer
 import com.aaronhowser1.ariadnesthread.config.ServerConfig
 import com.aaronhowser1.ariadnesthread.utils.Location
 import com.aaronhowser1.ariadnesthread.utils.Location.Companion.toLocation
+import com.aaronhowser1.ariadnesthread.utils.TextUtils.tooltipTranslatable
 import net.minecraft.ChatFormatting
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity
@@ -174,23 +174,24 @@ class ThreadItem : Item(
         tooltipFlag: TooltipFlag
     ) {
 
-        fun tooltipTranslatable(translatable: String, block: (MutableComponent) -> Unit = {}) {
-            tooltipComponents.add(
-                Component.translatable(translatable).apply {
-                    block(this)
-                }
-            )
-        }
+        tooltipTranslatable(
+            tooltipComponents,
+            if (isRecording(itemStack)) "tooltip.ariadnesthread.recording_1" else "tooltip.ariadnesthread.not_recording_1"
+        )
+        tooltipTranslatable(
+            tooltipComponents,
+            if (isRecording(itemStack)) "tooltip.ariadnesthread.recording_2" else "tooltip.ariadnesthread.not_recording_2"
+        )
 
-        tooltipTranslatable(if (isRecording(itemStack)) "tooltip.ariadnesthread.recording_1" else "tooltip.ariadnesthread.not_recording_1")
-        tooltipTranslatable(if (isRecording(itemStack)) "tooltip.ariadnesthread.recording_2" else "tooltip.ariadnesthread.not_recording_2")
-
-        if (!isRecording(itemStack) && hasHistory(itemStack)) tooltipTranslatable("tooltip.ariadnesthread.clear") {
+        if (!isRecording(itemStack) && hasHistory(itemStack)) tooltipTranslatable(
+            tooltipComponents,
+            "tooltip.ariadnesthread.clear"
+        ) {
             it.withStyle(ChatFormatting.RED)
         }
 
         if (isRecording(itemStack) && !inStartingDimension(itemStack, level)) {
-            tooltipTranslatable("tooltip.ariadnesthread.not_in_starting_dimension") {
+            tooltipTranslatable(tooltipComponents, "tooltip.ariadnesthread.not_in_starting_dimension") {
                 it.withStyle(ChatFormatting.RED)
             }
         }
