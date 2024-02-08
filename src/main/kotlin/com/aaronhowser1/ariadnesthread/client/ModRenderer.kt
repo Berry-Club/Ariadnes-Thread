@@ -15,7 +15,7 @@ object ModRenderer {
 
     private var vertexBuffer: VertexBuffer? = null
 
-    fun renderLine(event: RenderLevelStageEvent) {
+    fun renderLines(event: RenderLevelStageEvent) {
         if (LineSegment.lineSegments.isEmpty()) return
 
         if (vertexBuffer == null) {
