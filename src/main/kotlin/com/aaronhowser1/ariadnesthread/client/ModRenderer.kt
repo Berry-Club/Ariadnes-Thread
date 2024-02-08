@@ -1,5 +1,6 @@
 package com.aaronhowser1.ariadnesthread.client
 
+import com.aaronhowser1.ariadnesthread.utils.Location
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
 import net.minecraft.client.Minecraft
@@ -15,10 +16,16 @@ object ModRenderer {
 
     private var vertexBuffer: VertexBuffer? = null
 
+
     var reloadNeeded = false
+    var locations: List<Location> = emptyList()
+        set(value) {
+            field = value
+            reloadNeeded = true
+        }
 
     fun renderLines(event: RenderLevelStageEvent) {
-        if (LineSegment.lineSegments.isEmpty()) return
+        if (locations.isEmpty()) return
 
         if (vertexBuffer == null || reloadNeeded) {
             refresh()
@@ -37,11 +44,14 @@ object ModRenderer {
 
         buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR)
 
-        LineSegment.lineSegments.forEachIndexed { index, lineSegment ->
-            val (x1, y1, z1) = lineSegment.start.vec3
-            val (x2, y2, z2) = lineSegment.end.vec3
+        for (i in 0 until locations.size - 1) {
+            val loc1 = locations[i]
+            val loc2 = locations[i + 1]
 
-            val percentDone = index / LineSegment.lineSegments.size.toFloat()
+            val (x1, y1, z1) = loc1.vec3
+            val (x2, y2, z2) = loc2.vec3
+
+            val percentDone = i.toFloat() / locations.size
 
             val red = 1f - percentDone
             val green = percentDone

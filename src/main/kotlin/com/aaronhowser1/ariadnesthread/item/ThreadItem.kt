@@ -1,6 +1,5 @@
 package com.aaronhowser1.ariadnesthread.item
 
-import com.aaronhowser1.ariadnesthread.client.LineSegment
 import com.aaronhowser1.ariadnesthread.client.ModRenderer
 import com.aaronhowser1.ariadnesthread.config.ServerConfig
 import com.aaronhowser1.ariadnesthread.utils.Location
@@ -139,27 +138,8 @@ class ThreadItem : Item(
         return list.map { Location(it as CompoundTag) }
     }
 
-    private fun getLineSegments(itemStack: ItemStack): List<LineSegment> {
-        val history = getHistory(itemStack)
-        val mutable = mutableListOf<LineSegment>()
-
-        for (i in 0 until history.size - 1) {
-
-            val first = history[i]
-            val second = history[i + 1]
-
-            mutable.add(LineSegment(first, second))
-        }
-
-        return mutable
-    }
-
     private fun showHistory(itemStack: ItemStack) {
-
-        val lines = getLineSegments(itemStack)
-        LineSegment.lineSegments = lines
-        ModRenderer.reloadNeeded = true
-
+        ModRenderer.locations = getHistory(itemStack)
     }
 
     private fun hasHistory(itemStack: ItemStack): Boolean {
