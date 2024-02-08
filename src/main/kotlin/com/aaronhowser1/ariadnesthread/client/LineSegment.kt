@@ -9,13 +9,9 @@ data class LineSegment(
     val start: Location,
     val end: Location,
     val level: String,
-    val colorHex: String
+    val colorHex: Float
 ) {
     companion object {
-        val lineSegments: MutableList<LineSegment> = mutableListOf()
-    }
-
-    init {
-        lineSegments.add(this)
+        var lineSegments: List<LineSegment> = emptyList()
     }
 }

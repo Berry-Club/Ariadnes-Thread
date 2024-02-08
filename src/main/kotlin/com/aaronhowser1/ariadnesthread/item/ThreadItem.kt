@@ -149,7 +149,7 @@ class ThreadItem : Item(
             val first = history[i]
             val second = history[i + 1]
 
-            mutable.add(LineSegment(first, second, startingDim, "#ff0000"))
+            mutable.add(LineSegment(first, second, startingDim, 0F))
         }
 
         return mutable
@@ -158,7 +158,7 @@ class ThreadItem : Item(
     private fun showHistory(itemStack: ItemStack, player: Player) {
 
         val lines = getLineSegments(itemStack)
-
+        LineSegment.lineSegments = lines
 
     }
 
