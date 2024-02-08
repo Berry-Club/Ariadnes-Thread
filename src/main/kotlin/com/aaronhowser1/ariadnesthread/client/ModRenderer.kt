@@ -15,18 +15,21 @@ object ModRenderer {
 
     private var vertexBuffer: VertexBuffer? = null
 
+    var reloadNeeded = false
+
     fun renderLines(event: RenderLevelStageEvent) {
         if (LineSegment.lineSegments.isEmpty()) return
 
-        if (vertexBuffer == null) {
-            vBuffNull()
+        if (vertexBuffer == null || reloadNeeded) {
+            refresh()
         } else {
-            vBuffNotNull(event)
+            render(event)
         }
     }
 
-    private fun vBuffNull() {
+    private fun refresh() {
         vertexBuffer = VertexBuffer()
+        reloadNeeded = false
 
         val tesselator: Tesselator = Tesselator.getInstance()
         val buffer: BufferBuilder = tesselator.builder
@@ -90,7 +93,7 @@ object ModRenderer {
 
     }
 
-    private fun vBuffNotNull(event: RenderLevelStageEvent) {
+    private fun render(event: RenderLevelStageEvent) {
 
         val view: Vec3 = Minecraft.getInstance().entityRenderDispatcher.camera.position
 

@@ -1,6 +1,7 @@
 package com.aaronhowser1.ariadnesthread.item
 
 import com.aaronhowser1.ariadnesthread.client.LineSegment
+import com.aaronhowser1.ariadnesthread.client.ModRenderer
 import com.aaronhowser1.ariadnesthread.config.ServerConfig
 import com.aaronhowser1.ariadnesthread.utils.Location
 import com.aaronhowser1.ariadnesthread.utils.Location.Companion.toLocation
@@ -98,7 +99,7 @@ class ThreadItem : Item(
         if (entity !is Player) return
 
         if (level.isClientSide) {
-            showHistory(itemStack, entity)
+            showHistory(itemStack)
             return
         }
 
@@ -155,10 +156,11 @@ class ThreadItem : Item(
         return mutable
     }
 
-    private fun showHistory(itemStack: ItemStack, player: Player) {
+    private fun showHistory(itemStack: ItemStack) {
 
         val lines = getLineSegments(itemStack)
         LineSegment.lineSegments = lines
+        ModRenderer.reloadNeeded = true
 
     }
 
