@@ -159,9 +159,6 @@ class ThreadItem : Item(
 
         val lines = getLineSegments(itemStack)
 
-        lines.forEach {
-            it.spawnParticles(player)
-        }
 
     }
 

@@ -5,10 +5,10 @@ import net.minecraftforge.common.ForgeConfigSpec
 object ClientConfig {
     private val BUILDER = ForgeConfigSpec.Builder()
 
-    lateinit var SPEC : ForgeConfigSpec
-    lateinit var COLOR_START : ForgeConfigSpec.ConfigValue<String>
-    lateinit var COLOR_END : ForgeConfigSpec.ConfigValue<String>
-    lateinit var THREAD_TRANSPARENCY : ForgeConfigSpec.ConfigValue<Float>
+    val SPEC : ForgeConfigSpec
+    val COLOR_START : ForgeConfigSpec.ConfigValue<String>
+    val COLOR_END : ForgeConfigSpec.ConfigValue<String>
+    val THREAD_TRANSPARENCY : ForgeConfigSpec.ConfigValue<Float>
 
     init {
         BUILDER.push(" Client configs for Ariadne's Thread")
