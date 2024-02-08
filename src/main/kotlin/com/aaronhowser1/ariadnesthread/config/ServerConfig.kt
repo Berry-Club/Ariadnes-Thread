@@ -13,7 +13,7 @@ object ServerConfig {
     private val minDistance: ConfigValue<Double>
     private val teleportDistance: ConfigValue<Double>
 
-    val WAIT_TIME: Int
+    val CHECK_INTERVAL: Int
         get() = waitTime.get()
     val MIN_DISTANCE: Double
         get() = minDistance.get()
@@ -25,11 +25,11 @@ object ServerConfig {
 
         waitTime = BUILDER
             .comment(" The time in ticks to wait between checking location.")
-            .define("Wait time", 60)
+            .define("Check interval", 20)
 
         minDistance = BUILDER
             .comment(" The minimum distance between points.\nIf you haven't moved more than this distance from your last point, it isn't saved.")
-            .define("Minimum Distance", 10.0)
+            .define("Minimum Distance", 5.0)
 
         teleportDistance = BUILDER
             .comment(" The minimum distance between points to count as a teleport.")

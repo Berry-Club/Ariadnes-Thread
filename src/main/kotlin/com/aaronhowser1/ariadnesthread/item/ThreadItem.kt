@@ -103,7 +103,7 @@ class ThreadItem : Item(
             return
         }
 
-        if (level.gameTime % ServerConfig.WAIT_TIME != 0L) return
+        if (level.gameTime % ServerConfig.CHECK_INTERVAL != 0L) return
         if (!isRecording(itemStack)) return
         if (!inStartingDimension(itemStack, level)) {
             return
