@@ -29,11 +29,80 @@ class ThreadItem : Item(
         const val STARTING_DIMENSION = "ariadnesthread.startingDimension"
     }
 
+    // Recording functions
+
     private fun isRecording(itemStack: ItemStack): Boolean {
         val tag = itemStack.tag ?: return false
 
         return tag.getBoolean(IS_RECORDING)
     }
+
+    private fun startRecording(itemStack: ItemStack, player: Player) {
+
+        if (itemStack.tag?.contains(IS_RECORDING) == true) return
+
+        itemStack.tag = itemStack.tag ?: CompoundTag()
+        itemStack.tag?.apply {
+            putBoolean(IS_RECORDING, true)
+            putString(STARTING_DIMENSION, player.level.dimension().location().toString())
+
+            val hasHistory = itemStack.tag?.contains(HISTORY) ?: false
+            if (!hasHistory) {
+                val emptyList = ListTag()
+                put(HISTORY, emptyList)
+            }
+        }
+
+        addLocation(itemStack, player.eyePosition.toLocation())
+    }
+
+    private fun stopRecording(itemStack: ItemStack) {
+        itemStack.tag = itemStack.tag ?: CompoundTag()
+        itemStack.tag?.putBoolean(IS_RECORDING, false)
+    }
+
+    // History functions
+
+    private fun hasHistory(itemStack: ItemStack): Boolean {
+        return itemStack.tag?.contains(HISTORY) ?: false
+    }
+
+    private fun getHistory(itemStack: ItemStack): List<Location> {
+        val list = itemStack.tag?.getList(HISTORY, 10) ?: return emptyList()
+
+        return list.map { Location(it as CompoundTag) }
+    }
+
+    private fun clearHistory(itemStack: ItemStack) {
+        itemStack.tag = itemStack.tag ?: CompoundTag()
+
+        itemStack.tag?.apply {
+            remove(IS_RECORDING)
+            remove(HISTORY)
+            remove(STARTING_DIMENSION)
+        }
+    }
+
+    private fun showHistory(itemStack: ItemStack) {
+        ModRenderer.locations = getHistory(itemStack)
+    }
+
+    private fun addLocation(itemStack: ItemStack, location: Location) {
+        val list = itemStack.tag?.getList(HISTORY, 10) ?: return
+
+        if (list.isNotEmpty()) {
+            val mostRecentTag = list.lastOrNull() ?: error("List is not empty, but has no last element.")
+            val mostRecentLocation = Location(mostRecentTag as CompoundTag)
+
+            val tooClose = mostRecentLocation.closerThan(location, ServerConfig.MIN_DISTANCE)
+            if (tooClose) return
+        }
+
+        list.add(location.toTag())
+    }
+
+
+    // Override functions
 
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
 
@@ -61,25 +130,6 @@ class ThreadItem : Item(
         return InteractionResultHolder.pass(itemStack)
     }
 
-    private fun startRecording(itemStack: ItemStack, player: Player) {
-
-        if (itemStack.tag?.contains(IS_RECORDING) == true) return
-
-        itemStack.tag = itemStack.tag ?: CompoundTag()
-        itemStack.tag?.apply {
-            putBoolean(IS_RECORDING, true)
-            putString(STARTING_DIMENSION, player.level.dimension().location().toString())
-
-            val hasHistory = itemStack.tag?.contains(HISTORY) ?: false
-            if (!hasHistory) {
-                val emptyList = ListTag()
-                put(HISTORY, emptyList)
-            }
-        }
-
-        addLocation(itemStack, player.eyePosition.toLocation())
-    }
-
     override fun onDroppedByPlayer(item: ItemStack?, player: Player?): Boolean {
         stopRecording(item!!)
         return super.onDroppedByPlayer(item, player)
@@ -97,63 +147,20 @@ class ThreadItem : Item(
 
         if (entity !is Player) return
 
-        if (level.isClientSide) {
-            showHistory(itemStack)
-            return
-        }
+        if (inStartingDimension(itemStack, level)) {
 
-        if (level.gameTime % ServerConfig.CHECK_INTERVAL != 0L) return
-        if (!isRecording(itemStack)) return
-        if (!inStartingDimension(itemStack, level)) {
-            return
-        }
+            if (level.isClientSide) {
+                showHistory(itemStack)
+                return
+            }
 
-        addLocation(itemStack, entity.eyePosition.toLocation())
+            val goodTick = level.gameTime % ServerConfig.CHECK_INTERVAL == 0L
+            if (goodTick && isRecording(itemStack)) {
+                addLocation(itemStack, entity.eyePosition.toLocation())
+            }
+        }
 
         super.inventoryTick(itemStack, level, entity, slotId, isSelected)
-    }
-
-    private fun addLocation(itemStack: ItemStack, location: Location) {
-        val list = itemStack.tag?.getList(HISTORY, 10) ?: return
-
-        if (list.isNotEmpty()) {
-            val mostRecentTag = list.lastOrNull() ?: error("List is not empty, but has no last element.")
-            val mostRecentLocation = Location(mostRecentTag as CompoundTag)
-
-            val tooClose = mostRecentLocation.closerThan(location, ServerConfig.MIN_DISTANCE)
-            if (tooClose) return
-        }
-
-        list.add(location.toTag())
-    }
-
-    private fun stopRecording(itemStack: ItemStack) {
-        itemStack.tag = itemStack.tag ?: CompoundTag()
-        itemStack.tag?.putBoolean(IS_RECORDING, false)
-    }
-
-    private fun getHistory(itemStack: ItemStack): List<Location> {
-        val list = itemStack.tag?.getList(HISTORY, 10) ?: return emptyList()
-
-        return list.map { Location(it as CompoundTag) }
-    }
-
-    private fun showHistory(itemStack: ItemStack) {
-        ModRenderer.locations = getHistory(itemStack)
-    }
-
-    private fun hasHistory(itemStack: ItemStack): Boolean {
-        return itemStack.tag?.contains(HISTORY) ?: false
-    }
-
-    private fun clearHistory(itemStack: ItemStack) {
-        itemStack.tag = itemStack.tag ?: CompoundTag()
-
-        itemStack.tag?.apply {
-            remove(IS_RECORDING)
-            remove(HISTORY)
-            remove(STARTING_DIMENSION)
-        }
     }
 
     override fun isFoil(itemStack: ItemStack): Boolean {
