@@ -25,7 +25,7 @@ object ModRenderer {
         }
 
     fun renderLines(event: RenderLevelStageEvent) {
-        if (locations.isEmpty()) return
+        if (!reloadNeeded && locations.isEmpty()) return
 
         if (vertexBuffer == null || reloadNeeded) refresh()
 
