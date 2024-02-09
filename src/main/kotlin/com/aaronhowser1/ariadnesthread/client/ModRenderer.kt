@@ -115,12 +115,12 @@ object ModRenderer {
         green: Float,
         blue: Float
     ) {
-        val x1 = loc1.x
-        val y1 = loc1.y
-        val z1 = loc1.z
-        val x2 = loc2.x
-        val y2 = loc2.y
-        val z2 = loc2.z
+        val x1 = loc1.x.toDouble()
+        val y1 = loc1.y.toDouble()
+        val z1 = loc1.z.toDouble()
+        val x2 = loc2.x.toDouble()
+        val y2 = loc2.y.toDouble()
+        val z2 = loc2.z.toDouble()
 
         val alpha = ClientConfig.ALPHA
 
