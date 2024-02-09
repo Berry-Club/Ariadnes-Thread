@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.world.phys.Vec3
 import net.minecraftforge.client.event.RenderLevelStageEvent
-import org.lwjgl.opengl.GL11
 
 @Suppress("SameParameterValue")
 object ModRenderer {
@@ -78,10 +77,9 @@ object ModRenderer {
 
         val view: Vec3 = Minecraft.getInstance().entityRenderDispatcher.camera.position
 
-        GL11.glEnable(GL11.GL_BLEND)
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
-        GL11.glEnable(GL11.GL_LINE_SMOOTH)
-        GL11.glDisable(GL11.GL_DEPTH_TEST)
+        RenderSystem.enableBlend()
+        RenderSystem.defaultBlendFunc()
+        RenderSystem.disableDepthTest()
 
         RenderSystem.setShader(GameRenderer::getPositionColorShader)
 
@@ -102,9 +100,8 @@ object ModRenderer {
         VertexBuffer.unbind()
         matrix.popPose()
 
-        GL11.glEnable(GL11.GL_DEPTH_TEST)
-        GL11.glDisable(GL11.GL_BLEND)
-        GL11.glDisable(GL11.GL_LINE_SMOOTH)
+        RenderSystem.enableDepthTest()
+        RenderSystem.disableBlend()
     }
 
     private fun renderLine(
