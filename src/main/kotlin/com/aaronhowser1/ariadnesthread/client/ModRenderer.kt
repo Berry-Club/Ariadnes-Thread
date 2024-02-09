@@ -1,11 +1,5 @@
 package com.aaronhowser1.ariadnesthread.client
 
-import com.aaronhowser1.ariadnesthread.config.ClientConfig
-import com.aaronhowser1.ariadnesthread.utils.ColorUtils
-import com.aaronhowser1.ariadnesthread.utils.ColorUtils.getARGB
-import com.aaronhowser1.ariadnesthread.utils.ColorUtils.getBlue
-import com.aaronhowser1.ariadnesthread.utils.ColorUtils.getGreen
-import com.aaronhowser1.ariadnesthread.utils.ColorUtils.getRed
 import com.aaronhowser1.ariadnesthread.utils.Location
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
@@ -48,10 +42,6 @@ object ModRenderer {
 
         buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR)
 
-        val opacity = ClientConfig.THREAD_TRANSPARENCY.toFloat()
-        val startColor = ClientConfig.COLOR_START
-        val endColor = ClientConfig.COLOR_END
-
         for (i in 0 until locations.size - 1) {
             val loc1 = locations[i]
             val loc2 = locations[i + 1]
@@ -61,12 +51,14 @@ object ModRenderer {
 
             val percentDone = i.toFloat() / locations.size
 
-            val color = ColorUtils.interpolateColor(startColor, endColor, percentDone)
+            val red = 1f - percentDone
+            val green = percentDone
+            val blue = 0f
 
-            val (alpha, red, green, blue) = color.getARGB()
+            val opacity = 1f
 
-            buffer.vertex(x1, y1, z1).color(red, green, blue, alpha).endVertex()
-            buffer.vertex(x2, y2, z2).color(red, green, blue, alpha).endVertex()
+            buffer.vertex(x1, y1, z1).color(red, green, blue, opacity).endVertex()
+            buffer.vertex(x2, y2, z2).color(red, green, blue, opacity).endVertex()
         }
 
         vertexBuffer!!.apply {
