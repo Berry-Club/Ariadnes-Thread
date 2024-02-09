@@ -115,12 +115,12 @@ object ModRenderer {
         green: Float,
         blue: Float
     ) {
-        val x1 = loc1.x
-        val y1 = loc1.y
-        val z1 = loc1.z
-        val x2 = loc2.x
-        val y2 = loc2.y
-        val z2 = loc2.z
+        val x1 = loc1.x.toDouble() + 0.5
+        val y1 = loc1.y.toDouble() + 0.5
+        val z1 = loc1.z.toDouble() + 0.5
+        val x2 = loc2.x.toDouble() + 0.5
+        val y2 = loc2.y.toDouble() + 0.5
+        val z2 = loc2.z.toDouble() + 0.5
 
         val alpha = ClientConfig.ALPHA
 
@@ -144,9 +144,9 @@ object ModRenderer {
             buffer.vertex(x2, y2, z2).color(red, green, blue, alpha).endVertex()
         }
 
-        val x = loc.x - cubeSize / 2
-        val y = loc.y - cubeSize / 2
-        val z = loc.z - cubeSize / 2
+        val x = loc.x - cubeSize / 2 + 0.5
+        val y = loc.y - cubeSize / 2 + 0.5
+        val z = loc.z - cubeSize / 2 + 0.5
 
         connectPoints(x, y, z, x + cubeSize, y, z)
         connectPoints(x, y, z, x, y + cubeSize, z)
