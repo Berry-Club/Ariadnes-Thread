@@ -90,6 +90,11 @@ class ThreadItem : Item(
     private fun addLocation(itemStack: ItemStack, location: Location) {
         val list = itemStack.tag?.getList(HISTORY, 10) ?: return
 
+        if (list.size >= ServerConfig.MAX_LOCATIONS) {
+//            list.removeAt(0)
+            stopRecording(itemStack)
+        }
+
         if (list.isNotEmpty()) {
             val mostRecentTag = list.lastOrNull() ?: error("List is not empty, but has no last element.")
             val mostRecentLocation = Location(mostRecentTag as CompoundTag)
@@ -147,6 +152,11 @@ class ThreadItem : Item(
 
         if (entity !is Player) return
 
+        if (isRecording(itemStack)) {
+            // nbt space in bytes
+            val nbtSize = itemStack.tag?.toString()?.length ?: 0
+        }
+
         if (inStartingDimension(itemStack, level)) {
 
             if (level.isClientSide) {
@@ -196,7 +206,7 @@ class ThreadItem : Item(
             }
         }
 
-        tooltipComponents.add(
+        if (tooltipFlag.isAdvanced) tooltipComponents.add(
             Component.literal(itemStack.tag.toString())
         )
 
