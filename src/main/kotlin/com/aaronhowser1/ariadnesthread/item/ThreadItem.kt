@@ -107,7 +107,7 @@ class ThreadItem : Item(
             return itemStack.tag?.getString(STARTING_DIMENSION)
         }
 
-        private fun inStartingDimension(itemStack: ItemStack, level: Level?): Boolean {
+        fun inStartingDimension(itemStack: ItemStack, level: Level?): Boolean {
             return getStartingDimension(itemStack) == level?.dimension()?.location()?.toString()
         }
     }

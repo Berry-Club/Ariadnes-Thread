@@ -30,7 +30,14 @@ object ModEvents {
     private fun showThreads() {
         val player = Minecraft.getInstance().player ?: return
 
-        val threadItems = player.inventory.items.filter { it.item is ThreadItem }
+        val dimension = player.level
+
+        val threadItems =
+            player.inventory.items.filter {
+                // This returns false for items that don't have the very specific NBT we're looking for,
+                // so no need to check if it's a ThreadItem
+                ThreadItem.inStartingDimension(it, dimension)
+            }
 
         val histories: List<List<Location>> = threadItems.map { ThreadItem.getHistory(it) }
 
