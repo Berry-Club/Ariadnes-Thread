@@ -8,9 +8,6 @@ import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.world.phys.Vec3
 import net.minecraftforge.client.event.RenderLevelStageEvent
 import org.lwjgl.opengl.GL11
-import thedarkcolour.kotlinforforge.forge.vectorutil.component1
-import thedarkcolour.kotlinforforge.forge.vectorutil.component2
-import thedarkcolour.kotlinforforge.forge.vectorutil.component3
 
 object ModRenderer {
 
@@ -47,8 +44,12 @@ object ModRenderer {
                 val loc1 = history[i]
                 val loc2 = history[i + 1]
 
-                val (x1, y1, z1) = loc1.vec3
-                val (x2, y2, z2) = loc2.vec3
+                val x1 = loc1.x
+                val y1 = loc1.y
+                val z1 = loc1.z
+                val x2 = loc2.x
+                val y2 = loc2.y
+                val z2 = loc2.z
 
                 val percentDone = i.toFloat() / history.size
 
