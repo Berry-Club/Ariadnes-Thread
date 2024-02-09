@@ -16,8 +16,8 @@ object ModRenderer {
 
     private var vertexBuffer: VertexBuffer? = null
 
+    private var reloadNeeded = false
 
-    var reloadNeeded = false
     var locations: List<Location> = emptyList()
         set(value) {
             field = value
@@ -27,11 +27,9 @@ object ModRenderer {
     fun renderLines(event: RenderLevelStageEvent) {
         if (locations.isEmpty()) return
 
-        if (vertexBuffer == null || reloadNeeded) {
-            refresh()
-        } else {
-            render(event)
-        }
+        if (vertexBuffer == null || reloadNeeded) refresh()
+
+        render(event)
     }
 
     @Suppress("UnnecessaryVariable")
