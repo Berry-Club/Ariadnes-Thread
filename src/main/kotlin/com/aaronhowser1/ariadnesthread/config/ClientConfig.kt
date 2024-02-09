@@ -8,6 +8,7 @@ object ClientConfig {
 
     private val teleportDistance: ConfigValue<Double>
     private val alpha: ConfigValue<Double>
+    private val debugTooltips: ConfigValue<Boolean>
 
     val SPEC: ForgeConfigSpec
 
@@ -15,6 +16,8 @@ object ClientConfig {
         get() = teleportDistance.get()
     val ALPHA: Float
         get() = alpha.get().toFloat()
+    val DEBUG_TOOLTIPS: Boolean
+        get() = debugTooltips.get()
 
     init {
         BUILDER.push(" Client configs for Ariadne's Thread")
@@ -26,6 +29,10 @@ object ClientConfig {
         teleportDistance = BUILDER
             .comment(" The minimum distance between points to count as a teleport.")
             .defineInRange("Teleport Distance", 30.0, 0.0, Double.MAX_VALUE)
+
+        debugTooltips = BUILDER
+            .comment(" Whether or not to show debug information when Advanced Tooltips are enabled.")
+            .define("Debug Tooltips", false)
 
         BUILDER.pop()
         SPEC = BUILDER.build()

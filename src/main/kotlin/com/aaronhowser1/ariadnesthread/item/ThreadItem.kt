@@ -1,5 +1,6 @@
 package com.aaronhowser1.ariadnesthread.item
 
+import com.aaronhowser1.ariadnesthread.config.ClientConfig
 import com.aaronhowser1.ariadnesthread.config.ServerConfig
 import com.aaronhowser1.ariadnesthread.utils.Location
 import com.aaronhowser1.ariadnesthread.utils.Location.Companion.toLocation
@@ -196,7 +197,7 @@ class ThreadItem : Item(
             }
         }
 
-        if (tooltipFlag.isAdvanced) tooltipComponents.add(
+        if (tooltipFlag.isAdvanced && ClientConfig.DEBUG_TOOLTIPS) tooltipComponents.add(
             Component.literal(itemStack.tag.toString())
         )
 
