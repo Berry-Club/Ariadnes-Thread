@@ -30,4 +30,16 @@ object TextUtils {
         )
     }
 
+    fun tooltipLiteral(
+        tooltipComponents: MutableList<Component>,
+        literal: String,
+        block: (MutableComponent) -> Unit = {}
+    ) {
+        tooltipComponents.add(
+            Component.literal(literal).apply {
+                block(this)
+            }
+        )
+    }
+
 }

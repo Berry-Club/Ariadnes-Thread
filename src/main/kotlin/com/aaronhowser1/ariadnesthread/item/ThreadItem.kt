@@ -4,6 +4,7 @@ import com.aaronhowser1.ariadnesthread.config.ClientConfig
 import com.aaronhowser1.ariadnesthread.config.ServerConfig
 import com.aaronhowser1.ariadnesthread.utils.Location
 import com.aaronhowser1.ariadnesthread.utils.Location.Companion.toLocation
+import com.aaronhowser1.ariadnesthread.utils.TextUtils.tooltipLiteral
 import com.aaronhowser1.ariadnesthread.utils.TextUtils.tooltipTranslatable
 import net.minecraft.ChatFormatting
 import net.minecraft.nbt.CompoundTag
@@ -178,39 +179,45 @@ class ThreadItem : Item(
         tooltipTranslatable(
             tooltipComponents,
             if (isRecording(itemStack)) "tooltip.ariadnesthread.recording_1" else "tooltip.ariadnesthread.not_recording_1"
-        )
+        ) { it.withStyle(ChatFormatting.GRAY) }
+
         tooltipTranslatable(
             tooltipComponents,
             if (isRecording(itemStack)) "tooltip.ariadnesthread.recording_2" else "tooltip.ariadnesthread.not_recording_2"
-        )
+        ) { it.withStyle(ChatFormatting.GRAY) }
 
         if (!isRecording(itemStack) && hasHistory(itemStack)) tooltipTranslatable(
             tooltipComponents,
             "tooltip.ariadnesthread.clear"
-        ) {
-            it.withStyle(ChatFormatting.RED)
-        }
+        ) { it.withStyle(ChatFormatting.RED) }
 
         if (isRecording(itemStack) && !inStartingDimension(itemStack, level)) {
-            tooltipTranslatable(tooltipComponents, "tooltip.ariadnesthread.not_in_starting_dimension") {
-                it.withStyle(ChatFormatting.RED)
-            }
+            tooltipTranslatable(
+                tooltipComponents,
+                "tooltip.ariadnesthread.not_in_starting_dimension"
+            ) { it.withStyle(ChatFormatting.RED) }
+
             tooltipTranslatable(
                 tooltipComponents,
                 "tooltip.ariadnesthread.starting_dimension",
                 getStartingDimension(itemStack)
+            ) { it.withStyle(ChatFormatting.RED) }
+        }
+
+        if (tooltipFlag.isAdvanced && hasHistory(itemStack)) {
+            tooltipTranslatable(
+                tooltipComponents,
+                "tooltip.ariadnesthread.locations",
+                getHistory(itemStack).size
             ) {
-                it.withStyle(ChatFormatting.RED)
+                it.withStyle(ChatFormatting.GRAY)
             }
         }
 
-        if (hasHistory(itemStack)) {
-            tooltipTranslatable(tooltipComponents, "tooltip.ariadnesthread.locations", getHistory(itemStack).size)
-        }
-
-        if (tooltipFlag.isAdvanced && ClientConfig.DEBUG_TOOLTIPS) tooltipComponents.add(
-            Component.literal(itemStack.tag.toString())
-        )
+        if (tooltipFlag.isAdvanced && ClientConfig.DEBUG_TOOLTIPS) tooltipLiteral(
+            tooltipComponents,
+            itemStack.tag.toString()
+        ) { it.withStyle(ChatFormatting.GRAY) }
 
         super.appendHoverText(itemStack, level, tooltipComponents, tooltipFlag)
     }
