@@ -37,15 +37,14 @@ class ThreadItem : Item(
 
         private fun startRecording(itemStack: ItemStack, player: Player) {
 
-            if (itemStack.tag?.contains(IS_RECORDING) == true) return
+            if (itemStack.tag?.getBoolean(IS_RECORDING) == true) return
 
             itemStack.tag = itemStack.tag ?: CompoundTag()
             itemStack.tag?.apply {
                 putBoolean(IS_RECORDING, true)
                 putString(STARTING_DIMENSION, player.level.dimension().location().toString())
 
-                val hasHistory = itemStack.tag?.contains(HISTORY) ?: false
-                if (!hasHistory) {
+                if (!hasHistory(itemStack)) {
                     val emptyList = ListTag()
                     put(HISTORY, emptyList)
                 }
