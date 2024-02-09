@@ -81,6 +81,8 @@ class ThreadItem : Item(
             remove(HISTORY)
             remove(STARTING_DIMENSION)
         }
+
+        ModRenderer.locations = emptyList()
     }
 
     private fun showHistory(itemStack: ItemStack) {
