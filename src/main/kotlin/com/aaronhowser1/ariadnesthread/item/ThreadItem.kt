@@ -4,6 +4,8 @@ import com.aaronhowser1.ariadnesthread.config.ServerConfig
 import com.aaronhowser1.ariadnesthread.utils.Location
 import com.aaronhowser1.ariadnesthread.utils.Location.Companion.toLocation
 import com.aaronhowser1.ariadnesthread.utils.TextUtils.tooltipTranslatable
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 import net.minecraft.ChatFormatting
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
@@ -197,9 +199,21 @@ class ThreadItem : Item(
             }
         }
 
-        if (tooltipFlag.isAdvanced) tooltipComponents.add(
-            Component.literal(itemStack.tag.toString())
-        )
+        if (tooltipFlag.isAdvanced) {
+
+            val output = "NBT:\n" + try {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val jsonElement = JsonParser.parseString(itemStack.tag.toString())
+
+                gson.toJson(jsonElement)
+            } catch (e: Exception) {
+                itemStack.tag.toString()
+            }
+
+            tooltipComponents.add(
+                Component.literal("NBT: $output")
+            )
+        }
 
         super.appendHoverText(itemStack, level, tooltipComponents, tooltipFlag)
     }
