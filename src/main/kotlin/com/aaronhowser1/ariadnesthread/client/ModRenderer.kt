@@ -18,14 +18,14 @@ object ModRenderer {
 
     private var reloadNeeded = false
 
-    var locations: List<Location> = emptyList()
+    var histories: List<List<Location>> = emptyList()
         set(value) {
             field = value
             reloadNeeded = true
         }
 
     fun renderLines(event: RenderLevelStageEvent) {
-        if (!reloadNeeded && locations.isEmpty()) return
+        if (!reloadNeeded && histories.isEmpty()) return
 
         if (vertexBuffer == null || reloadNeeded) refresh()
 
@@ -42,23 +42,25 @@ object ModRenderer {
 
         buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR)
 
-        for (i in 0 until locations.size - 1) {
-            val loc1 = locations[i]
-            val loc2 = locations[i + 1]
+        for (history in histories) {
+            for (i in 0 until history.size - 1) {
+                val loc1 = history[i]
+                val loc2 = history[i + 1]
 
-            val (x1, y1, z1) = loc1.vec3
-            val (x2, y2, z2) = loc2.vec3
+                val (x1, y1, z1) = loc1.vec3
+                val (x2, y2, z2) = loc2.vec3
 
-            val percentDone = i.toFloat() / locations.size
+                val percentDone = i.toFloat() / history.size
 
-            val red = 1f - percentDone
-            val green = percentDone
-            val blue = 0f
+                val red = 1f - percentDone
+                val green = percentDone
+                val blue = 0f
 
-            val opacity = 1f
+                val opacity = 1f
 
-            buffer.vertex(x1, y1, z1).color(red, green, blue, opacity).endVertex()
-            buffer.vertex(x2, y2, z2).color(red, green, blue, opacity).endVertex()
+                buffer.vertex(x1, y1, z1).color(red, green, blue, opacity).endVertex()
+                buffer.vertex(x2, y2, z2).color(red, green, blue, opacity).endVertex()
+            }
         }
 
         vertexBuffer!!.apply {
