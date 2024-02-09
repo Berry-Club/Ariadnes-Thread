@@ -26,7 +26,7 @@ object AriadnesThread {
 
         ModItems.REGISTRY.register(MOD_BUS)
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC, "ariadnesthread-client.toml");
+//        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC, "ariadnesthread-client.toml");
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC, "ariadnesthread-server.toml");
 
         val obj = runForDist(

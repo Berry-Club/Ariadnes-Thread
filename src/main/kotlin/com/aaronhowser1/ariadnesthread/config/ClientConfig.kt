@@ -3,6 +3,9 @@ package com.aaronhowser1.ariadnesthread.config
 import net.minecraftforge.common.ForgeConfigSpec
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue
 
+//TODO:
+//  - Figure out how to convert a "#RRGGBB" string to a color
+//  - Figure out how to lerp between them
 object ClientConfig {
     private val BUILDER = ForgeConfigSpec.Builder()
 
