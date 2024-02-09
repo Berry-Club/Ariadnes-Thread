@@ -25,7 +25,7 @@ object ModEvents {
 
     @SubscribeEvent
     fun onWorldRenderLast(event: RenderLevelStageEvent) {
-        if (event.stage != RenderLevelStageEvent.Stage.AFTER_CUTOUT_BLOCKS) return
+        if (event.stage != RenderLevelStageEvent.Stage.AFTER_PARTICLES) return
 
         if (Minecraft.getInstance().player != null) {
             ModRenderer.renderLines(event)
