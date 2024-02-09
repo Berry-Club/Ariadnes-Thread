@@ -195,6 +195,17 @@ class ThreadItem : Item(
             tooltipTranslatable(tooltipComponents, "tooltip.ariadnesthread.not_in_starting_dimension") {
                 it.withStyle(ChatFormatting.RED)
             }
+            tooltipTranslatable(
+                tooltipComponents,
+                "tooltip.ariadnesthread.starting_dimension",
+                getStartingDimension(itemStack)
+            ) {
+                it.withStyle(ChatFormatting.RED)
+            }
+        }
+
+        if (hasHistory(itemStack)) {
+            tooltipTranslatable(tooltipComponents, "tooltip.ariadnesthread.locations", getHistory(itemStack).size)
         }
 
         if (tooltipFlag.isAdvanced && ClientConfig.DEBUG_TOOLTIPS) tooltipComponents.add(
