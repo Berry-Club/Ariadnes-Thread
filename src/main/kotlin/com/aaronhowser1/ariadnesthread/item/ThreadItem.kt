@@ -99,8 +99,10 @@ class ThreadItem : Item(
         private fun addLocation(itemStack: ItemStack, location: Location) {
             val list = itemStack.tag?.getList(HISTORY, 10) ?: return
 
-            if (list.size >= ServerConfig.MAX_LOCATIONS) {
-//            list.removeAt(0)
+            val stopBecauseTooMany = ServerConfig.shouldCheckLocations && list.size >= ServerConfig.MAX_LOCATIONS
+            val stopBecauseNbtSize = ServerConfig.shouldCheckNbt && getNbtSize(itemStack) >= ServerConfig.MAX_NBT_SIZE
+
+            if (stopBecauseTooMany || stopBecauseNbtSize) {
                 stopRecording(itemStack)
             }
 
