@@ -6,9 +6,11 @@ import com.aaronhowser1.ariadnesthread.utils.Location
 import com.aaronhowser1.ariadnesthread.utils.Location.Companion.toLocation
 import com.aaronhowser1.ariadnesthread.utils.TextUtils.tooltipLiteral
 import com.aaronhowser1.ariadnesthread.utils.TextUtils.tooltipTranslatable
+import io.netty.buffer.Unpooled
 import net.minecraft.ChatFormatting
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
+import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
@@ -120,6 +122,17 @@ class ThreadItem : Item(
         fun inStartingDimension(itemStack: ItemStack, level: Level?): Boolean {
             return getStartingDimension(itemStack) == level?.dimension()?.location()?.toString()
         }
+
+        fun getNbtSize(itemStack: ItemStack): Int {
+            return getNbtSize(itemStack.tag ?: CompoundTag())
+        }
+
+        fun getNbtSize(nbt: CompoundTag): Int {
+            val buffer = FriendlyByteBuf(Unpooled.buffer())
+            buffer.writeNbt(nbt)
+            buffer.release()
+            return buffer.writerIndex()
+        }
     }
 
     // Override functions
@@ -222,6 +235,11 @@ class ThreadItem : Item(
             ) {
                 it.withStyle(ChatFormatting.GRAY)
             }
+
+            tooltipLiteral(
+                tooltipComponents,
+                "NBT Size: ${getNbtSize(itemStack)} bytes"
+            )
         }
 
         if (tooltipFlag.isAdvanced && ClientConfig.DEBUG_TOOLTIPS) tooltipLiteral(
