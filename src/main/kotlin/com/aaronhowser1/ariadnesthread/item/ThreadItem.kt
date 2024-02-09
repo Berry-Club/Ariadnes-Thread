@@ -62,14 +62,24 @@ class ThreadItem : Item(
 
         // History functions
 
+        class History(private val innerList: List<Location>) : AbstractList<Location>() {
+
+            override val size: Int
+                get() = innerList.size
+
+            override fun get(index: Int): Location {
+                return innerList[index]
+            }
+        }
+
         private fun hasHistory(itemStack: ItemStack): Boolean {
             return itemStack.tag?.contains(HISTORY) ?: false
         }
 
-        fun getHistory(itemStack: ItemStack): List<Location> {
-            val list = itemStack.tag?.getList(HISTORY, 10) ?: return emptyList()
+        fun getHistory(itemStack: ItemStack): History {
+            val list = itemStack.tag?.getList(HISTORY, 10) ?: return History(emptyList())
 
-            return list.map { Location(it as CompoundTag) }
+            return History(list.map { Location(it as CompoundTag) })
         }
 
         private fun clearHistory(itemStack: ItemStack) {

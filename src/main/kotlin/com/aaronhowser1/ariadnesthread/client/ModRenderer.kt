@@ -1,6 +1,7 @@
 package com.aaronhowser1.ariadnesthread.client
 
 import com.aaronhowser1.ariadnesthread.config.ClientConfig
+import com.aaronhowser1.ariadnesthread.item.ThreadItem
 import com.aaronhowser1.ariadnesthread.utils.Location
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
@@ -17,7 +18,7 @@ object ModRenderer {
 
     private var reloadNeeded = false
 
-    var histories: List<List<Location>> = emptyList()
+    var histories: List<ThreadItem.Companion.History> = emptyList()
         set(value) {
             field = value
             reloadNeeded = true

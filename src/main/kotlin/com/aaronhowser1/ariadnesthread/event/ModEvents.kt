@@ -39,7 +39,7 @@ object ModEvents {
                 ThreadItem.inStartingDimension(it, dimension)
             }
 
-        val histories: List<List<Location>> = threadItems.map { ThreadItem.getHistory(it) }
+        val histories: List<ThreadItem.Companion.History> = threadItems.map { ThreadItem.getHistory(it) }
 
         ModRenderer.histories = histories
     }
