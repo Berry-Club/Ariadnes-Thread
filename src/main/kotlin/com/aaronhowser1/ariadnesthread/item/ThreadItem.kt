@@ -230,21 +230,25 @@ class ThreadItem : Item(
         }
 
         if (tooltipFlag.isAdvanced && hasHistory(itemStack)) {
-            tooltipTranslatable(
-                tooltipComponents,
-                "tooltip.ariadnesthread.locations",
-                getHistory(itemStack).size
-            ) {
-                it.withStyle(ChatFormatting.GRAY)
+            if (ServerConfig.shouldCheckLocations) {
+                tooltipTranslatable(
+                    tooltipComponents,
+                    "tooltip.ariadnesthread.locations",
+                    getHistory(itemStack).size
+                ) {
+                    it.withStyle(ChatFormatting.GRAY)
+                }
             }
 
-            tooltipLiteral(
-                tooltipComponents,
-                "NBT Size: ${getNbtSize(itemStack)} bytes"
-            )
+            if (ServerConfig.shouldCheckNbt) {
+                tooltipLiteral(
+                    tooltipComponents,
+                    "NBT Size: ${getNbtSize(itemStack)} bytes"
+                ) { it.withStyle(ChatFormatting.GRAY) }
+            }
         }
 
-        if (tooltipFlag.isAdvanced && ClientConfig.DEBUG_TOOLTIPS) tooltipLiteral(
+        if (tooltipFlag.isAdvanced && ClientConfig.SHOW_NBT_TOOLTIP) tooltipLiteral(
             tooltipComponents,
             itemStack.tag.toString()
         ) { it.withStyle(ChatFormatting.GRAY) }
