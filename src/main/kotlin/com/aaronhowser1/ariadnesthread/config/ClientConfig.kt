@@ -12,10 +12,10 @@ object ClientConfig {
 
     val SPEC: ForgeConfigSpec
 
-    val COLOR_START: String
-        get() = startColor.get()
-    val COLOR_END: String
-        get() = endColor.get()
+    val COLOR_START: Int
+        get() = startColor.get().substring(1).toInt(16)
+    val COLOR_END: Int
+        get() = endColor.get().substring(1).toInt(16)
     val THREAD_TRANSPARENCY: Double
         get() = threadTransparency.get()
 
@@ -24,10 +24,10 @@ object ClientConfig {
 
         startColor = BUILDER
             .comment(" The RGB color at the start of the thread.")
-            .define("Start Color", "#68D97A")
+            .define("Start Color", "#FF68D97A")
         endColor = BUILDER
             .comment(" The RGB color at the end of the thread.")
-            .define("End Color", "#7177CC")
+            .define("End Color", "#FF7177CC")
         threadTransparency = BUILDER
             .comment(" The transparency of the thread.")
             .defineInRange("Thread Transparency", 0.9, 0.0, 1.0)
