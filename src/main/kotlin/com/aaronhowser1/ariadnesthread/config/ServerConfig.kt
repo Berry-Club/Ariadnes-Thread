@@ -11,7 +11,6 @@ object ServerConfig {
 
     private val waitTime: ConfigValue<Int>
     private val minDistance: ConfigValue<Double>
-    private val teleportDistance: ConfigValue<Double>
     private val maxLocations: ConfigValue<Int>
 
     val CHECK_INTERVAL: Int
@@ -20,28 +19,22 @@ object ServerConfig {
         get() = minDistance.get()
     val MAX_LOCATIONS: Int
         get() = maxLocations.get()
-    val TELEPORT_DISTANCE: Double
-        get() = teleportDistance.get()
+
 
     init {
         BUILDER.push(" Server configs for Ariadne's Thread")
 
         waitTime = BUILDER
             .comment(" The time in ticks to wait between checking location.")
-            .define("Check interval", 20)
+            .defineInRange("Check interval", 20, 1, Int.MAX_VALUE)
 
         minDistance = BUILDER
             .comment(" The minimum distance between points.\nIf you haven't moved more than this distance from your last point, it isn't saved.")
-            .define("Minimum Distance", 5.0)
+            .defineInRange("Minimum Distance", 5.0, 0.0, Double.MAX_VALUE)
 
         maxLocations = BUILDER
             .comment(" The maximum number of locations to store.")
             .defineInRange("Max Locations", 5120, 0, Int.MAX_VALUE)
-
-        teleportDistance = BUILDER
-            .comment(" The minimum distance between points to count as a teleport.")
-            .define("Teleport Distance", 100.0)
-
 
         BUILDER.pop()
         SPEC = BUILDER.build()

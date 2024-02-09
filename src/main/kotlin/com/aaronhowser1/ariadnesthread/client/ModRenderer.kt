@@ -1,5 +1,6 @@
 package com.aaronhowser1.ariadnesthread.client
 
+import com.aaronhowser1.ariadnesthread.config.ClientConfig
 import com.aaronhowser1.ariadnesthread.utils.Location
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
@@ -44,6 +45,10 @@ object ModRenderer {
                 val loc1 = history[i]
                 val loc2 = history[i + 1]
 
+                if (!loc1.closerThan(loc2, ClientConfig.TELEPORT_DISTANCE)) {
+                    continue
+                }
+
                 val x1 = loc1.x
                 val y1 = loc1.y
                 val z1 = loc1.z
@@ -57,7 +62,7 @@ object ModRenderer {
                 val green = percentDone
                 val blue = 0f
 
-                val opacity = 1f
+                val opacity = ClientConfig.ALPHA
 
                 buffer.vertex(x1, y1, z1).color(red, green, blue, opacity).endVertex()
                 buffer.vertex(x2, y2, z2).color(red, green, blue, opacity).endVertex()
