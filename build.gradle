@@ -4,6 +4,11 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.neoforged.gradle.userdev' version '7.0.80'
+
+    // Adds the Kotlin Gradle plugin
+    kotlin("jvm") version "1.9.22"
+    // OPTIONAL Kotlin Serialization plugin
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 version = mod_version
@@ -11,6 +16,12 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
+
+    // Add KFF Maven repository
+    maven {
+        name = "Kotlin for Forge"
+        setUrl("https://thedarkcolour.github.io/KotlinForForge/")
+    }
 }
 
 base {
@@ -102,6 +113,12 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
+    // Adds KFF as dependency and Kotlin libs (use the variant matching your mod loader)
+    // FORGE
+//    implementation("thedarkcolour:kotlinforforge:4.10.0")
+    // NEOFORGE
+    implementation("thedarkcolour:kotlinforforge-neoforge:4.10.0")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
