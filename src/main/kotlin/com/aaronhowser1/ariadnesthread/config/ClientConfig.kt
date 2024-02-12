@@ -1,16 +1,15 @@
 package com.aaronhowser1.ariadnesthread.config
 
-import net.minecraftforge.common.ForgeConfigSpec
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue
+import net.neoforged.neoforge.common.ModConfigSpec
 
 object ClientConfig {
-    private val BUILDER = ForgeConfigSpec.Builder()
+    private val BUILDER = ModConfigSpec.Builder()
 
-    private val teleportDistance: ConfigValue<Double>
-    private val alpha: ConfigValue<Double>
-    private val showNbtInTooltip: ConfigValue<Boolean>
+    private val teleportDistance: ModConfigSpec.DoubleValue
+    private val alpha: ModConfigSpec.DoubleValue
+    private val showNbtInTooltip: ModConfigSpec.BooleanValue
 
-    val SPEC: ForgeConfigSpec
+    val SPEC: ModConfigSpec
 
     val TELEPORT_DISTANCE: Double
         get() = teleportDistance.get()

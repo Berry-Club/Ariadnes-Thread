@@ -1,18 +1,16 @@
 package com.aaronhowser1.ariadnesthread.config
 
-import net.minecraftforge.common.ForgeConfigSpec
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue
-
+import net.neoforged.neoforge.common.ModConfigSpec
 
 object ServerConfig {
 
-    private val BUILDER = ForgeConfigSpec.Builder()
-    val SPEC: ForgeConfigSpec
+    private val BUILDER = ModConfigSpec.Builder()
+    val SPEC: ModConfigSpec
 
-    private val waitTime: ConfigValue<Int>
-    private val minDistance: ConfigValue<Double>
-    private val maxLocations: ConfigValue<Int>
-    private val maxNbtSize: ConfigValue<Int>
+    private val waitTime: ModConfigSpec.IntValue
+    private val minDistance: ModConfigSpec.DoubleValue
+    private val maxLocations: ModConfigSpec.IntValue
+    private val maxNbtSize: ModConfigSpec.IntValue
 
     val CHECK_INTERVAL: Int
         get() = waitTime.get()

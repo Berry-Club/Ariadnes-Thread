@@ -16,7 +16,10 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.*
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Rarity
+import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.Level
 
 class ThreadItem : Item(properties) {
@@ -26,8 +29,8 @@ class ThreadItem : Item(properties) {
         private const val HISTORY = "ariadnesthread.history"
         private const val STARTING_DIMENSION = "ariadnesthread.startingDimension"
 
-        val properties: Item.Properties
-            get() = Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)
+        val properties: Properties
+            get() = Properties().stacksTo(1).rarity(Rarity.UNCOMMON)
 
         // Recording functions
 
