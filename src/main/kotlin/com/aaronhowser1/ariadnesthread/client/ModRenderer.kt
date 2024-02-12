@@ -8,8 +8,8 @@ import com.mojang.blaze3d.vertex.*
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.world.phys.Vec3
-import net.minecraftforge.client.event.RenderLevelStageEvent
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent
+import org.joml.Matrix4f
 
 @Suppress("SameParameterValue")
 object ModRenderer {
@@ -34,7 +34,7 @@ object ModRenderer {
 
     @Suppress("UnnecessaryVariable")
     private fun refresh() {
-        vertexBuffer = VertexBuffer()
+        vertexBuffer = VertexBuffer(VertexBuffer.Usage.STATIC)
         reloadNeeded = false
 
         val tesselator: Tesselator = Tesselator.getInstance()
@@ -93,7 +93,7 @@ object ModRenderer {
             bind()
             drawWithShader(
                 matrix.last().pose(),
-                event.projectionMatrix.copy(),
+                Matrix4f(event.projectionMatrix),
                 RenderSystem.getShader()!!
             )
         }
