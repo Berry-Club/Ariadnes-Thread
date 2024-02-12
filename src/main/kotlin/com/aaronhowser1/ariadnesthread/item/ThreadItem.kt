@@ -19,17 +19,15 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.*
 import net.minecraft.world.level.Level
 
-class ThreadItem : Item(
-    Properties()
-        .tab(CreativeModeTab.TAB_MISC)
-        .stacksTo(1)
-        .rarity(Rarity.UNCOMMON)
-) {
+class ThreadItem : Item(properties) {
 
     companion object {
         private const val IS_RECORDING = "ariadnesthread.isRecording"
         private const val HISTORY = "ariadnesthread.history"
         private const val STARTING_DIMENSION = "ariadnesthread.startingDimension"
+
+        val properties: Item.Properties
+            get() = Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)
 
         // Recording functions
 
@@ -46,7 +44,7 @@ class ThreadItem : Item(
             itemStack.tag = itemStack.tag ?: CompoundTag()
             itemStack.tag?.apply {
                 putBoolean(IS_RECORDING, true)
-                putString(STARTING_DIMENSION, player.level.dimension().location().toString())
+                putString(STARTING_DIMENSION, player.level().dimension().location().toString())
 
                 if (!hasHistory(itemStack)) {
                     val emptyList = ListTag()

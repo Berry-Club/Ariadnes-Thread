@@ -1,15 +1,13 @@
 package com.aaronhowser1.ariadnesthread.item
 
 import com.aaronhowser1.ariadnesthread.AriadnesThread
-import net.minecraft.world.item.Item
-import net.minecraftforge.registries.DeferredRegister
-import net.minecraftforge.registries.ForgeRegistries
-import thedarkcolour.kotlinforforge.forge.registerObject
+import net.neoforged.neoforge.registries.DeferredRegister
 
 object ModItems {
-    val REGISTRY: DeferredRegister<Item> = DeferredRegister.create(ForgeRegistries.ITEMS, AriadnesThread.MOD_ID)
+    val REGISTRY: DeferredRegister.Items =
+        DeferredRegister.createItems(AriadnesThread.MOD_ID)
 
-    val THREAD_ITEM by REGISTRY.registerObject("ariadnes_thread") {
+    val THREAD_ITEM = REGISTRY.register("thread_item") {
         ThreadItem()
     }
 
