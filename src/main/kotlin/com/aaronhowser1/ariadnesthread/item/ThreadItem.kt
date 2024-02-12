@@ -21,7 +21,7 @@ import net.minecraft.world.level.Level
 
 class ThreadItem : Item(
     Properties()
-        .tab(CreativeModeTab.TAB_MISC)
+        .tab(CreativeModeTab.TAB_TOOLS)
         .stacksTo(1)
         .rarity(Rarity.UNCOMMON)
 ) {
