@@ -46,7 +46,7 @@ object ModEvents {
 
     @SubscribeEvent
     fun onWorldRenderLast(event: RenderLevelStageEvent) {
-        if (event.stage != RenderLevelStageEvent.Stage.AFTER_PARTICLES) return
+        if (event.stage != RenderLevelStageEvent.Stage.AFTER_WEATHER) return
 
         if (Minecraft.getInstance().player != null) {
             ModRenderer.renderLines(event)
