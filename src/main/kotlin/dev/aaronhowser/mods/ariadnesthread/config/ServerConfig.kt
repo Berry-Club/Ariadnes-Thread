@@ -27,7 +27,7 @@ object ServerConfig {
         get() = MAX_LOCATIONS > 0
 
     init {
-        BUILDER.push(" Server configs for Ariadne's Thread")
+        BUILDER.push("Server")
 
         waitTime = BUILDER
             .comment(" The time in ticks to wait between checking location.")
@@ -36,6 +36,8 @@ object ServerConfig {
         minDistance = BUILDER
             .comment(" The minimum distance between points.\n If you haven't moved more than this distance from your last point, it isn't saved.")
             .defineInRange("Minimum Distance", 5.0, 0.0, Double.MAX_VALUE)
+
+        BUILDER.push("Limits")
 
         maxLocations = BUILDER
             .comment(" The maximum number of locations to store. Set to 0 to disable limit.\n Enabling advanced tooltips will show how many locations are stored.")
