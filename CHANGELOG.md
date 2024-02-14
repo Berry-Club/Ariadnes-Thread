@@ -1,6 +1,6 @@
 # 1.0.0
 
-- Initial relase
+- Initial release
 
 # 1.1.0
 
@@ -8,3 +8,4 @@
 - The item is now in the Tools tab, rather than the Misc tab
 - Thread color gradient can now be configured
 - Reformatted the configs
+- The thread now aims at the center of your body rather than at your head

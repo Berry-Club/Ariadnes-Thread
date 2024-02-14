@@ -42,7 +42,6 @@ object ClientConfig {
     init {
         BUILDER.push("Client")
 
-
         teleportDistance = BUILDER
             .comment(" The minimum distance between points to count as a teleport.")
             .defineInRange("Teleport Distance", 30.0, 0.0, Double.MAX_VALUE)
@@ -75,16 +74,13 @@ object ClientConfig {
 
         endGreen = BUILDER
             .comment(" The green value of the end color.")
-            .defineInRange("End Green", 0.0, 0.0, 1.0)
+            .defineInRange("End Green", 1.0, 0.0, 1.0)
 
         endBlue = BUILDER
             .comment(" The blue value of the end color.")
-            .defineInRange("End Blue", 1.0, 0.0, 1.0)
+            .defineInRange("End Blue", 0.0, 0.0, 1.0)
 
         BUILDER.pop()
         SPEC = BUILDER.build()
     }
-
-    //TODO:
-    // - Add configurable color
 }
