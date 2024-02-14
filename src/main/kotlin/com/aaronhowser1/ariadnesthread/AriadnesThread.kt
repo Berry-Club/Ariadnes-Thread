@@ -43,7 +43,6 @@ object AriadnesThread {
     }
 
     private fun onClientSetup(event: FMLClientSetupEvent) {
-        ClientConfig.checkValid()
     }
 
     private fun onServerSetup(event: FMLDedicatedServerSetupEvent) {
