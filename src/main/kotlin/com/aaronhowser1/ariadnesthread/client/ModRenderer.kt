@@ -9,9 +9,12 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.util.Mth.lerp
 import net.minecraft.world.phys.Vec3
+import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.api.distmarker.OnlyIn
 import net.minecraftforge.client.event.RenderLevelStageEvent
 
 @Suppress("SameParameterValue")
+@OnlyIn(Dist.CLIENT)
 object ModRenderer {
 
     private var vertexBuffer: VertexBuffer? = null
@@ -32,7 +35,6 @@ object ModRenderer {
         render(event)
     }
 
-    @Suppress("UnnecessaryVariable")
     private fun refresh() {
         vertexBuffer = VertexBuffer()
         reloadNeeded = false

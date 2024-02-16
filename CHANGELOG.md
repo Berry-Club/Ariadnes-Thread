@@ -9,3 +9,7 @@
 - Thread color gradient can now be configured
 - Reformatted the configs
 - The thread now aims at the center of your body rather than at your head
+
+# 1.1.1
+
+- Fixed the mod on dedicated servers, so it doesn't try to load clientside-only classes
