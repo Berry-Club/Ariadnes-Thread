@@ -1,4 +1,4 @@
-package dev.aaronhowser.ariadnesthread.utils
+package dev.aaronhowser.mods.ariadnesthread.utils
 
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent

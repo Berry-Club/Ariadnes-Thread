@@ -1,4 +1,4 @@
-package dev.aaronhowser.ariadnesthread.utils
+package dev.aaronhowser.mods.ariadnesthread.utils
 
 import com.google.common.collect.HashMultimap
 import java.util.concurrent.Executors

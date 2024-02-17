@@ -1,6 +1,6 @@
-package dev.aaronhowser.ariadnesthread.item
+package dev.aaronhowser.mods.ariadnesthread.item
 
-import dev.aaronhowser.ariadnesthread.AriadnesThread
+import dev.aaronhowser.mods.ariadnesthread.AriadnesThread
 import net.minecraft.world.item.Item
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries

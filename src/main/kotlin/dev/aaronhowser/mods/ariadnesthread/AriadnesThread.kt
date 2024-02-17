@@ -1,8 +1,8 @@
-package dev.aaronhowser.ariadnesthread
+package dev.aaronhowser.mods.ariadnesthread
 
-import dev.aaronhowser.ariadnesthread.config.ClientConfig
-import dev.aaronhowser.ariadnesthread.config.ServerConfig
-import dev.aaronhowser.ariadnesthread.item.ModItems
+import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
+import dev.aaronhowser.mods.ariadnesthread.config.ServerConfig
+import dev.aaronhowser.mods.ariadnesthread.item.ModItems
 import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.fml.common.Mod
