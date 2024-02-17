@@ -1,8 +1,8 @@
-package com.aaronhowser1.ariadnesthread
+package dev.aaronhowser.ariadnesthread
 
-import com.aaronhowser1.ariadnesthread.config.ClientConfig
-import com.aaronhowser1.ariadnesthread.config.ServerConfig
-import com.aaronhowser1.ariadnesthread.item.ModItems
+import dev.aaronhowser.ariadnesthread.config.ClientConfig
+import dev.aaronhowser.ariadnesthread.config.ServerConfig
+import dev.aaronhowser.ariadnesthread.item.ModItems
 import net.minecraft.client.Minecraft
 import net.neoforged.fml.ModLoadingContext
 import net.neoforged.fml.common.Mod
@@ -31,11 +31,11 @@ object AriadnesThread {
 
         val obj = runForDist(
             clientTarget = {
-                MOD_BUS.addListener(::onClientSetup)
+                MOD_BUS.addListener(AriadnesThread::onClientSetup)
                 Minecraft.getInstance()
             },
             serverTarget = {
-                MOD_BUS.addListener(::onServerSetup)
+                MOD_BUS.addListener(AriadnesThread::onServerSetup)
                 "test"
             })
 

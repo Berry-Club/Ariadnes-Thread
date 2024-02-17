@@ -1,9 +1,9 @@
-package com.aaronhowser1.ariadnesthread.event
+package dev.aaronhowser.ariadnesthread.event
 
-import com.aaronhowser1.ariadnesthread.AriadnesThread
-import com.aaronhowser1.ariadnesthread.client.ModRenderer
-import com.aaronhowser1.ariadnesthread.item.ThreadItem
-import com.aaronhowser1.ariadnesthread.utils.ModScheduler.handleSyncScheduledTasks
+import dev.aaronhowser.ariadnesthread.AriadnesThread
+import dev.aaronhowser.ariadnesthread.client.ModRenderer
+import dev.aaronhowser.ariadnesthread.item.ThreadItem
+import dev.aaronhowser.ariadnesthread.utils.ModScheduler.handleSyncScheduledTasks
 import net.minecraft.client.Minecraft
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.Mod

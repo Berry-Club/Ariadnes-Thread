@@ -1,6 +1,6 @@
-package com.aaronhowser1.ariadnesthread.item
+package dev.aaronhowser.ariadnesthread.item
 
-import com.aaronhowser1.ariadnesthread.AriadnesThread
+import dev.aaronhowser.ariadnesthread.AriadnesThread
 import net.neoforged.neoforge.registries.DeferredItem
 import net.neoforged.neoforge.registries.DeferredRegister
 
