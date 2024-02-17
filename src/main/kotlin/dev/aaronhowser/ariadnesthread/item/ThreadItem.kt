@@ -1,10 +1,10 @@
-package com.aaronhowser1.ariadnesthread.item
+package dev.aaronhowser.ariadnesthread.item
 
-import com.aaronhowser1.ariadnesthread.config.ClientConfig
-import com.aaronhowser1.ariadnesthread.config.ServerConfig
-import com.aaronhowser1.ariadnesthread.utils.Location
-import com.aaronhowser1.ariadnesthread.utils.TextUtils.tooltipLiteral
-import com.aaronhowser1.ariadnesthread.utils.TextUtils.tooltipTranslatable
+import dev.aaronhowser.ariadnesthread.config.ClientConfig
+import dev.aaronhowser.ariadnesthread.config.ServerConfig
+import dev.aaronhowser.ariadnesthread.utils.Location
+import dev.aaronhowser.ariadnesthread.utils.TextUtils.tooltipLiteral
+import dev.aaronhowser.ariadnesthread.utils.TextUtils.tooltipTranslatable
 import io.netty.buffer.Unpooled
 import net.minecraft.ChatFormatting
 import net.minecraft.nbt.CompoundTag

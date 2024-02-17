@@ -1,4 +1,4 @@
-package com.aaronhowser1.ariadnesthread.config
+package dev.aaronhowser.ariadnesthread.config
 
 import net.minecraftforge.common.ForgeConfigSpec
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue

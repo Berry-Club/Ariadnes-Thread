@@ -1,7 +1,7 @@
-package com.aaronhowser1.ariadnesthread.event
+package dev.aaronhowser.ariadnesthread.event
 
-import com.aaronhowser1.ariadnesthread.AriadnesThread
-import com.aaronhowser1.ariadnesthread.utils.ModScheduler
+import dev.aaronhowser.ariadnesthread.AriadnesThread
+import dev.aaronhowser.ariadnesthread.utils.ModScheduler
 import net.minecraftforge.event.TickEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod

@@ -1,8 +1,8 @@
-package com.aaronhowser1.ariadnesthread.client
+package dev.aaronhowser.ariadnesthread.client
 
-import com.aaronhowser1.ariadnesthread.config.ClientConfig
-import com.aaronhowser1.ariadnesthread.item.ThreadItem
-import com.aaronhowser1.ariadnesthread.utils.Location
+import dev.aaronhowser.ariadnesthread.config.ClientConfig
+import dev.aaronhowser.ariadnesthread.item.ThreadItem
+import dev.aaronhowser.ariadnesthread.utils.Location
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
 import net.minecraft.client.Minecraft
