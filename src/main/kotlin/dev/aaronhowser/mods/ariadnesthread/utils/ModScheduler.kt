@@ -1,6 +1,6 @@
-package dev.aaronhowser.ariadnesthread.utils
+package dev.aaronhowser.mods.ariadnesthread.utils
 
-import dev.aaronhowser.ariadnesthread.event.ModEvents
+import dev.aaronhowser.mods.ariadnesthread.event.ModEvents
 import com.google.common.collect.HashMultimap
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService

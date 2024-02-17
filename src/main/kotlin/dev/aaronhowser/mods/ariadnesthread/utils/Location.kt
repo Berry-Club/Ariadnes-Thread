@@ -1,4 +1,4 @@
-package dev.aaronhowser.ariadnesthread.utils
+package dev.aaronhowser.mods.ariadnesthread.utils
 
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.FloatTag

@@ -1,4 +1,4 @@
-package dev.aaronhowser.ariadnesthread.config
+package dev.aaronhowser.mods.ariadnesthread.config
 
 import net.neoforged.neoforge.common.ModConfigSpec
 

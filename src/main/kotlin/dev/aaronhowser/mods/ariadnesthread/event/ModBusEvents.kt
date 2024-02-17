@@ -1,7 +1,7 @@
-package dev.aaronhowser.ariadnesthread.event
+package dev.aaronhowser.mods.ariadnesthread.event
 
-import dev.aaronhowser.ariadnesthread.AriadnesThread
-import dev.aaronhowser.ariadnesthread.item.ModItems
+import dev.aaronhowser.mods.ariadnesthread.AriadnesThread
+import dev.aaronhowser.mods.ariadnesthread.item.ModItems
 import net.minecraft.world.item.CreativeModeTabs
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.Mod
