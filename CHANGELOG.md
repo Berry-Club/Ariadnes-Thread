@@ -6,3 +6,5 @@
 
 - The thread line now renders after weather, rather than after particles
 - Color gradient is now configurable
+- Reformatted the configs
+- The thread now aims at the center of your body rather than at your head

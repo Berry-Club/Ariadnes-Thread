@@ -55,7 +55,7 @@ class ThreadItem : Item(properties) {
                 }
             }
 
-            addLocation(itemStack, player.eyePosition.toLocation())
+            addLocation(itemStack, player)
         }
 
         private fun stopRecording(itemStack: ItemStack) {
@@ -96,6 +96,20 @@ class ThreadItem : Item(properties) {
         }
 
         // Other functions
+
+
+        private fun addLocation(itemStack: ItemStack, player: Player) {
+            val height = player.boundingBox.ysize.toFloat()
+            val footPos = player.position().toVector3f()
+
+            val location = Location(
+                footPos.x(),
+                footPos.y() + height / 2,
+                footPos.z()
+            )
+
+            addLocation(itemStack, location)
+        }
 
         private fun addLocation(itemStack: ItemStack, location: Location) {
             val list = itemStack.tag?.getList(HISTORY, 10) ?: return
@@ -172,9 +186,9 @@ class ThreadItem : Item(properties) {
     }
 
 
-    override fun inventoryTick(itemStack: ItemStack, level: Level, entity: Entity, slotId: Int, isSelected: Boolean) {
+    override fun inventoryTick(itemStack: ItemStack, level: Level, player: Entity, slotId: Int, isSelected: Boolean) {
 
-        if (entity !is Player) return
+        if (player !is Player) return
 
         if (inStartingDimension(itemStack, level)) {
 
@@ -184,11 +198,11 @@ class ThreadItem : Item(properties) {
 
             val goodTick = level.gameTime % ServerConfig.CHECK_INTERVAL == 0L
             if (goodTick && isRecording(itemStack)) {
-                addLocation(itemStack, entity.eyePosition.toLocation())
+                addLocation(itemStack, player)
             }
         }
 
-        super.inventoryTick(itemStack, level, entity, slotId, isSelected)
+        super.inventoryTick(itemStack, level, player, slotId, isSelected)
     }
 
     override fun isFoil(itemStack: ItemStack): Boolean {
