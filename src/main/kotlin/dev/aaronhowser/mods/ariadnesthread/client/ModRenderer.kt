@@ -1,12 +1,13 @@
 package dev.aaronhowser.mods.ariadnesthread.client
 
+import com.mojang.blaze3d.systems.RenderSystem
+import com.mojang.blaze3d.vertex.*
 import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
 import dev.aaronhowser.mods.ariadnesthread.item.ThreadItem
 import dev.aaronhowser.mods.ariadnesthread.utils.Location
-import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.vertex.*
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GameRenderer
+import net.minecraft.util.Mth.lerp
 import net.minecraft.world.phys.Vec3
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent
 import org.joml.Matrix4f
@@ -42,20 +43,21 @@ object ModRenderer {
 
         buffer.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR)
 
+        val startRGB = ClientConfig.START_RGB
+        val endRGB = ClientConfig.END_RGB
+
         for (history in histories) {
             for (i in 0 until history.size - 1) {
+                val percentDone = i.toFloat() / history.size
+
+                val red = lerp(percentDone, startRGB[0], endRGB[0])
+                val green = lerp(percentDone, startRGB[1], endRGB[1])
+                val blue = lerp(percentDone, startRGB[2], endRGB[2])
+
                 val loc1 = history[i]
                 val loc2 = history[i + 1]
 
-                val percentDone = i.toFloat() / history.size
-
-                val red = 1f - percentDone
-                val green = percentDone
-                val blue = 0f
-
-                if (i == 0) {
-                    renderCube(buffer, loc1, red, green, blue)
-                }
+                if (i == 0) renderCube(buffer, loc1, red, green, blue)
 
                 if (loc1.closerThan(loc2, ClientConfig.TELEPORT_DISTANCE)) {
                     renderLine(buffer, loc1, loc2, red, green, blue)
