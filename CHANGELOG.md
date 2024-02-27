@@ -2,7 +2,7 @@
 
 - Initial relase
 
-# 1.0.1
+# 1.1.0
 
 - The thread line now renders after weather, rather than after particles
 - Color gradient is now configurable
