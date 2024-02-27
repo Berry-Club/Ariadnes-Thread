@@ -1,6 +1,6 @@
 package dev.aaronhowser.mods.ariadnesthread.utils
 
-import dev.aaronhowser.mods.ariadnesthread.event.ModEvents
+import dev.aaronhowser.mods.ariadnesthread.event.ModCommonEvents
 import com.google.common.collect.HashMultimap
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -10,7 +10,7 @@ object ModScheduler {
     private var scheduler: ScheduledExecutorService? = null
     private val scheduledSyncTasks = HashMultimap.create<Int, Runnable>()
     fun scheduleSynchronisedTask(ticks: Int, run: Runnable) {
-        scheduledSyncTasks.put(ModEvents.tick + ticks, run)
+        scheduledSyncTasks.put(ModCommonEvents.tick + ticks, run)
     }
 
     fun scheduleAsyncTask(time: Int, unit: TimeUnit?, run: Runnable) {
