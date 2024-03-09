@@ -23,54 +23,5 @@ run
 
 # Files from Forge MDK
 forge*changelog.txt
-/runs/client/config/ariadnesthread-client.toml
-/runs/client/config/ariadnesthread-server.toml
-/runs/client/config/fml.toml
-/runs/client/config/neoforge-client.toml
-/runs/client/config/neoforge-server.toml
-/runs/client/crash-reports/crash-2024-02-11_19.16.04-fml.txt
-/runs/client/downloads/log.json
-/runs/client/logs/2024-02-11-1.log.gz
-/runs/client/logs/2024-02-11-2.log.gz
-/runs/client/logs/2024-02-11-3.log.gz
-/runs/client/logs/debug.log
-/runs/client/logs/debug-1.log.gz
-/runs/client/logs/debug-2.log.gz
-/runs/client/logs/debug-3.log.gz
-/runs/client/logs/latest.log
-/runs/client/saves/New World/advancements/380df991-f603-344c-a090-369bad2a924a.json
-/runs/client/saves/New World/data/neoforge_data_attachments.dat
-/runs/client/saves/New World/data/raids.dat
-/runs/client/saves/New World/data/random_sequences.dat
-/runs/client/saves/New World/DIM1/data/neoforge_data_attachments.dat
-/runs/client/saves/New World/DIM1/data/raids_end.dat
-/runs/client/saves/New World/DIM-1/data/neoforge_data_attachments.dat
-/runs/client/saves/New World/DIM-1/data/raids.dat
-/runs/client/saves/New World/entities/r.0.0.mca
-/runs/client/saves/New World/entities/r.0.-1.mca
-/runs/client/saves/New World/entities/r.-1.0.mca
-/runs/client/saves/New World/entities/r.-1.-1.mca
-/runs/client/saves/New World/playerdata/380df991-f603-344c-a090-369bad2a924a.dat
-/runs/client/saves/New World/playerdata/380df991-f603-344c-a090-369bad2a924a.dat_old
-/runs/client/saves/New World/poi/r.0.0.mca
-/runs/client/saves/New World/poi/r.0.-1.mca
-/runs/client/saves/New World/poi/r.0.-2.mca
-/runs/client/saves/New World/poi/r.-1.0.mca
-/runs/client/saves/New World/poi/r.-1.-1.mca
-/runs/client/saves/New World/poi/r.-1.-2.mca
-/runs/client/saves/New World/region/r.0.0.mca
-/runs/client/saves/New World/region/r.0.-1.mca
-/runs/client/saves/New World/region/r.0.-2.mca
-/runs/client/saves/New World/region/r.-1.0.mca
-/runs/client/saves/New World/region/r.-1.-1.mca
-/runs/client/saves/New World/region/r.-1.-2.mca
-/runs/client/saves/New World/serverconfig/readme.txt
-/runs/client/saves/New World/stats/380df991-f603-344c-a090-369bad2a924a.json
-/runs/client/saves/New World/icon.png
-/runs/client/saves/New World/level.dat
-/runs/client/saves/New World/level.dat_old
-/runs/client/saves/New World/session.lock
-/runs/client/command_history.txt
-/runs/client/options.txt
-/runs/client/usercache.json
-/runs/client/usernamecache.json
+
+/runs/
