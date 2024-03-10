@@ -1,54 +1,35 @@
 package dev.aaronhowser.mods.ariadnesthread.utils
 
 import com.google.common.collect.HashMultimap
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
+import dev.aaronhowser.mods.ariadnesthread.AriadnesThread
 
 object ModScheduler {
 
     var tick = 0
         set(value) {
             field = value
-            handleSyncScheduledTasks(value)
+            handleScheduledTasks(value)
         }
 
-    private var scheduler: ScheduledExecutorService? = null
-    private val scheduledSyncTasks = HashMultimap.create<Int, Runnable>()
+    private val upcomingTasks = HashMultimap.create<Int, Runnable>()
 
-    private fun scheduleSynchronisedTask(ticks: Int, run: Runnable) {
-        scheduledSyncTasks.put(tick + ticks, run)
+    private fun scheduleTaskInTicks(ticks: Int, run: Runnable) {
+        upcomingTasks.put(tick + ticks, run)
     }
 
-    private fun scheduleAsyncTask(time: Int, unit: TimeUnit, run: Runnable) {
-        if (scheduler == null) serverStartupTasks()
-        scheduler!!.schedule(run, time.toLong(), unit)
-    }
+    private fun handleScheduledTasks(tick: Int?) {
+        if (!upcomingTasks.containsKey(tick)) return
 
-    private fun serverStartupTasks() {
-        if (scheduler != null) scheduler!!.shutdownNow()
-        scheduler = Executors.newScheduledThreadPool(1)
-        handleSyncScheduledTasks(null)
-    }
+        val tasks = upcomingTasks[tick].iterator()
 
-    private fun serverShutdownTasks() {
-        handleSyncScheduledTasks(null)
-        scheduler!!.shutdownNow()
-        scheduler = null
-    }
-
-    private fun handleSyncScheduledTasks(tick: Int?) {
-        if (scheduledSyncTasks.containsKey(tick)) {
-            val tasks =
-                if (tick == null) scheduledSyncTasks.values().iterator() else scheduledSyncTasks[tick].iterator()
-            while (tasks.hasNext()) {
-                try {
-                    tasks.next().run()
-                } catch (ex: Exception) {
-//                    Logging.logMessage(Level.ERROR, "Unable to run unhandled scheduled task, skipping.", ex);
-                }
-                tasks.remove()
+        while (tasks.hasNext()) {
+            try {
+                tasks.next().run()
+            } catch (e: Exception) {
+                AriadnesThread.LOGGER.error(e.toString())
             }
+
+            tasks.remove()
         }
     }
 }
