@@ -8,6 +8,7 @@ import net.minecraft.client.player.LocalPlayer
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.client.event.RenderLevelStageEvent
 import net.minecraftforge.event.TickEvent
+import net.minecraftforge.event.TickEvent.ClientTickEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod
 
@@ -18,7 +19,7 @@ import net.minecraftforge.fml.common.Mod
 object ModClientEvents {
 
     @SubscribeEvent
-    fun clientTick(event: TickEvent.ClientTickEvent) {
+    fun clientTick(event: ClientTickEvent) {
         if (event.phase == TickEvent.Phase.END) showThreads()
     }
 
