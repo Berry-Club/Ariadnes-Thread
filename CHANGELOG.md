@@ -13,3 +13,7 @@
 # 1.1.1
 
 - Fixed the mod on dedicated servers, so it doesn't try to load clientside-only classes
+
+# 1.1.2
+
+- The mod scheduler now uses ServerTickEvent rather than TickEvent
