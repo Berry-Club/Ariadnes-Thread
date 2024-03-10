@@ -16,4 +16,4 @@
 
 # 1.1.2
 
-- The mod scheduler now uses ServerTickEvent rather than TickEvent
+- Removed the Mod Scheduler as it isn't used for anything. I probably used it at some point and then decided it wasn't needed.
