@@ -1,6 +1,7 @@
 package dev.aaronhowser.mods.ariadnesthread
 
 import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
+import dev.aaronhowser.mods.ariadnesthread.config.ServerConfig
 import dev.aaronhowser.mods.ariadnesthread.registry.ModRegistries
 import net.neoforged.fml.ModContainer
 import net.neoforged.fml.common.Mod
@@ -21,6 +22,7 @@ class AriadnesThread(
 
     init {
         modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfig.CONFIG_SPEC)
+        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.CONFIG_SPEC)
 
         ModRegistries.register(MOD_BUS)
     }
