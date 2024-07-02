@@ -8,6 +8,7 @@ import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -28,8 +29,12 @@ class ThreadItem : Item(
         fun isRecording(stack: ItemStack): Boolean =
             stack.get(BooleanItemComponent.isRecordingComponent)?.value ?: false
 
-        fun setRecording(stack: ItemStack, value: Boolean) {
-            stack.set(BooleanItemComponent.isRecordingComponent, BooleanItemComponent(value))
+        fun stopRecording(stack: ItemStack) {
+            stack.set(BooleanItemComponent.isRecordingComponent, BooleanItemComponent(false))
+        }
+
+        fun startRecording(stack: ItemStack) {
+            stack.set(BooleanItemComponent.isRecordingComponent, BooleanItemComponent(true))
         }
 
         fun setHistory(stack: ItemStack, history: List<LocationItemComponent>) {
@@ -68,12 +73,12 @@ class ThreadItem : Item(
                 return InteractionResultHolder.success(stack)
             }
 
-            setRecording(stack, true)
+            startRecording(stack)
             return InteractionResultHolder.success(stack)
         }
 
         if (isSneaking) {
-            setRecording(stack, false)
+            startRecording(stack)
             return InteractionResultHolder.success(stack)
         }
 
@@ -81,12 +86,22 @@ class ThreadItem : Item(
     }
 
     override fun onDroppedByPlayer(item: ItemStack, player: Player): Boolean {
-        setRecording(item, false)
+        stopRecording(item)
         return super.onDroppedByPlayer(item, player)
     }
 
     override fun isFoil(pStack: ItemStack): Boolean {
         return isRecording(pStack)
+    }
+
+    override fun inventoryTick(
+        pStack: ItemStack,
+        pLevel: Level,
+        player: Entity,
+        pSlotId: Int,
+        pIsSelected: Boolean
+    ) {
+        if (player !is Player) return
     }
 
     override fun appendHoverText(
