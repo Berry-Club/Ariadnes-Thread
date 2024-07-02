@@ -37,8 +37,12 @@ class ThreadItem : Item(
             stack.set(BooleanItemComponent.isRecordingComponent, BooleanItemComponent(false))
         }
 
-        fun startRecording(stack: ItemStack) {
+        fun startRecording(stack: ItemStack, player: Player) {
             stack.set(BooleanItemComponent.isRecordingComponent, BooleanItemComponent(true))
+
+            if (getStartingDimension(stack) == null) {
+                setStartingDimension(stack, player.level().dimension().location())
+            }
         }
 
         fun setHistory(stack: ItemStack, history: List<LocationItemComponent>) {
@@ -91,12 +95,12 @@ class ThreadItem : Item(
                 return InteractionResultHolder.success(stack)
             }
 
-            startRecording(stack)
+            startRecording(stack, pPlayer)
             return InteractionResultHolder.success(stack)
         }
 
         if (isSneaking) {
-            startRecording(stack)
+            stopRecording(stack)
             return InteractionResultHolder.success(stack)
         }
 
