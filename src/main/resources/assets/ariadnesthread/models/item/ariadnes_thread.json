@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "ariadnesthread:item/ariadnes_thread"
+  }
+}
