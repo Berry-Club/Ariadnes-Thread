@@ -1,5 +1,6 @@
 package dev.aaronhowser.mods.ariadnesthread.item
 
+import dev.aaronhowser.mods.ariadnesthread.datagen.ModLanguageProvider
 import dev.aaronhowser.mods.ariadnesthread.item.component.BooleanItemComponent
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
 import net.minecraft.ChatFormatting
@@ -65,13 +66,13 @@ class ThreadItem : Item(
 
         pTooltipComponents.add(
             Component.translatable(
-                if (isRecording) "tooltip.ariadnesthread.recording_1" else "tooltip.ariadnesthread.not_recording_1"
+                if (isRecording) ModLanguageProvider.Tooltip.RECORDING_1 else ModLanguageProvider.Tooltip.NOT_RECORDING_1
             ).withStyle(ChatFormatting.GRAY)
         )
 
         pTooltipComponents.add(
             Component.translatable(
-                if (isRecording) "tooltip.ariadnesthread.recording_2" else "tooltip.ariadnesthread.not_recording_2"
+                if (isRecording) ModLanguageProvider.Tooltip.RECORDING_2 else ModLanguageProvider.Tooltip.NOT_RECORDING_2
             ).withStyle(ChatFormatting.GRAY)
         )
 
