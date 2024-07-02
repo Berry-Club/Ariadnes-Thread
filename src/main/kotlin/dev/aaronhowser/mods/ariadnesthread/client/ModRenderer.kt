@@ -10,8 +10,11 @@ import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent
-import org.joml.Matrix4f
+import org.lwjgl.opengl.GL11
 
+/**
+ * I got a lot of the code for this from the mod [Advanced Xray](https://github.com/AdvancedXRay/XRay-Mod/blob/mc/neoforge/1.21/src/main/java/pro/mikey/xray/xray/Render.java)
+ */
 object ModRenderer {
 
     private var vertexBuffer: VertexBuffer? = null
@@ -33,32 +36,36 @@ object ModRenderer {
 
     private fun render(event: RenderLevelStageEvent) {
 
-        val view: Vec3 = Minecraft.getInstance().entityRenderDispatcher.camera.position
+        val playerView: Vec3 = Minecraft.getInstance().entityRenderDispatcher.camera.position
 
+        RenderSystem.depthMask(false)
         RenderSystem.enableBlend()
         RenderSystem.defaultBlendFunc()
-        RenderSystem.disableDepthTest()
-        RenderSystem.setShader(GameRenderer::getPositionColorShader)
 
-        val poseStack = event.poseStack
-
+        val poseStack: PoseStack = event.poseStack
         poseStack.pushPose()
-        poseStack.translate(-view.x, -view.y, -view.z)
 
-        vertexBuffer!!.apply {
+        RenderSystem.setShader(GameRenderer::getPositionColorShader)
+        RenderSystem.applyModelViewMatrix()
+        RenderSystem.depthFunc(GL11.GL_ALWAYS)
+
+        poseStack.mulPose(event.modelViewMatrix)
+        poseStack.translate(-playerView.x, -playerView.y, -playerView.z)
+
+        vertexBuffer?.apply {
             bind()
             drawWithShader(
                 poseStack.last().pose(),
-                event.projectionMatrix.clone() as Matrix4f,
+                event.projectionMatrix,
                 RenderSystem.getShader()!!
             )
         }
-
         VertexBuffer.unbind()
-        poseStack.popPose()
+        RenderSystem.depthFunc(GL11.GL_LEQUAL)
 
-        RenderSystem.enableDepthTest()
-        RenderSystem.disableBlend()
+        poseStack.popPose()
+        RenderSystem.applyModelViewMatrix()
+
     }
 
     private fun refresh() {
