@@ -1,11 +1,16 @@
 package dev.aaronhowser.mods.ariadnesthread.client
 
+import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
 import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
 import dev.aaronhowser.mods.ariadnesthread.item.component.LocationItemComponent
+import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.util.Mth
+import net.minecraft.world.phys.Vec3
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent
+import org.joml.Matrix4f
 
 object ModRenderer {
 
@@ -23,6 +28,37 @@ object ModRenderer {
 
         if (vertexBuffer == null || reloadNeeded) refresh()
 
+        render(event)
+    }
+
+    private fun render(event: RenderLevelStageEvent) {
+
+        val view: Vec3 = Minecraft.getInstance().entityRenderDispatcher.camera.position
+
+        RenderSystem.enableBlend()
+        RenderSystem.defaultBlendFunc()
+        RenderSystem.disableDepthTest()
+        RenderSystem.setShader(GameRenderer::getPositionColorShader)
+
+        val poseStack = event.poseStack
+
+        poseStack.pushPose()
+        poseStack.translate(-view.x, -view.y, -view.z)
+
+        vertexBuffer!!.apply {
+            bind()
+            drawWithShader(
+                poseStack.last().pose(),
+                event.projectionMatrix.clone() as Matrix4f,
+                RenderSystem.getShader()!!
+            )
+        }
+
+        VertexBuffer.unbind()
+        poseStack.popPose()
+
+        RenderSystem.enableDepthTest()
+        RenderSystem.disableBlend()
     }
 
     private fun refresh() {

@@ -69,10 +69,10 @@ class ThreadItem : Item(
             return stack.get(DimensionItemComponent.dimensionComponent)?.dimensionRl
         }
 
-        fun inStartingDimension(stack: ItemStack, player: Player): Boolean {
+        fun inStartingDimension(stack: ItemStack, level: Level): Boolean {
             val startingDimension = getStartingDimension(stack) ?: return false
 
-            return player.level().dimension().location() == startingDimension
+            return level.dimension().location() == startingDimension
         }
 
         fun setStartingDimension(stack: ItemStack, dimension: ResourceLocation) {
@@ -126,7 +126,7 @@ class ThreadItem : Item(
         if (pLevel.isClientSide) return
         if (player !is Player) return
         if (!isRecording(pStack)) return
-        if (!inStartingDimension(pStack, player)) return
+        if (!inStartingDimension(pStack, player.level())) return
 
         if (pLevel.gameTime % ServerConfig.waitTime.get() != 0L) return
 
@@ -178,7 +178,7 @@ class ThreadItem : Item(
         }
 
         val startingDimension = getStartingDimension(pStack)
-        if (startingDimension != null && !inStartingDimension(pStack, ClientUtil.localPlayer!!)) {
+        if (startingDimension != null && !inStartingDimension(pStack, ClientUtil.localPlayer!!.level())) {
             pTooltipComponents.add(
                 Component.translatable(
                     ModLanguageProvider.Tooltip.NOT_IN_STARTING_DIMENSION

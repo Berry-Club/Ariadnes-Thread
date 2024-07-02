@@ -14,6 +14,8 @@ data class LocationItemComponent(
     val z: Float
 ) {
 
+    constructor(x: Double, y: Double, z: Double) : this(x.toFloat(), y.toFloat(), z.toFloat())
+
     companion object {
 
         val CODEC: Codec<LocationItemComponent> = RecordCodecBuilder.create { instance ->
