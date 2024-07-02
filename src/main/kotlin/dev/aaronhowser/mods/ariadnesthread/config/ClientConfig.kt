@@ -1,0 +1,82 @@
+package dev.aaronhowser.mods.ariadnesthread.config
+
+import net.neoforged.neoforge.common.ModConfigSpec
+import org.apache.commons.lang3.tuple.Pair
+
+class ClientConfig(
+    private val builder: ModConfigSpec.Builder
+) {
+
+    companion object {
+
+        private val configPair: Pair<ClientConfig, ModConfigSpec> = ModConfigSpec.Builder().configure(::ClientConfig)
+
+        val CONFIG: ClientConfig = configPair.left
+        val CONFIG_SPEC: ModConfigSpec = configPair.right
+
+        lateinit var teleportDistance: ModConfigSpec.DoubleValue
+        lateinit var alpha: ModConfigSpec.DoubleValue
+        lateinit var startRed: ModConfigSpec.DoubleValue
+        lateinit var startGreen: ModConfigSpec.DoubleValue
+        lateinit var startBlue: ModConfigSpec.DoubleValue
+        lateinit var endRed: ModConfigSpec.DoubleValue
+        lateinit var endGreen: ModConfigSpec.DoubleValue
+        lateinit var endBlue: ModConfigSpec.DoubleValue
+        lateinit var showNbtInTooltip: ModConfigSpec.BooleanValue
+    }
+
+
+    init {
+        clientConfigs()
+
+        builder.build()
+    }
+
+    private fun clientConfigs() {
+        builder.push("Client")
+
+        teleportDistance = builder
+            .comment("The minimum distance between points to count as a teleport.")
+            .defineInRange("Teleport Distance", 30.0, 0.0, Double.MAX_VALUE)
+
+        showNbtInTooltip = builder
+            .comment("Whether or not to show the entire NBT data in the tooltip. This can be very long and is not recommended. Required advanced tooltips.")
+            .define("NBT In Tooltips", false)
+
+        builder.push("Appearance")
+
+        alpha = builder
+            .comment("The opacity of the thread.")
+            .defineInRange("Alpha", 0.9, 0.0, 1.0)
+
+        startRed = builder
+            .comment("The red value of the start color.")
+            .defineInRange("Start Red", 1.0, 0.0, 1.0)
+
+        startGreen = builder
+            .comment("The green value of the start color.")
+            .defineInRange("Start Green", 0.0, 0.0, 1.0)
+
+        startBlue = builder
+            .comment("The blue value of the start color.")
+            .defineInRange("Start Blue", 0.0, 0.0, 1.0)
+
+        endRed = builder
+            .comment("The red value of the end color.")
+            .defineInRange("End Red", 0.0, 0.0, 1.0)
+
+        endGreen = builder
+            .comment("The green value of the end color.")
+            .defineInRange("End Green", 1.0, 0.0, 1.0)
+
+        endBlue = builder
+            .comment("The blue value of the end color.")
+            .defineInRange("End Blue", 0.0, 0.0, 1.0)
+
+        builder.pop()
+        builder.pop()
+
+    }
+
+
+}

@@ -1,21 +1,23 @@
 package dev.aaronhowser.mods.ariadnesthread
 
-import net.neoforged.fml.common.EventBusSubscriber
+import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
+import net.neoforged.fml.ModContainer
 import net.neoforged.fml.common.Mod
-import org.apache.logging.log4j.Level
+import net.neoforged.fml.config.ModConfig
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 @Mod(AriadnesThread.ID)
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
-object AriadnesThread {
-    const val ID = "ariadnesthread"
+class AriadnesThread(
+    modContainer: ModContainer
+) {
 
-    // the logger for our mod
-    val LOGGER: Logger = LogManager.getLogger(ID)
+    companion object {
+        const val ID = "ariadnesthread"
+        val LOGGER: Logger = LogManager.getLogger(ID)
+    }
 
     init {
-        LOGGER.log(Level.INFO, "Hello world!")
-
+        modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfig.CONFIG_SPEC)
     }
 }
