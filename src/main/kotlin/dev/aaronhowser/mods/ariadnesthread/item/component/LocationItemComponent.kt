@@ -9,25 +9,25 @@ import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 
 data class LocationItemComponent(
-    val x: Double,
-    val y: Double,
-    val z: Double
+    val x: Float,
+    val y: Float,
+    val z: Float
 ) {
 
     companion object {
 
         val CODEC: Codec<LocationItemComponent> = RecordCodecBuilder.create { instance ->
             instance.group(
-                Codec.DOUBLE.fieldOf("x").forGetter(LocationItemComponent::x),
-                Codec.DOUBLE.fieldOf("y").forGetter(LocationItemComponent::y),
-                Codec.DOUBLE.fieldOf("z").forGetter(LocationItemComponent::z)
+                Codec.FLOAT.fieldOf("x").forGetter(LocationItemComponent::x),
+                Codec.FLOAT.fieldOf("y").forGetter(LocationItemComponent::y),
+                Codec.FLOAT.fieldOf("z").forGetter(LocationItemComponent::z)
             ).apply(instance, ::LocationItemComponent)
         }
 
         val STREAM_CODEC: StreamCodec<ByteBuf, LocationItemComponent> = StreamCodec.composite(
-            ByteBufCodecs.DOUBLE, LocationItemComponent::x,
-            ByteBufCodecs.DOUBLE, LocationItemComponent::y,
-            ByteBufCodecs.DOUBLE, LocationItemComponent::z,
+            ByteBufCodecs.FLOAT, LocationItemComponent::x,
+            ByteBufCodecs.FLOAT, LocationItemComponent::y,
+            ByteBufCodecs.FLOAT, LocationItemComponent::z,
             ::LocationItemComponent
         )
 
@@ -37,7 +37,7 @@ data class LocationItemComponent(
 
     }
 
-    fun distanceToSqr(other: LocationItemComponent): Double {
+    fun distanceToSqr(other: LocationItemComponent): Float {
         val dx = x - other.x
         val dy = y - other.y
         val dz = z - other.z
