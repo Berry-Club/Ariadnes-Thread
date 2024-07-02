@@ -5,7 +5,8 @@ import net.neoforged.bus.api.IEventBus
 object ModRegistries {
 
     private val registries = listOf(
-        ModDataComponents.DATA_COMPONENT_REGISTRY
+        ModDataComponents.DATA_COMPONENT_REGISTRY,
+        ModItems.ITEMS_REGISTRY
     )
 
     fun register(modBus: IEventBus) {
