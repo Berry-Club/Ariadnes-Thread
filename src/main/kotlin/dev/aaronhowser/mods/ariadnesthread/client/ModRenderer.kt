@@ -83,7 +83,7 @@ object ModRenderer {
         val endGreen = ClientConfig.endGreen.get().toFloat()
         val endBlue = ClientConfig.endBlue.get().toFloat()
 
-        for (history in histories.map { it.history }) {
+        for (history in histories.map { it.locations }) {
             for (i in 0 until history.size - 1) {
                 val percentDone = i.toFloat() / history.size
 

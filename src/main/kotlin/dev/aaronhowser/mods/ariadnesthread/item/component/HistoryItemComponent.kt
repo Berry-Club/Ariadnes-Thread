@@ -10,7 +10,7 @@ import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 
 data class HistoryItemComponent(
-    val history: List<LocationItemComponent>
+    val locations: List<LocationItemComponent>
 ) {
 
     constructor() : this(emptyList())
@@ -20,7 +20,7 @@ data class HistoryItemComponent(
         val CODEC: Codec<HistoryItemComponent> =
             RecordCodecBuilder.create { instance ->
                 instance.group(
-                    LocationItemComponent.CODEC.listOf().fieldOf("history").forGetter(HistoryItemComponent::history)
+                    LocationItemComponent.CODEC.listOf().fieldOf("history").forGetter(HistoryItemComponent::locations)
                 ).apply(instance, ::HistoryItemComponent)
             }
 
@@ -34,11 +34,11 @@ data class HistoryItemComponent(
     }
 
     fun canAddLocation(location: LocationItemComponent): Boolean {
-        if (history.isEmpty()) return true
+        if (locations.isEmpty()) return true
 
-        if (ServerConfig.isLimitingLocations && history.size + 1 >= ServerConfig.maxLocations.get()) return false
+        if (ServerConfig.isLimitingLocations && locations.size + 1 >= ServerConfig.maxLocations.get()) return false
 
-        val last = history.last()
+        val last = locations.last()
         return !location.closerThan(last, ServerConfig.minDistance.get())
     }
 

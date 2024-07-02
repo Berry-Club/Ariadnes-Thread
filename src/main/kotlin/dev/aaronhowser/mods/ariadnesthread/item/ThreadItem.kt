@@ -53,16 +53,21 @@ class ThreadItem : Item(
             return stack.get(HistoryItemComponent.historyComponent) ?: HistoryItemComponent()
         }
 
-        fun hasHistory(stack: ItemStack): Boolean = getHistory(stack).history.isNotEmpty()
+        fun hasHistory(stack: ItemStack): Boolean = getHistory(stack).locations.isNotEmpty()
 
         fun clearHistory(stack: ItemStack) {
             setHistory(stack, emptyList())
         }
 
         fun addLocation(stack: ItemStack, location: LocationItemComponent) {
-            val history = getHistory(stack).history.toMutableList()
-            history.add(location)
-            setHistory(stack, history)
+            val history = getHistory(stack)
+            val canAdd = history.canAddLocation(location)
+
+            if (!canAdd) return
+
+            val list = history.locations.toMutableList()
+            list.add(location)
+            setHistory(stack, list)
         }
 
         fun getStartingDimension(stack: ItemStack): ResourceLocation? {
@@ -139,11 +144,7 @@ class ThreadItem : Item(
             footPos.z,
         )
 
-        val canAddLocation = getHistory(pStack).canAddLocation(location)
-
-        if (canAddLocation) {
-            addLocation(pStack, location)
-        }
+        addLocation(pStack, location)
     }
 
     override fun appendHoverText(
@@ -188,13 +189,13 @@ class ThreadItem : Item(
             pTooltipComponents.add(
                 Component.translatable(
                     ModLanguageProvider.Tooltip.STARTING_DIMENSION,
-                    Component.translatable(startingDimension.toLanguageKey())
+                    startingDimension.toString()
                 ).withStyle(ChatFormatting.RED)
             )
         }
 
         if (pTooltipFlag.isAdvanced) {
-            val history = getHistory(pStack).history
+            val history = getHistory(pStack).locations
             if (history.isNotEmpty()) {
                 pTooltipComponents.add(
                     Component.translatable(
