@@ -37,7 +37,7 @@ data class HistoryItemComponent(
         if (history.isEmpty()) return true
 
         val last = history.last()
-        return location.closerThan(last, ServerConfig.minDistance.get())
+        return !location.closerThan(last, ServerConfig.minDistance.get())
     }
 
 }
