@@ -2,6 +2,7 @@ package dev.aaronhowser.mods.ariadnesthread.item.component
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import dev.aaronhowser.mods.ariadnesthread.config.ServerConfig
 import dev.aaronhowser.mods.ariadnesthread.registry.ModDataComponents
 import io.netty.buffer.ByteBuf
 import net.minecraft.core.component.DataComponentType
@@ -30,6 +31,13 @@ data class HistoryItemComponent(
             ModDataComponents.HISTORY_COMPONENT.get()
         }
 
+    }
+
+    fun canAddLocation(location: LocationItemComponent): Boolean {
+        if (history.isEmpty()) return true
+
+        val last = history.last()
+        return location.closerThan(last, ServerConfig.minDistance.get())
     }
 
 }

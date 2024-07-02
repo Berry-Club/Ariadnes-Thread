@@ -37,4 +37,15 @@ data class LocationItemComponent(
 
     }
 
+    fun distanceToSqr(other: LocationItemComponent): Double {
+        val dx = x - other.x
+        val dy = y - other.y
+        val dz = z - other.z
+        return dx * dx + dy * dy + dz * dz
+    }
+
+    fun closerThan(other: LocationItemComponent, distance: Double): Boolean {
+        return distanceToSqr(other) < distance * distance
+    }
+
 }
