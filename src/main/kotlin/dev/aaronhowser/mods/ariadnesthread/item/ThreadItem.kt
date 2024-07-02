@@ -3,6 +3,7 @@ package dev.aaronhowser.mods.ariadnesthread.item
 import dev.aaronhowser.mods.ariadnesthread.datagen.ModLanguageProvider
 import dev.aaronhowser.mods.ariadnesthread.item.component.BooleanItemComponent
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
+import dev.aaronhowser.mods.ariadnesthread.item.component.LocationItemComponent
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.world.InteractionHand
@@ -31,6 +32,26 @@ class ThreadItem : Item(
             stack.set(BooleanItemComponent.isRecordingComponent, BooleanItemComponent(value))
         }
 
+        fun setHistory(stack: ItemStack, history: List<LocationItemComponent>) {
+            stack.set(HistoryItemComponent.historyComponent, HistoryItemComponent(history))
+        }
+
+        fun getHistory(stack: ItemStack): List<LocationItemComponent> {
+            return stack.get(HistoryItemComponent.historyComponent)?.history ?: emptyList()
+        }
+
+        fun hasHistory(stack: ItemStack): Boolean = getHistory(stack).isNotEmpty()
+
+        fun clearHistory(stack: ItemStack) {
+            setHistory(stack, emptyList())
+        }
+
+        fun addLocation(stack: ItemStack, location: LocationItemComponent) {
+            val history = getHistory(stack).toMutableList()
+            history.add(location)
+            setHistory(stack, history)
+        }
+
     }
 
     override fun use(pLevel: Level, pPlayer: Player, pUsedHand: InteractionHand): InteractionResultHolder<ItemStack> {
@@ -41,7 +62,20 @@ class ThreadItem : Item(
         val isSneaking = pPlayer.isCrouching
         val isRecording = isRecording(stack)
 
-        setRecording(stack, !isRecording)
+        if (!isRecording) {
+            if (isSneaking) {
+                clearHistory(stack)
+                return InteractionResultHolder.success(stack)
+            }
+
+            setRecording(stack, true)
+            return InteractionResultHolder.success(stack)
+        }
+
+        if (isSneaking) {
+            setRecording(stack, false)
+            return InteractionResultHolder.success(stack)
+        }
 
         return InteractionResultHolder.pass(stack)
     }
@@ -75,6 +109,16 @@ class ThreadItem : Item(
                 if (isRecording) ModLanguageProvider.Tooltip.RECORDING_2 else ModLanguageProvider.Tooltip.NOT_RECORDING_2
             ).withStyle(ChatFormatting.GRAY)
         )
+
+        val hasHistory = hasHistory(pStack)
+
+        if (!isRecording && hasHistory) {
+            pTooltipComponents.add(
+                Component.translatable(
+                    ModLanguageProvider.Tooltip.CLEAR
+                ).withStyle(ChatFormatting.RED)
+            )
+        }
 
     }
 
