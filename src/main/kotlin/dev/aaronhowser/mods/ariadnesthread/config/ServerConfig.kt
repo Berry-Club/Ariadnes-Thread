@@ -17,8 +17,9 @@ class ServerConfig(
         lateinit var waitTime: ModConfigSpec.IntValue
         lateinit var minDistance: ModConfigSpec.DoubleValue
         lateinit var maxLocations: ModConfigSpec.IntValue
-        lateinit var maxNbtSize: ModConfigSpec.IntValue
 
+        val isLimitingLocations: Boolean
+            get() = maxLocations.get() > 0
     }
 
 
@@ -39,17 +40,10 @@ class ServerConfig(
             .comment("The minimum distance between points.\nIf you haven't moved more than this distance from your last point, it isn't saved.")
             .defineInRange("Minimum Distance", 5.0, 0.0, Double.MAX_VALUE)
 
-        builder.push("Limits")
-
         maxLocations = builder
             .comment("The maximum number of locations to store. Set to 0 to disable limit.\nEnabling advanced tooltips will show how many locations are stored.")
-            .defineInRange("Max Locations", 5120, 0, Int.MAX_VALUE)
+            .defineInRange("Max Locations", 0, 0, Int.MAX_VALUE)
 
-        maxNbtSize = builder
-            .comment(" The maximum size of the NBT data for the thread item, in bits. Set to 0 to disable limit.\nEnabling advanced tooltips will show the current size.")
-            .defineInRange("Max NBT Size", 0, 0, Int.MAX_VALUE)
-
-        builder.pop()
         builder.pop()
     }
 

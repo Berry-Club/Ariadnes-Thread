@@ -36,6 +36,8 @@ data class HistoryItemComponent(
     fun canAddLocation(location: LocationItemComponent): Boolean {
         if (history.isEmpty()) return true
 
+        if (ServerConfig.isLimitingLocations && history.size + 1 >= ServerConfig.maxLocations.get()) return false
+
         val last = history.last()
         return !location.closerThan(last, ServerConfig.minDistance.get())
     }

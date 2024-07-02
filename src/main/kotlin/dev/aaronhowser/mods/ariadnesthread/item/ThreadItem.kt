@@ -194,15 +194,15 @@ class ThreadItem : Item(
         }
 
         if (pTooltipFlag.isAdvanced) {
-
             val history = getHistory(pStack).history
-
-            for (location in history) {
+            if (history.isNotEmpty()) {
                 pTooltipComponents.add(
-                    Component.literal("${location.x} ${location.y} ${location.z}")
+                    Component.translatable(
+                        ModLanguageProvider.Tooltip.LOCATIONS,
+                        history.size.toString()
+                    ).withStyle(ChatFormatting.GRAY)
                 )
             }
-
         }
 
     }

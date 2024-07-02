@@ -1,19 +1,7 @@
-# 1.0.0
+# 1.21
 
-- Initial release
+### 1.2.0
 
-# 1.1.0
-
-- The thread line now renders after weather, rather than after particles
-- The item is now in the Tools tab, rather than the Misc tab
-- Thread color gradient can now be configured
-- Reformatted the configs
-- The thread now aims at the center of your body rather than at your head
-
-# 1.1.1
-
-- Fixed the mod on dedicated servers, so it doesn't try to load clientside-only classes
-
-# 1.1.2
-
-- Removed the Mod Scheduler as it isn't used for anything. I probably used it at some point and then decided it wasn't needed.
+- Updated to 1.21
+- Removed the config for limiting based on NBT size
+- Changed the config for max location size to be unlimited by default
