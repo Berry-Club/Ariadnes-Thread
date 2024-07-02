@@ -15,7 +15,7 @@ object ModBusEvents {
 
     @SubscribeEvent
     fun onCreativeTab(event: BuildCreativeModeTabContentsEvent) {
-        if (event.tab == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+        if (event.tabKey == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(ModItems.ARIADNES_THREAD.get())
         }
     }
