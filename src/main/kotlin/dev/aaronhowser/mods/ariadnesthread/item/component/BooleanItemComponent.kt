@@ -8,7 +8,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 
-class BooleanItemComponent(
+data class BooleanItemComponent(
     val value: Boolean
 ) {
     companion object {
@@ -24,7 +24,9 @@ class BooleanItemComponent(
             ::BooleanItemComponent
         )
 
-        val isRecordingComponent: DataComponentType<BooleanItemComponent> by lazy { ModDataComponents.IS_RECORDING_COMPONENT.get() }
+        val isRecordingComponent: DataComponentType<BooleanItemComponent> by lazy {
+            ModDataComponents.IS_RECORDING_COMPONENT.get()
+        }
 
     }
 
