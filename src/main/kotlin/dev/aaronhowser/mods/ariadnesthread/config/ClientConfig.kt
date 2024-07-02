@@ -22,7 +22,6 @@ class ClientConfig(
         lateinit var endRed: ModConfigSpec.DoubleValue
         lateinit var endGreen: ModConfigSpec.DoubleValue
         lateinit var endBlue: ModConfigSpec.DoubleValue
-        lateinit var showNbtInTooltip: ModConfigSpec.BooleanValue
     }
 
 
@@ -38,12 +37,6 @@ class ClientConfig(
         teleportDistance = builder
             .comment("The minimum distance between points to count as a teleport.")
             .defineInRange("Teleport Distance", 30.0, 0.0, Double.MAX_VALUE)
-
-        showNbtInTooltip = builder
-            .comment("Whether or not to show the entire NBT data in the tooltip. This can be very long and is not recommended. Required advanced tooltips.")
-            .define("NBT In Tooltips", false)
-
-        builder.push("Appearance")
 
         alpha = builder
             .comment("The opacity of the thread.")
@@ -73,7 +66,6 @@ class ClientConfig(
             .comment("The blue value of the end color.")
             .defineInRange("End Blue", 0.0, 0.0, 1.0)
 
-        builder.pop()
         builder.pop()
 
     }

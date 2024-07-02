@@ -86,30 +86,37 @@ class ThreadItem : Item(
 
     }
 
-    override fun use(pLevel: Level, pPlayer: Player, pUsedHand: InteractionHand): InteractionResultHolder<ItemStack> {
+    override fun use(
+        pLevel: Level,
+        pPlayer: Player,
+        pUsedHand: InteractionHand
+    ): InteractionResultHolder<ItemStack> {
         if (pLevel.isClientSide) return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand))
 
-        val stack = pPlayer.getItemInHand(pUsedHand)
+        val itemStack = pPlayer.getItemInHand(pUsedHand)
 
         val isSneaking = pPlayer.isCrouching
-        val isRecording = isRecording(stack)
+        val isRecording = isRecording(itemStack)
 
+        // Start recording by regular-clicking while not recording
+        // Clear history by sneak-clicking while not recording
+        // Stop recording by sneak-clicking while recording
         if (!isRecording) {
             if (isSneaking) {
-                clearHistory(stack)
-                return InteractionResultHolder.success(stack)
+                clearHistory(itemStack)
+                return InteractionResultHolder.success(itemStack)
             }
 
-            startRecording(stack, pPlayer)
-            return InteractionResultHolder.success(stack)
+            startRecording(itemStack, pPlayer)
+            return InteractionResultHolder.success(itemStack)
         }
 
         if (isSneaking) {
-            stopRecording(stack)
-            return InteractionResultHolder.success(stack)
+            stopRecording(itemStack)
+            return InteractionResultHolder.success(itemStack)
         }
 
-        return InteractionResultHolder.pass(stack)
+        return InteractionResultHolder.pass(itemStack)
     }
 
     override fun onDroppedByPlayer(item: ItemStack, player: Player): Boolean {
