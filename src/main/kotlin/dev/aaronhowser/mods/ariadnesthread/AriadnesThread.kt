@@ -1,6 +1,6 @@
-package example.examplemod
+package dev.aaronhowser.mods.ariadnesthread
 
-import example.examplemod.block.ModBlocks
+import dev.aaronhowser.mods.ariadnesthread.block.ModBlocks
 import net.minecraft.client.Minecraft
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
@@ -21,9 +21,9 @@ import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
  *
  * An example for blocks is in the `blocks` package of this mod.
  */
-@Mod(ExampleMod.ID)
+@Mod(AriadnesThread.ID)
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
-object ExampleMod {
+object AriadnesThread {
     const val ID = "examplemod"
 
     // the logger for our mod
@@ -37,11 +37,11 @@ object ExampleMod {
 
         val obj = runForDist(
             clientTarget = {
-                MOD_BUS.addListener(::onClientSetup)
+                MOD_BUS.addListener(AriadnesThread::onClientSetup)
                 Minecraft.getInstance()
             },
             serverTarget = {
-                MOD_BUS.addListener(::onServerSetup)
+                MOD_BUS.addListener(AriadnesThread::onServerSetup)
                 "test"
             })
 
