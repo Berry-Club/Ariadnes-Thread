@@ -1,12 +1,16 @@
 package dev.aaronhowser.mods.ariadnesthread.item
 
 import dev.aaronhowser.mods.ariadnesthread.item.component.BooleanItemComponent
+import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
+import net.minecraft.ChatFormatting
+import net.minecraft.network.chat.Component
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Rarity
+import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.Level
 
 class ThreadItem : Item(
@@ -14,6 +18,7 @@ class ThreadItem : Item(
         .stacksTo(1)
         .rarity(Rarity.UNCOMMON)
         .component(BooleanItemComponent.isRecordingComponent, BooleanItemComponent(false))
+        .component(HistoryItemComponent.historyComponent, HistoryItemComponent())
 ) {
 
     companion object {
@@ -47,6 +52,29 @@ class ThreadItem : Item(
 
     override fun isFoil(pStack: ItemStack): Boolean {
         return isRecording(pStack)
+    }
+
+    override fun appendHoverText(
+        pStack: ItemStack,
+        pContext: TooltipContext,
+        pTooltipComponents: MutableList<Component>,
+        pTooltipFlag: TooltipFlag
+    ) {
+
+        val isRecording = isRecording(pStack)
+
+        pTooltipComponents.add(
+            Component.translatable(
+                if (isRecording) "tooltip.ariadnesthread.recording_1" else "tooltip.ariadnesthread.not_recording_1"
+            ).withStyle(ChatFormatting.GRAY)
+        )
+
+        pTooltipComponents.add(
+            Component.translatable(
+                if (isRecording) "tooltip.ariadnesthread.recording_2" else "tooltip.ariadnesthread.not_recording_2"
+            ).withStyle(ChatFormatting.GRAY)
+        )
+
     }
 
 }
