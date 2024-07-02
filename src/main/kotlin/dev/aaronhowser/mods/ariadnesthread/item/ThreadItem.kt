@@ -6,6 +6,7 @@ import dev.aaronhowser.mods.ariadnesthread.item.component.BooleanItemComponent
 import dev.aaronhowser.mods.ariadnesthread.item.component.DimensionItemComponent
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
 import dev.aaronhowser.mods.ariadnesthread.item.component.LocationItemComponent
+import dev.aaronhowser.mods.ariadnesthread.util.ClientUtil
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
@@ -170,6 +171,34 @@ class ThreadItem : Item(
                     ModLanguageProvider.Tooltip.CLEAR
                 ).withStyle(ChatFormatting.RED)
             )
+        }
+
+        val startingDimension = getStartingDimension(pStack)
+        if (startingDimension != null && !inStartingDimension(pStack, ClientUtil.localPlayer!!)) {
+            pTooltipComponents.add(
+                Component.translatable(
+                    ModLanguageProvider.Tooltip.NOT_IN_STARTING_DIMENSION
+                ).withStyle(ChatFormatting.RED)
+            )
+
+            pTooltipComponents.add(
+                Component.translatable(
+                    ModLanguageProvider.Tooltip.STARTING_DIMENSION,
+                    Component.translatable(startingDimension.toLanguageKey())
+                ).withStyle(ChatFormatting.RED)
+            )
+        }
+
+        if (pTooltipFlag.isAdvanced) {
+
+            val history = getHistory(pStack).history
+
+            for (location in history) {
+                pTooltipComponents.add(
+                    Component.literal("${location.x} ${location.y} ${location.z}")
+                )
+            }
+
         }
 
     }
