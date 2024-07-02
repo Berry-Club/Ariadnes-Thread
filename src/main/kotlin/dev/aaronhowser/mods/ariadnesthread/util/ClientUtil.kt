@@ -5,6 +5,7 @@ import net.minecraft.client.player.LocalPlayer
 
 object ClientUtil {
 
-    val localPlayer: LocalPlayer? = Minecraft.getInstance().player
+    val localPlayer: LocalPlayer?
+        get() = Minecraft.getInstance().player
 
 }
