@@ -1,16 +1,16 @@
 package dev.aaronhowser.mods.ariadnesthread.item.component
 
 import com.mojang.serialization.Codec
-import com.mojang.serialization.codecs.RecordCodecBuilder
 import dev.aaronhowser.mods.ariadnesthread.config.ServerConfig
 import dev.aaronhowser.mods.ariadnesthread.registry.ModDataComponents
 import io.netty.buffer.ByteBuf
+import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 
 data class HistoryItemComponent(
-    val locations: List<LocationItemComponent>
+    val locations: List<BlockPos>
 ) {
 
     constructor() : this(emptyList())
@@ -18,14 +18,11 @@ data class HistoryItemComponent(
     companion object {
 
         val CODEC: Codec<HistoryItemComponent> =
-            RecordCodecBuilder.create { instance ->
-                instance.group(
-                    LocationItemComponent.CODEC.listOf().fieldOf("history").forGetter(HistoryItemComponent::locations)
-                ).apply(instance, ::HistoryItemComponent)
-            }
+            BlockPos.CODEC.listOf().xmap(::HistoryItemComponent, HistoryItemComponent::locations)
 
         val STREAM_CODEC: StreamCodec<ByteBuf, HistoryItemComponent> =
-            ByteBufCodecs.fromCodec(CODEC)
+            BlockPos.STREAM_CODEC.apply(ByteBufCodecs.list())
+                .map(::HistoryItemComponent, HistoryItemComponent::locations)
 
         val historyComponent: DataComponentType<HistoryItemComponent> by lazy {
             ModDataComponents.HISTORY_COMPONENT.get()
@@ -33,7 +30,7 @@ data class HistoryItemComponent(
 
     }
 
-    fun canAddLocation(location: LocationItemComponent): Boolean {
+    fun canAddBlockPos(location: BlockPos): Boolean {
         if (locations.isEmpty()) return true
 
         if (ServerConfig.isLimitingLocations && locations.size + 1 >= ServerConfig.maxLocations.get()) return false

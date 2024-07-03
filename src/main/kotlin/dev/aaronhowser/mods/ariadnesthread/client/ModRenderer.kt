@@ -4,9 +4,9 @@ import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
 import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
-import dev.aaronhowser.mods.ariadnesthread.item.component.LocationItemComponent
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GameRenderer
+import net.minecraft.core.BlockPos
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent
@@ -91,18 +91,18 @@ object ModRenderer {
                 val green = Mth.lerp(percentDone, startGreen, endGreen)
                 val blue = Mth.lerp(percentDone, startBlue, endBlue)
 
-                val loc1 = history[i]
-                val loc2 = history[i + 1]
+                val blockPos1 = history[i]
+                val blockPos2 = history[i + 1]
 
                 if (i == 0) {
-                    renderCube(buffer, loc1, alpha, red, green, blue)
+                    renderCube(buffer, blockPos1, alpha, red, green, blue)
                 }
 
-                if (loc1.closerThan(loc2, ClientConfig.teleportDistance.get())) {
-                    renderLine(buffer, loc1, loc2, alpha, red, green, blue)
+                if (blockPos1.closerThan(blockPos2, ClientConfig.teleportDistance.get())) {
+                    renderLine(buffer, blockPos1, blockPos2, alpha, red, green, blue)
                 } else {
-                    renderCube(buffer, loc1, alpha, red, green, blue)
-                    renderCube(buffer, loc2, alpha, red, green, blue)
+                    renderCube(buffer, blockPos1, alpha, red, green, blue)
+                    renderCube(buffer, blockPos2, alpha, red, green, blue)
                 }
             }
         }
@@ -134,8 +134,8 @@ object ModRenderer {
 
     private fun renderLine(
         buffer: BufferBuilder,
-        loc1: LocationItemComponent,
-        loc2: LocationItemComponent,
+        blockPos1: BlockPos,
+        blockPos2: BlockPos,
         alpha: Float,
         red: Float,
         green: Float,
@@ -143,12 +143,12 @@ object ModRenderer {
     ) {
         renderLine(
             buffer,
-            loc1.x.toFloat(),
-            loc1.y.toFloat(),
-            loc1.z.toFloat(),
-            loc2.x.toFloat(),
-            loc2.y.toFloat(),
-            loc2.z.toFloat(),
+            blockPos1.x.toFloat(),
+            blockPos1.y.toFloat(),
+            blockPos1.z.toFloat(),
+            blockPos2.x.toFloat(),
+            blockPos2.y.toFloat(),
+            blockPos2.z.toFloat(),
             alpha,
             red,
             green,
@@ -158,19 +158,19 @@ object ModRenderer {
 
     private fun renderCube(
         buffer: BufferBuilder,
-        loc: LocationItemComponent,
+        blockPos: BlockPos,
         alpha: Float,
         red: Float,
         green: Float,
         blue: Float
     ) {
         val cubeSize = 0.5f
-        val x1 = loc.x - cubeSize / 2
-        val y1 = loc.y - cubeSize / 2
-        val z1 = loc.z - cubeSize / 2
-        val x2 = loc.x + cubeSize / 2
-        val y2 = loc.y + cubeSize / 2
-        val z2 = loc.z + cubeSize / 2
+        val x1 = blockPos.x - cubeSize / 2
+        val y1 = blockPos.y - cubeSize / 2
+        val z1 = blockPos.z - cubeSize / 2
+        val x2 = blockPos.x + cubeSize / 2
+        val y2 = blockPos.y + cubeSize / 2
+        val z2 = blockPos.z + cubeSize / 2
 
         renderLine(buffer, x1, y1, z1, x2, y1, z1, alpha, red, green, blue)
         renderLine(buffer, x1, y1, z1, x1, y2, z1, alpha, red, green, blue)

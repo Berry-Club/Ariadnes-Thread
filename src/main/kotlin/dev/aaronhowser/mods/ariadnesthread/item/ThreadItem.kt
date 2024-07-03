@@ -5,9 +5,9 @@ import dev.aaronhowser.mods.ariadnesthread.datagen.ModLanguageProvider
 import dev.aaronhowser.mods.ariadnesthread.item.component.BooleanItemComponent
 import dev.aaronhowser.mods.ariadnesthread.item.component.DimensionItemComponent
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
-import dev.aaronhowser.mods.ariadnesthread.item.component.LocationItemComponent
 import dev.aaronhowser.mods.ariadnesthread.util.ClientUtil
 import net.minecraft.ChatFormatting
+import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.InteractionHand
@@ -45,7 +45,7 @@ class ThreadItem : Item(
             }
         }
 
-        fun setHistory(stack: ItemStack, history: List<LocationItemComponent>) {
+        fun setHistory(stack: ItemStack, history: List<BlockPos>) {
             stack.set(HistoryItemComponent.historyComponent, HistoryItemComponent(history))
         }
 
@@ -59,9 +59,9 @@ class ThreadItem : Item(
             setHistory(stack, emptyList())
         }
 
-        fun addLocation(stack: ItemStack, location: LocationItemComponent) {
+        fun addBlockPos(stack: ItemStack, location: BlockPos) {
             val history = getHistory(stack)
-            val canAdd = history.canAddLocation(location)
+            val canAdd = history.canAddBlockPos(location)
 
             if (!canAdd) return
 
@@ -142,9 +142,9 @@ class ThreadItem : Item(
 
         if (pLevel.gameTime % ServerConfig.waitTime.get() != 0L) return
 
-        val location = LocationItemComponent(player.blockPosition().atY(player.eyeY.toInt()))
+        val blockPos = player.blockPosition().atY(player.eyeY.toInt())
 
-        addLocation(pStack, location)
+        addBlockPos(pStack, blockPos)
     }
 
     override fun appendHoverText(
