@@ -3,9 +3,9 @@
   "tooltip.ariadnesthread.clear": "Clear history with a sneak right-click",
   "tooltip.ariadnesthread.locations": "There are %s saved locations",
   "tooltip.ariadnesthread.not_in_starting_dimension": "Not recording! Return to your starting dimension!",
-  "tooltip.ariadnesthread.not_recording_1": "☒ Not recording!",
+  "tooltip.ariadnesthread.not_recording_1": "§c⏸§r Not recording!",
   "tooltip.ariadnesthread.not_recording_2": "Start with a right-click",
-  "tooltip.ariadnesthread.recording_1": "☑ Recording!",
+  "tooltip.ariadnesthread.recording_1": "§c■§r Recording!",
   "tooltip.ariadnesthread.recording_2": "Stop with a shift right-click",
   "tooltip.ariadnesthread.starting_dimension": "Starting dimension: %s"
 }

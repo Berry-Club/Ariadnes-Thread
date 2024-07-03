@@ -27,9 +27,9 @@ class ModLanguageProvider(
 
         add(Item.ARIADNES_THREAD, "Ariadne's Thread")
 
-        add(Tooltip.RECORDING_1, "☑ Recording!")
+        add(Tooltip.RECORDING_1, "§c■§r Recording!")
         add(Tooltip.RECORDING_2, "Stop with a shift right-click")
-        add(Tooltip.NOT_RECORDING_1, "☒ Not recording!")
+        add(Tooltip.NOT_RECORDING_1, "§c⏸§r Not recording!")
         add(Tooltip.NOT_RECORDING_2, "Start with a right-click")
         add(Tooltip.CLEAR, "Clear history with a sneak right-click")
         add(Tooltip.NOT_IN_STARTING_DIMENSION, "Not recording! Return to your starting dimension!")
