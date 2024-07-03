@@ -1,37 +1,32 @@
 package dev.aaronhowser.mods.ariadnesthread.item.component
 
 import com.mojang.serialization.Codec
-import com.mojang.serialization.codecs.RecordCodecBuilder
 import dev.aaronhowser.mods.ariadnesthread.registry.ModDataComponents
 import io.netty.buffer.ByteBuf
+import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponentType
-import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 
 data class LocationItemComponent(
-    val x: Float,
-    val y: Float,
-    val z: Float
+    val blockPos: BlockPos
 ) {
 
-    constructor(x: Double, y: Double, z: Double) : this(x.toFloat(), y.toFloat(), z.toFloat())
+    val x: Int
+        get() = blockPos.x
+
+    val y: Int
+        get() = blockPos.y
+
+    val z: Int
+        get() = blockPos.z
 
     companion object {
 
-        val CODEC: Codec<LocationItemComponent> = RecordCodecBuilder.create { instance ->
-            instance.group(
-                Codec.FLOAT.fieldOf("x").forGetter(LocationItemComponent::x),
-                Codec.FLOAT.fieldOf("y").forGetter(LocationItemComponent::y),
-                Codec.FLOAT.fieldOf("z").forGetter(LocationItemComponent::z)
-            ).apply(instance, ::LocationItemComponent)
-        }
+        val CODEC: Codec<LocationItemComponent> =
+            BlockPos.CODEC.xmap(::LocationItemComponent, LocationItemComponent::blockPos)
 
-        val STREAM_CODEC: StreamCodec<ByteBuf, LocationItemComponent> = StreamCodec.composite(
-            ByteBufCodecs.FLOAT, LocationItemComponent::x,
-            ByteBufCodecs.FLOAT, LocationItemComponent::y,
-            ByteBufCodecs.FLOAT, LocationItemComponent::z,
-            ::LocationItemComponent
-        )
+        val STREAM_CODEC: StreamCodec<ByteBuf, LocationItemComponent> =
+            BlockPos.STREAM_CODEC.map(::LocationItemComponent, LocationItemComponent::blockPos)
 
         val locationComponent: DataComponentType<LocationItemComponent> by lazy {
             ModDataComponents.LOCATION_COMPONENT.get()
@@ -39,11 +34,8 @@ data class LocationItemComponent(
 
     }
 
-    fun distanceToSqr(other: LocationItemComponent): Float {
-        val dx = x - other.x
-        val dy = y - other.y
-        val dz = z - other.z
-        return dx * dx + dy * dy + dz * dz
+    fun distanceToSqr(other: LocationItemComponent): Double {
+        return blockPos.distSqr(other.blockPos)
     }
 
     fun closerThan(other: LocationItemComponent, distance: Double): Boolean {

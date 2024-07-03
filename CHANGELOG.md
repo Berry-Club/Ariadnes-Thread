@@ -10,3 +10,4 @@
 ### 1.2.1
 
 - Update NeoForge to 21.0.52-beta from 21.0.14-beta
+- It now stores the BlockPos rather than the floats for x y z

@@ -141,7 +141,19 @@ object ModRenderer {
         green: Float,
         blue: Float
     ) {
-        renderLine(buffer, loc1.x, loc1.y, loc1.z, loc2.x, loc2.y, loc2.z, alpha, red, green, blue)
+        renderLine(
+            buffer,
+            loc1.x.toFloat(),
+            loc1.y.toFloat(),
+            loc1.z.toFloat(),
+            loc2.x.toFloat(),
+            loc2.y.toFloat(),
+            loc2.z.toFloat(),
+            alpha,
+            red,
+            green,
+            blue
+        )
     }
 
     private fun renderCube(

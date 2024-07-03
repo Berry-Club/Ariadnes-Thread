@@ -142,14 +142,7 @@ class ThreadItem : Item(
 
         if (pLevel.gameTime % ServerConfig.waitTime.get() != 0L) return
 
-        val height = player.boundingBox.ysize
-        val footPos = player.position()
-
-        val location = LocationItemComponent(
-            footPos.x,
-            footPos.y + height,
-            footPos.z,
-        )
+        val location = LocationItemComponent(player.blockPosition().atY(player.eyeY.toInt()))
 
         addLocation(pStack, location)
     }
