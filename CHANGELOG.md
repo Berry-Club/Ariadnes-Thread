@@ -12,3 +12,8 @@
 - Update NeoForge to 21.0.52-beta from 21.0.14-beta
 - Removed LocationItemComponent, HistoryItemComponent now has a List<BlockPos> instead. As a consequence, it no longer stores the exact float location. This is better for performance.
 - Changed the text in the tooltip
+
+### 1.2.2
+
+- Updated NeoForge to 21.0.75-beta
+- Fixed the recipe still using the tag #forge:nuggets/gold instead of #c:nuggets/gold

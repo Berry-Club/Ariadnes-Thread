@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "minecraft:compass"
+    },
+    "G": {
+      "tag": "c:nuggets/gold"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "pattern": [
+    "GSG",
+    "SCS",
+    "GSG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ariadnesthread:ariadnes_thread"
+  }
+}
