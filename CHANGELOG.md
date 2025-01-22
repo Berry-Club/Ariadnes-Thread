@@ -22,3 +22,5 @@
 
 - Improved the rendering, so it's more than a single pixel wide
 - Fixed the item checking if you're crouching rather than if `isSecondaryUseActive`, so now you can toggle while flying
+- Added config screens
+- Line thickness is in the startup config
