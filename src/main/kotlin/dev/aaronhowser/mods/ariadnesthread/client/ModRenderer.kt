@@ -45,7 +45,7 @@ object ModRenderer {
 
     @SubscribeEvent
     fun onWorldRenderLast(event: RenderLevelStageEvent) {
-        if (event.stage != RenderLevelStageEvent.Stage.AFTER_WEATHER) return
+        if (event.stage != RenderLevelStageEvent.Stage.AFTER_LEVEL) return
         if (!this.reloadNeeded && this.histories.isEmpty()) return
 
         val poseStack: PoseStack = event.poseStack
