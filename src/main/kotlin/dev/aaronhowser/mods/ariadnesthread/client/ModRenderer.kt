@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
 import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
-import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.core.BlockPos
 import net.minecraft.util.Mth
@@ -36,7 +35,8 @@ object ModRenderer {
 
     private fun render(event: RenderLevelStageEvent) {
 
-        val playerView: Vec3 = Minecraft.getInstance().entityRenderDispatcher.camera.position
+        val playerView: Vec3 = event.camera.position
+        val vertexBuffer = this.vertexBuffer ?: return
 
         RenderSystem.depthMask(false)
         RenderSystem.enableBlend()
@@ -52,14 +52,13 @@ object ModRenderer {
         poseStack.mulPose(event.modelViewMatrix)
         poseStack.translate(-playerView.x, -playerView.y, -playerView.z)
 
-        vertexBuffer?.apply {
-            bind()
-            drawWithShader(
-                poseStack.last().pose(),
-                event.projectionMatrix,
-                RenderSystem.getShader()!!
-            )
-        }
+        vertexBuffer.bind()
+        vertexBuffer.drawWithShader(
+            poseStack.last().pose(),
+            event.projectionMatrix,
+            RenderSystem.getShader()!!
+        )
+
         VertexBuffer.unbind()
         RenderSystem.depthFunc(GL11.GL_LEQUAL)
 
