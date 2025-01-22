@@ -8,7 +8,6 @@ import dev.aaronhowser.mods.ariadnesthread.item.ThreadItem
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
 import dev.aaronhowser.mods.ariadnesthread.util.ClientUtil
 import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.RenderType
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
 import net.neoforged.bus.api.SubscribeEvent
@@ -55,7 +54,7 @@ object ModRenderer {
         val vertexConsumer: VertexConsumer = Minecraft.getInstance()
             .renderBuffers()
             .bufferSource()
-            .getBuffer(RenderType.debugLineStrip(3.0))
+            .getBuffer(ModRenderTypes.THREAD)
 
         val alpha = ClientConfig.LINE_ALPHA.get().toFloat()
         val startRed = ClientConfig.LINE_START_RED.get().toFloat()
