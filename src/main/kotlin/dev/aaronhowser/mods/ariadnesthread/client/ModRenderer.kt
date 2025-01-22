@@ -28,13 +28,8 @@ object ModRenderer {
             reloadNeeded = true
         }
 
-    fun renderLines(event: RenderLevelStageEvent) {
+    fun render(event: RenderLevelStageEvent) {
         if (!this.reloadNeeded && this.histories.isEmpty()) return
-
-        renderBuffer(event)
-    }
-
-    private fun renderBuffer(event: RenderLevelStageEvent) {
 
         RenderSystem.depthMask(false)
         RenderSystem.enableBlend()

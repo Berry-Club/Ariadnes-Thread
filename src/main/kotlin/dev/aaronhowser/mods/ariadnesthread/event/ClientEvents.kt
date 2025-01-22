@@ -39,7 +39,7 @@ object ClientEvents {
         if (event.stage != RenderLevelStageEvent.Stage.AFTER_WEATHER) return
 
         if (ClientUtil.localPlayer != null) {
-            ModRenderer.renderLines(event)
+            ModRenderer.render(event)
         }
     }
 
