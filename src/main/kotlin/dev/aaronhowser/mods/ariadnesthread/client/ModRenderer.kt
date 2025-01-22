@@ -133,9 +133,15 @@ object ModRenderer {
         blue: Float
     ) {
 
-        val lengthX = endX - startX
-        val lengthY = endY - startY
-        val lengthZ = endZ - startZ
+        var lengthX = endX - startX
+        var lengthY = endY - startY
+        var lengthZ = endZ - startZ
+
+        val length = sqrt(lengthX * lengthX + lengthY * lengthY + lengthZ * lengthZ)
+
+        lengthX /= length
+        lengthY /= length
+        lengthZ /= length
 
         vertexConsumer.addVertex(
             pose,
