@@ -28,14 +28,10 @@ object ModRenderer {
 
     private var reloadNeeded = false
 
-    var histories: List<HistoryItemComponent> = emptyList()
-        set(value) {
-            field = value
-            reloadNeeded = true
-        }
+    private val histories: MutableList<HistoryItemComponent> = mutableListOf()
 
     @SubscribeEvent
-    fun clientTick(event: ClientTickEvent.Post) {
+    fun afterClientTick(event: ClientTickEvent.Post) {
         val player = ClientUtil.localPlayer ?: return
         val level = player.level()
 
@@ -43,11 +39,12 @@ object ModRenderer {
             ThreadItem.inStartingDimension(it, level)
         }
 
-        val histories = threadItems.map { ThreadItem.getHistory(it) }
+        val newHistories = threadItems.map { ThreadItem.getHistory(it) }
 
-        if (this.histories.isNotEmpty() != histories.isNotEmpty()) {
-            this.histories = histories
-        }
+        if (newHistories.isEmpty() == this.histories.isEmpty()) return
+
+        this.histories.clear()
+        this.histories.addAll(newHistories)
     }
 
     @SubscribeEvent
