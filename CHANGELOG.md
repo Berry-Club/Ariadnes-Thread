@@ -18,7 +18,7 @@
 - Updated NeoForge to 21.0.75-beta
 - Fixed the recipe still using the tag #forge:nuggets/gold instead of #c:nuggets/gold
 
-### 1.2.3
+### 1.3.0
 
 - Improved the rendering, so it's more than a single pixel wide
 - Fixed the item checking if you're crouching rather than if `isSecondaryUseActive`, so now you can toggle while flying
