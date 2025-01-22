@@ -75,6 +75,8 @@ object ModRenderer {
         val poseStack: PoseStack = event.poseStack
         poseStack.pushPose()
 
+        val pose = poseStack.last()
+
         val vertexConsumer: VertexConsumer = Minecraft.getInstance()
             .renderBuffers()
             .bufferSource()
@@ -87,8 +89,6 @@ object ModRenderer {
         val endRed = ClientConfig.LINE_END_RED.get().toFloat()
         val endGreen = ClientConfig.LINE_END_GREEN.get().toFloat()
         val endBlue = ClientConfig.LINE_END_BLUE.get().toFloat()
-
-        val pose = poseStack.last().pose()
 
         val cameraPos = event.camera.position
         poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z)
@@ -105,17 +105,19 @@ object ModRenderer {
                 val endPos = history[i + 1].center
 
                 if (i == 0) {
-                    renderCube(vertexConsumer, pose, startPos, alpha, red, green, blue)
+                    renderCube(vertexConsumer, pose.pose(), startPos, alpha, red, green, blue)
                 }
 
                 if (startPos.closerThan(endPos, ClientConfig.teleportDistance.get())) {
-                    drawLine(vertexConsumer, pose, startPos, endPos, alpha, red, green, blue)
+                    drawLine(vertexConsumer, pose.pose(), startPos, endPos, alpha, red, green, blue)
                 } else {
-                    renderCube(vertexConsumer, pose, startPos, alpha, red, green, blue)
-                    renderCube(vertexConsumer, pose, endPos, alpha, red, green, blue)
+                    renderCube(vertexConsumer, pose.pose(), startPos, alpha, red, green, blue)
+                    renderCube(vertexConsumer, pose.pose(), endPos, alpha, red, green, blue)
                 }
             }
         }
+
+        poseStack.popPose()
     }
 
     private fun drawLine(
@@ -132,7 +134,6 @@ object ModRenderer {
         green: Float,
         blue: Float
     ) {
-
         var lengthX = endX - startX
         var lengthY = endY - startY
         var lengthZ = endZ - startZ
