@@ -2,14 +2,13 @@ package dev.aaronhowser.mods.ariadnesthread.item
 
 import dev.aaronhowser.mods.ariadnesthread.config.ServerConfig
 import dev.aaronhowser.mods.ariadnesthread.datagen.ModLanguageProvider
-import dev.aaronhowser.mods.ariadnesthread.item.component.DimensionItemComponent
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
 import dev.aaronhowser.mods.ariadnesthread.registry.ModDataComponents
 import dev.aaronhowser.mods.ariadnesthread.util.ClientUtil
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.ResourceKey
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity
@@ -24,33 +23,33 @@ class ThreadItem : Item(
     Properties()
         .stacksTo(1)
         .rarity(Rarity.UNCOMMON)
-        .component(ModDataComponents.IS_RECORDING_COMPONENT, false)
-        .component(HistoryItemComponent.historyComponent, HistoryItemComponent())
+        .component(ModDataComponents.IS_RECORDING, false)
+        .component(ModDataComponents.HISTORY, HistoryItemComponent())
 ) {
 
     companion object {
 
         fun isRecording(stack: ItemStack): Boolean =
-            stack.get(ModDataComponents.IS_RECORDING_COMPONENT) ?: false
+            stack.get(ModDataComponents.IS_RECORDING) ?: false
 
         fun stopRecording(stack: ItemStack) {
-            stack.set(ModDataComponents.IS_RECORDING_COMPONENT, false)
+            stack.set(ModDataComponents.IS_RECORDING, false)
         }
 
         fun startRecording(stack: ItemStack, player: Player) {
-            stack.set(ModDataComponents.IS_RECORDING_COMPONENT, true)
+            stack.set(ModDataComponents.IS_RECORDING, true)
 
             if (getStartingDimension(stack) == null) {
-                setStartingDimension(stack, player.level().dimension().location())
+                setStartingDimension(stack, player.level().dimension())
             }
         }
 
         fun setHistory(stack: ItemStack, history: List<BlockPos>) {
-            stack.set(HistoryItemComponent.historyComponent, HistoryItemComponent(history))
+            stack.set(ModDataComponents.HISTORY, HistoryItemComponent(history))
         }
 
         fun getHistory(stack: ItemStack): HistoryItemComponent {
-            return stack.get(HistoryItemComponent.historyComponent) ?: HistoryItemComponent()
+            return stack.get(ModDataComponents.HISTORY) ?: HistoryItemComponent()
         }
 
         fun hasHistory(stack: ItemStack): Boolean = getHistory(stack).locations.isNotEmpty()
@@ -70,18 +69,18 @@ class ThreadItem : Item(
             setHistory(stack, list)
         }
 
-        fun getStartingDimension(stack: ItemStack): ResourceLocation? {
-            return stack.get(DimensionItemComponent.dimensionComponent)?.dimensionRl
+        fun getStartingDimension(stack: ItemStack): ResourceKey<Level>? {
+            return stack.get(ModDataComponents.STARTING_DIMENSION)
         }
 
         fun inStartingDimension(stack: ItemStack, level: Level): Boolean {
             val startingDimension = getStartingDimension(stack) ?: return false
 
-            return level.dimension().location() == startingDimension
+            return level.dimension() == startingDimension
         }
 
-        fun setStartingDimension(stack: ItemStack, dimension: ResourceLocation) {
-            stack.set(DimensionItemComponent.dimensionComponent, DimensionItemComponent(dimension))
+        fun setStartingDimension(stack: ItemStack, dimension: ResourceKey<Level>) {
+            stack.set(ModDataComponents.STARTING_DIMENSION, dimension)
         }
 
     }
