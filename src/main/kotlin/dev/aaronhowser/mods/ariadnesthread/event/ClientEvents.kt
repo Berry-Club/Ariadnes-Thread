@@ -29,7 +29,7 @@ object ClientEvents {
 
         val histories = threadItems.map { ThreadItem.getHistory(it) }
 
-        if (ModRenderer.histories.isNotEmpty() && histories.isNotEmpty()) {
+        if (ModRenderer.histories.isNotEmpty() != histories.isNotEmpty()) {
             ModRenderer.histories = histories
         }
     }
