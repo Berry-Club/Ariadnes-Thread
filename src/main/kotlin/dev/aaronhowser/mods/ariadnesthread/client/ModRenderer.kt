@@ -1,6 +1,5 @@
 package dev.aaronhowser.mods.ariadnesthread.client
 
-import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import dev.aaronhowser.mods.ariadnesthread.AriadnesThread
@@ -9,9 +8,7 @@ import dev.aaronhowser.mods.ariadnesthread.item.ThreadItem
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
 import dev.aaronhowser.mods.ariadnesthread.util.ClientUtil
 import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.client.renderer.RenderType
-import net.minecraft.core.BlockPos
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
 import net.neoforged.bus.api.SubscribeEvent
@@ -19,7 +16,7 @@ import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.client.event.ClientTickEvent
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent
 import org.joml.Matrix4f
-import org.lwjgl.opengl.GL11
+import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
 
 @EventBusSubscriber(
     modid = AriadnesThread.ID
@@ -52,20 +49,8 @@ object ModRenderer {
         if (event.stage != RenderLevelStageEvent.Stage.AFTER_WEATHER) return
         if (!this.reloadNeeded && this.histories.isEmpty()) return
 
-        RenderSystem.depthMask(false)
-        RenderSystem.enableBlend()
-        RenderSystem.defaultBlendFunc()
-
         val poseStack: PoseStack = event.poseStack
         poseStack.pushPose()
-
-        RenderSystem.setShader(GameRenderer::getPositionColorShader)
-        RenderSystem.applyModelViewMatrix()
-        RenderSystem.depthFunc(GL11.GL_ALWAYS)
-
-        poseStack.mulPose(event.modelViewMatrix)
-        val playerView: Vec3 = event.camera.position
-        poseStack.translate(-playerView.x, -playerView.y, -playerView.z)
 
         val vertexConsumer: VertexConsumer = Minecraft.getInstance()
             .renderBuffers()
@@ -82,6 +67,8 @@ object ModRenderer {
 
         val pose = poseStack.last().pose()
 
+        val cameraPos = event.camera.position
+
         for (history in this.histories.map { it.locations }) {
             for (i in 0 until history.size - 1) {
                 val percentDone = i.toFloat() / history.size
@@ -90,8 +77,8 @@ object ModRenderer {
                 val green = Mth.lerp(percentDone, startGreen, endGreen)
                 val blue = Mth.lerp(percentDone, startBlue, endBlue)
 
-                val startPos = history[i]
-                val endPos = history[i + 1]
+                val startPos = history[i].center.minus(cameraPos)
+                val endPos = history[i + 1].center.minus(cameraPos)
 
                 if (i == 0) {
                     renderCube(vertexConsumer, pose, startPos, alpha, red, green, blue)
@@ -139,8 +126,8 @@ object ModRenderer {
     private fun drawLine(
         vertexConsumer: VertexConsumer,
         pose: Matrix4f,
-        startPos: BlockPos,
-        endPos: BlockPos,
+        startPos: Vec3,
+        endPos: Vec3,
         alpha: Float,
         red: Float,
         green: Float,
@@ -165,19 +152,19 @@ object ModRenderer {
     private fun renderCube(
         buffer: VertexConsumer,
         pose: Matrix4f,
-        center: BlockPos,
+        center: Vec3,
         alpha: Float,
         red: Float,
         green: Float,
         blue: Float
     ) {
         val cubeSize = 0.5f
-        val x1 = center.x - cubeSize / 2
-        val y1 = center.y - cubeSize / 2
-        val z1 = center.z - cubeSize / 2
-        val x2 = center.x + cubeSize / 2
-        val y2 = center.y + cubeSize / 2
-        val z2 = center.z + cubeSize / 2
+        val x1 = (center.x - cubeSize / 2).toFloat()
+        val y1 = (center.y - cubeSize / 2).toFloat()
+        val z1 = (center.z - cubeSize / 2).toFloat()
+        val x2 = (center.x + cubeSize / 2).toFloat()
+        val y2 = (center.y + cubeSize / 2).toFloat()
+        val z2 = (center.z + cubeSize / 2).toFloat()
 
         drawLine(buffer, pose, x1, y1, z1, x2, y1, z1, alpha, red, green, blue)
         drawLine(buffer, pose, x1, y1, z1, x1, y2, z1, alpha, red, green, blue)
