@@ -3,21 +3,27 @@ package dev.aaronhowser.mods.ariadnesthread.client
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
+import dev.aaronhowser.mods.ariadnesthread.AriadnesThread
 import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
+import dev.aaronhowser.mods.ariadnesthread.item.ThreadItem
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
+import dev.aaronhowser.mods.ariadnesthread.util.ClientUtil
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.core.BlockPos
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
+import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.fml.common.EventBusSubscriber
+import net.neoforged.neoforge.client.event.ClientTickEvent
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent
 import org.joml.Matrix4f
 import org.lwjgl.opengl.GL11
 
-/**
- * I got a lot of the code for this from the mod [Advanced Xray](https://github.com/AdvancedXRay/XRay-Mod/blob/mc/neoforge/1.21/src/main/java/pro/mikey/xray/xray/Render.java)
- */
+@EventBusSubscriber(
+    modid = AriadnesThread.ID
+)
 object ModRenderer {
 
     private var reloadNeeded = false
@@ -28,7 +34,25 @@ object ModRenderer {
             reloadNeeded = true
         }
 
-    fun render(event: RenderLevelStageEvent) {
+    @SubscribeEvent
+    fun clientTick(event: ClientTickEvent.Post) {
+        val player = ClientUtil.localPlayer ?: return
+        val level = player.level()
+
+        val threadItems = player.inventory.items.filter {
+            ThreadItem.inStartingDimension(it, level)
+        }
+
+        val histories = threadItems.map { ThreadItem.getHistory(it) }
+
+        if (this.histories.isNotEmpty() != histories.isNotEmpty()) {
+            this.histories = histories
+        }
+    }
+
+    @SubscribeEvent
+    fun onWorldRenderLast(event: RenderLevelStageEvent) {
+        if (event.stage != RenderLevelStageEvent.Stage.AFTER_WEATHER) return
         if (!this.reloadNeeded && this.histories.isEmpty()) return
 
         RenderSystem.depthMask(false)
