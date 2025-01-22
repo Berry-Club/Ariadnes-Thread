@@ -94,7 +94,7 @@ class ThreadItem : Item(
 
         val itemStack = pPlayer.getItemInHand(pUsedHand)
 
-        val isSneaking = pPlayer.isCrouching
+        val isSneaking = pPlayer.isSecondaryUseActive
         val isRecording = isRecording(itemStack)
 
         // Start recording by regular-clicking while not recording
