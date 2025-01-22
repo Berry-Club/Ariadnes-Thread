@@ -14,7 +14,7 @@ class ClientConfig(
         val CONFIG: ClientConfig = configPair.left
         val CONFIG_SPEC: ModConfigSpec = configPair.right
 
-        lateinit var teleportDistance: ModConfigSpec.DoubleValue
+        lateinit var TELEPORT_DISTANCE: ModConfigSpec.DoubleValue
         lateinit var LINE_ALPHA: ModConfigSpec.DoubleValue
         lateinit var LINE_START_RED: ModConfigSpec.DoubleValue
         lateinit var LINE_START_GREEN: ModConfigSpec.DoubleValue
@@ -32,9 +32,7 @@ class ClientConfig(
     }
 
     private fun clientConfigs() {
-        builder.push("Client")
-
-        teleportDistance = builder
+        TELEPORT_DISTANCE = builder
             .comment("The minimum distance between points to count as a teleport.")
             .defineInRange("Teleport Distance", 30.0, 0.0, Double.MAX_VALUE)
 
@@ -65,9 +63,6 @@ class ClientConfig(
         LINE_END_BLUE = builder
             .comment("The blue value of the end color.")
             .defineInRange("End Blue", 0.0, 0.0, 1.0)
-
-        builder.pop()
-
     }
 
 

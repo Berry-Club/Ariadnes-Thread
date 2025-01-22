@@ -38,6 +38,7 @@ class ModLanguageProvider(
 
         addConfig(ClientConfig.LINE_ALPHA, "Line Opacity")
 
+        addConfig(ClientConfig.TELEPORT_DISTANCE, "Distance for Teleport")
         addConfig(ClientConfig.LINE_START_RED, "Line Start Red")
         addConfig(ClientConfig.LINE_START_GREEN, "Line Start Green")
         addConfig(ClientConfig.LINE_START_BLUE, "Line Start Blue")

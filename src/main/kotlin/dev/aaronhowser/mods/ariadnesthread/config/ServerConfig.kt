@@ -30,8 +30,6 @@ class ServerConfig(
     }
 
     private fun serverConfigs() {
-        builder.push("Server")
-
         CHECK_INTERVAL = builder
             .comment("The time in ticks to wait between checking location.")
             .defineInRange("Check interval", 20, 1, Int.MAX_VALUE)
@@ -43,8 +41,6 @@ class ServerConfig(
         MAX_LOCATIONS = builder
             .comment("The maximum number of locations to store. Set to 0 to disable limit.\nEnabling advanced tooltips will show how many locations are stored.")
             .defineInRange("Max Locations", 0, 0, Int.MAX_VALUE)
-
-        builder.pop()
     }
 
 

@@ -108,7 +108,7 @@ object ModRenderer {
                     renderCube(vertexConsumer, pose.pose(), startPos, alpha, red, green, blue)
                 }
 
-                if (startPos.closerThan(endPos, ClientConfig.teleportDistance.get())) {
+                if (startPos.closerThan(endPos, ClientConfig.TELEPORT_DISTANCE.get())) {
                     drawLine(vertexConsumer, pose.pose(), startPos, endPos, alpha, red, green, blue)
                 } else {
                     renderCube(vertexConsumer, pose.pose(), startPos, alpha, red, green, blue)
