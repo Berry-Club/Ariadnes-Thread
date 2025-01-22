@@ -20,8 +20,8 @@ import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.client.event.ClientTickEvent
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent
 import org.joml.Matrix4f
-import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
 import java.util.*
+import kotlin.math.sqrt
 
 @EventBusSubscriber(
     modid = AriadnesThread.ID
@@ -91,6 +91,7 @@ object ModRenderer {
         val pose = poseStack.last().pose()
 
         val cameraPos = event.camera.position
+        poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z)
 
         for (history in this.histories.map { it.locations }) {
             for (i in 0 until history.size - 1) {
@@ -100,8 +101,8 @@ object ModRenderer {
                 val green = Mth.lerp(percentDone, startGreen, endGreen)
                 val blue = Mth.lerp(percentDone, startBlue, endBlue)
 
-                val startPos = history[i].center.minus(cameraPos)
-                val endPos = history[i + 1].center.minus(cameraPos)
+                val startPos = history[i].center
+                val endPos = history[i + 1].center
 
                 if (i == 0) {
                     renderCube(vertexConsumer, pose, startPos, alpha, red, green, blue)
