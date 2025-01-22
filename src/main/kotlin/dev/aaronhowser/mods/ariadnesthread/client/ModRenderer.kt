@@ -4,7 +4,9 @@ import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
 import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
+import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GameRenderer
+import net.minecraft.client.renderer.RenderType
 import net.minecraft.core.BlockPos
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
@@ -69,11 +71,15 @@ object ModRenderer {
     }
 
     private fun rebuildBuffer() {
-        vertexBuffer = VertexBuffer(VertexBuffer.Usage.STATIC)
-        reloadNeeded = false
+        this.vertexBuffer = VertexBuffer(VertexBuffer.Usage.STATIC)
+        this.reloadNeeded = false
 
-        val tesselator: Tesselator = Tesselator.getInstance()
-        val buffer: BufferBuilder = tesselator.begin(VertexFormat.Mode.DEBUG_LINES, DefaultVertexFormat.POSITION_COLOR)
+        val vertexBuffer = this.vertexBuffer ?: return
+
+        val buffer: VertexConsumer = Minecraft.getInstance()
+            .renderBuffers()
+            .bufferSource()
+            .getBuffer(RenderType.debugLineStrip(3.0))
 
         val alpha = ClientConfig.alpha.get().toFloat()
         val startRed = ClientConfig.startRed.get().toFloat()
@@ -91,36 +97,35 @@ object ModRenderer {
                 val green = Mth.lerp(percentDone, startGreen, endGreen)
                 val blue = Mth.lerp(percentDone, startBlue, endBlue)
 
-                val blockPos1 = history[i]
-                val blockPos2 = history[i + 1]
+                val startPos = history[i]
+                val endPos = history[i + 1]
 
                 if (i == 0) {
-                    renderCube(buffer, blockPos1, alpha, red, green, blue)
+                    renderCube(buffer, startPos, alpha, red, green, blue)
                 }
 
-                if (blockPos1.closerThan(blockPos2, ClientConfig.teleportDistance.get())) {
-                    renderLine(buffer, blockPos1, blockPos2, alpha, red, green, blue)
+                if (startPos.closerThan(endPos, ClientConfig.teleportDistance.get())) {
+                    renderLine(buffer, startPos, endPos, alpha, red, green, blue)
                 } else {
-                    renderCube(buffer, blockPos1, alpha, red, green, blue)
-                    renderCube(buffer, blockPos2, alpha, red, green, blue)
+                    renderCube(buffer, startPos, alpha, red, green, blue)
+                    renderCube(buffer, endPos, alpha, red, green, blue)
                 }
             }
         }
 
         val build = buffer.build()
         if (build == null) {
-            vertexBuffer = null
+            this.vertexBuffer = null
             return
-        } else {
-            vertexBuffer!!.bind()
-            vertexBuffer!!.upload(build)
-            VertexBuffer.unbind()
         }
 
+        vertexBuffer.bind()
+        vertexBuffer.upload(build)
+        VertexBuffer.unbind()
     }
 
     private fun renderLine(
-        buffer: BufferBuilder,
+        buffer: VertexConsumer,
         x1: Float, y1: Float, z1: Float,
         x2: Float, y2: Float, z2: Float,
         alpha: Float,
@@ -133,7 +138,7 @@ object ModRenderer {
     }
 
     private fun renderLine(
-        buffer: BufferBuilder,
+        buffer: VertexConsumer,
         blockPos1: BlockPos,
         blockPos2: BlockPos,
         alpha: Float,
@@ -157,7 +162,7 @@ object ModRenderer {
     }
 
     private fun renderCube(
-        buffer: BufferBuilder,
+        buffer: VertexConsumer,
         blockPos: BlockPos,
         alpha: Float,
         red: Float,
