@@ -38,6 +38,8 @@ object ModRenderer {
 
         val newHistories = threadItems.map { ThreadItem.getHistory(it) }
 
+        if (this.histories.isEmpty() && newHistories.isEmpty()) return
+
         this.histories.clear()
         this.histories.addAll(newHistories)
     }
