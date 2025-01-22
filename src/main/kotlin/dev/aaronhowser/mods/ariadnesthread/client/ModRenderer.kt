@@ -81,13 +81,13 @@ object ModRenderer {
             .bufferSource()
             .getBuffer(RenderType.debugLineStrip(3.0))
 
-        val alpha = ClientConfig.alpha.get().toFloat()
-        val startRed = ClientConfig.startRed.get().toFloat()
-        val startGreen = ClientConfig.startGreen.get().toFloat()
-        val startBlue = ClientConfig.startBlue.get().toFloat()
-        val endRed = ClientConfig.endRed.get().toFloat()
-        val endGreen = ClientConfig.endGreen.get().toFloat()
-        val endBlue = ClientConfig.endBlue.get().toFloat()
+        val alpha = ClientConfig.LINE_ALPHA.get().toFloat()
+        val startRed = ClientConfig.LINE_START_RED.get().toFloat()
+        val startGreen = ClientConfig.LINE_START_GREEN.get().toFloat()
+        val startBlue = ClientConfig.LINE_START_BLUE.get().toFloat()
+        val endRed = ClientConfig.LINE_END_RED.get().toFloat()
+        val endGreen = ClientConfig.LINE_END_GREEN.get().toFloat()
+        val endBlue = ClientConfig.LINE_END_BLUE.get().toFloat()
 
         for (history in histories.map { it.locations }) {
             for (i in 0 until history.size - 1) {
