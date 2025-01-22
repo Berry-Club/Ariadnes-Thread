@@ -2,6 +2,7 @@ package dev.aaronhowser.mods.ariadnesthread
 
 import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
 import dev.aaronhowser.mods.ariadnesthread.config.ServerConfig
+import dev.aaronhowser.mods.ariadnesthread.config.StartupConfig
 import dev.aaronhowser.mods.ariadnesthread.registry.ModRegistries
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.fml.ModContainer
@@ -27,6 +28,7 @@ class AriadnesThread(
     init {
         modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfig.CONFIG_SPEC)
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.CONFIG_SPEC)
+        modContainer.registerConfig(ModConfig.Type.STARTUP, StartupConfig.CONFIG_SPEC)
 
         runWhenOn(Dist.CLIENT) {
             val screenFactory = IConfigScreenFactory { container, screen -> ConfigurationScreen(container, screen) }

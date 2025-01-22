@@ -10,6 +10,7 @@
   "ariadnesthread.configuration.Start Green": "Line Start Green",
   "ariadnesthread.configuration.Start Red": "Line Start Red",
   "ariadnesthread.configuration.Teleport Distance": "Distance for Teleport",
+  "ariadnesthread.configuration.Thickness": "Line Thickness",
   "item.ariadnesthread.ariadnes_thread": "Ariadne's Thread",
   "tooltip.ariadnesthread.clear": "Clear history with a sneak right-click",
   "tooltip.ariadnesthread.locations": "There are %s saved locations",

@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.blaze3d.vertex.VertexFormat
 import dev.aaronhowser.mods.ariadnesthread.AriadnesThread
 import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
+import dev.aaronhowser.mods.ariadnesthread.config.StartupConfig
 import dev.aaronhowser.mods.ariadnesthread.item.ThreadItem
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
 import dev.aaronhowser.mods.ariadnesthread.util.ClientUtil
@@ -38,7 +39,7 @@ object ModRenderer {
         false,
         CompositeState.builder()
             .setShaderState(RENDERTYPE_LINES_SHADER)
-            .setLineState(LineStateShard(OptionalDouble.of(5.0)))
+            .setLineState(LineStateShard(OptionalDouble.of(StartupConfig.LINE_THICKNESS.get())))
             .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
             .setOutputState(OUTLINE_TARGET)
             .setWriteMaskState(COLOR_WRITE)

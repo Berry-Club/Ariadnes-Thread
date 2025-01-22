@@ -3,6 +3,7 @@ package dev.aaronhowser.mods.ariadnesthread.datagen
 import dev.aaronhowser.mods.ariadnesthread.AriadnesThread
 import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
 import dev.aaronhowser.mods.ariadnesthread.config.ServerConfig
+import dev.aaronhowser.mods.ariadnesthread.config.StartupConfig
 import dev.aaronhowser.mods.ariadnesthread.registry.ModItems
 import net.minecraft.data.PackOutput
 import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue
@@ -49,6 +50,8 @@ class ModLanguageProvider(
         addConfig(ServerConfig.CHECK_INTERVAL, "Check Interval")
         addConfig(ServerConfig.MIN_DISTANCE, "Minimum Distance")
         addConfig(ServerConfig.MAX_LOCATIONS, "Max Locations")
+
+        addConfig(StartupConfig.LINE_THICKNESS, "Line Thickness")
     }
 
     private fun addConfig(config: ConfigValue<*>, desc: String) {
