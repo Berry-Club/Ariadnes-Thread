@@ -27,10 +27,10 @@ data class HistoryItemComponent(
     fun canAddBlockPos(location: BlockPos): Boolean {
         if (locations.isEmpty()) return true
 
-        if (ServerConfig.isLimitingLocations && locations.size + 1 >= ServerConfig.maxLocations.get()) return false
+        if (ServerConfig.isLimitingLocations && locations.size + 1 >= ServerConfig.MAX_LOCATIONS.get()) return false
 
         val last = locations.last()
-        return !location.closerThan(last, ServerConfig.minDistance.get())
+        return !location.closerThan(last, ServerConfig.MIN_DISTANCE.get())
     }
 
 }

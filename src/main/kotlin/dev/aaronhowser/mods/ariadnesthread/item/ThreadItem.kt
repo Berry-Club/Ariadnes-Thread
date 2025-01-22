@@ -139,7 +139,7 @@ class ThreadItem : Item(
         if (!isRecording(pStack)) return
         if (!inStartingDimension(pStack, player.level())) return
 
-        if (pLevel.gameTime % ServerConfig.waitTime.get() != 0L) return
+        if (pLevel.gameTime % ServerConfig.CHECK_INTERVAL.get() != 0L) return
 
         val blockPos = player.blockPosition().atY(player.eyeY.toInt())
 

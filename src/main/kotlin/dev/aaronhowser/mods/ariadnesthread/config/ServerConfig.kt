@@ -14,12 +14,12 @@ class ServerConfig(
         val CONFIG: ServerConfig = configPair.left
         val CONFIG_SPEC: ModConfigSpec = configPair.right
 
-        lateinit var waitTime: ModConfigSpec.IntValue
-        lateinit var minDistance: ModConfigSpec.DoubleValue
-        lateinit var maxLocations: ModConfigSpec.IntValue
+        lateinit var CHECK_INTERVAL: ModConfigSpec.IntValue
+        lateinit var MIN_DISTANCE: ModConfigSpec.DoubleValue
+        lateinit var MAX_LOCATIONS: ModConfigSpec.IntValue
 
         val isLimitingLocations: Boolean
-            get() = maxLocations.get() > 0
+            get() = MAX_LOCATIONS.get() > 0
     }
 
 
@@ -32,15 +32,15 @@ class ServerConfig(
     private fun serverConfigs() {
         builder.push("Server")
 
-        waitTime = builder
+        CHECK_INTERVAL = builder
             .comment("The time in ticks to wait between checking location.")
             .defineInRange("Check interval", 20, 1, Int.MAX_VALUE)
 
-        minDistance = builder
+        MIN_DISTANCE = builder
             .comment("The minimum distance between points.\nIf you haven't moved more than this distance from your last point, it isn't saved.")
             .defineInRange("Minimum Distance", 5.0, 0.0, Double.MAX_VALUE)
 
-        maxLocations = builder
+        MAX_LOCATIONS = builder
             .comment("The maximum number of locations to store. Set to 0 to disable limit.\nEnabling advanced tooltips will show how many locations are stored.")
             .defineInRange("Max Locations", 0, 0, Int.MAX_VALUE)
 
