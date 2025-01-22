@@ -16,10 +16,10 @@ object ClientEvents {
 
     @SubscribeEvent
     fun clientTick(event: ClientTickEvent.Post) {
-        showThreads()
+        setHistories()
     }
 
-    private fun showThreads() {
+    private fun setHistories() {
         val player = ClientUtil.localPlayer ?: return
         val level = player.level()
 
@@ -29,7 +29,9 @@ object ClientEvents {
 
         val histories = threadItems.map { ThreadItem.getHistory(it) }
 
-        ModRenderer.histories = histories
+        if (ModRenderer.histories.isNotEmpty() && histories.isNotEmpty()) {
+            ModRenderer.histories = histories
+        }
     }
 
     @SubscribeEvent

@@ -26,15 +26,16 @@ object ModRenderer {
         }
 
     fun renderLines(event: RenderLevelStageEvent) {
-        if (!reloadNeeded && histories.isEmpty()) return
+        if (!this.reloadNeeded && this.histories.isEmpty()) return
 
-        if (vertexBuffer == null || reloadNeeded) refresh()
+        if (this.vertexBuffer == null || this.reloadNeeded) {
+            rebuildBuffer()
+        }
 
-        render(event)
+        renderBuffer(event)
     }
 
-    private fun render(event: RenderLevelStageEvent) {
-
+    private fun renderBuffer(event: RenderLevelStageEvent) {
         val playerView: Vec3 = event.camera.position
         val vertexBuffer = this.vertexBuffer ?: return
 
@@ -67,7 +68,7 @@ object ModRenderer {
 
     }
 
-    private fun refresh() {
+    private fun rebuildBuffer() {
         vertexBuffer = VertexBuffer(VertexBuffer.Usage.STATIC)
         reloadNeeded = false
 
