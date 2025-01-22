@@ -1,13 +1,18 @@
 package dev.aaronhowser.mods.ariadnesthread.client
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
+import com.mojang.blaze3d.vertex.VertexFormat
 import dev.aaronhowser.mods.ariadnesthread.AriadnesThread
 import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
 import dev.aaronhowser.mods.ariadnesthread.item.ThreadItem
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
 import dev.aaronhowser.mods.ariadnesthread.util.ClientUtil
 import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.RenderStateShard.LineStateShard
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.RenderType.*
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
 import net.neoforged.bus.api.SubscribeEvent
@@ -16,11 +21,30 @@ import net.neoforged.neoforge.client.event.ClientTickEvent
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent
 import org.joml.Matrix4f
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
+import java.util.*
 
 @EventBusSubscriber(
     modid = AriadnesThread.ID
 )
 object ModRenderer {
+
+    @Suppress("INACCESSIBLE_TYPE")
+    private val THREAD_RENDER_TYPE: RenderType = create(
+        "${AriadnesThread.ID}:thread",
+        DefaultVertexFormat.POSITION_COLOR_NORMAL,
+        VertexFormat.Mode.LINES,
+        256,
+        true,
+        false,
+        CompositeState.builder()
+            .setShaderState(RENDERTYPE_LINES_SHADER)
+            .setLineState(LineStateShard(OptionalDouble.of(5.0)))
+            .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+            .setOutputState(OUTLINE_TARGET)
+            .setWriteMaskState(COLOR_WRITE)
+            .setCullState(NO_CULL)
+            .createCompositeState(false)
+    )
 
     private var reloadNeeded = false
 
@@ -54,7 +78,7 @@ object ModRenderer {
         val vertexConsumer: VertexConsumer = Minecraft.getInstance()
             .renderBuffers()
             .bufferSource()
-            .getBuffer(ModRenderTypes.THREAD)
+            .getBuffer(THREAD_RENDER_TYPE)
 
         val alpha = ClientConfig.LINE_ALPHA.get().toFloat()
         val startRed = ClientConfig.LINE_START_RED.get().toFloat()
@@ -107,19 +131,24 @@ object ModRenderer {
         green: Float,
         blue: Float
     ) {
+
+        val lengthX = endX - startX
+        val lengthY = endY - startY
+        val lengthZ = endZ - startZ
+
         vertexConsumer.addVertex(
             pose,
             startX,
             startY,
             startZ
-        ).setColor(red, green, blue, alpha)
+        ).setColor(red, green, blue, alpha).setNormal(lengthX, lengthY, lengthZ)
 
         vertexConsumer.addVertex(
             pose,
             endX,
             endY,
             endZ
-        ).setColor(red, green, blue, alpha)
+        ).setColor(red, green, blue, alpha).setNormal(lengthX, lengthY, lengthZ)
     }
 
     private fun drawLine(
