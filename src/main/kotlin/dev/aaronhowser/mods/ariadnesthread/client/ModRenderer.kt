@@ -1,7 +1,8 @@
 package dev.aaronhowser.mods.ariadnesthread.client
 
 import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.vertex.*
+import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.blaze3d.vertex.VertexConsumer
 import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
 import net.minecraft.client.Minecraft
@@ -11,6 +12,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent
+import org.joml.Matrix4f
 import org.lwjgl.opengl.GL11
 
 /**
@@ -18,7 +20,6 @@ import org.lwjgl.opengl.GL11
  */
 object ModRenderer {
 
-    private var vertexBuffer: VertexBuffer? = null
     private var reloadNeeded = false
 
     var histories: List<HistoryItemComponent> = emptyList()
@@ -30,16 +31,10 @@ object ModRenderer {
     fun renderLines(event: RenderLevelStageEvent) {
         if (!this.reloadNeeded && this.histories.isEmpty()) return
 
-        if (this.vertexBuffer == null || this.reloadNeeded) {
-            rebuildBuffer()
-        }
-
         renderBuffer(event)
     }
 
     private fun renderBuffer(event: RenderLevelStageEvent) {
-        val playerView: Vec3 = event.camera.position
-        val vertexBuffer = this.vertexBuffer ?: return
 
         RenderSystem.depthMask(false)
         RenderSystem.enableBlend()
@@ -53,30 +48,10 @@ object ModRenderer {
         RenderSystem.depthFunc(GL11.GL_ALWAYS)
 
         poseStack.mulPose(event.modelViewMatrix)
+        val playerView: Vec3 = event.camera.position
         poseStack.translate(-playerView.x, -playerView.y, -playerView.z)
 
-        vertexBuffer.bind()
-        vertexBuffer.drawWithShader(
-            poseStack.last().pose(),
-            event.projectionMatrix,
-            RenderSystem.getShader()!!
-        )
-
-        VertexBuffer.unbind()
-        RenderSystem.depthFunc(GL11.GL_LEQUAL)
-
-        poseStack.popPose()
-        RenderSystem.applyModelViewMatrix()
-
-    }
-
-    private fun rebuildBuffer() {
-        this.vertexBuffer = VertexBuffer(VertexBuffer.Usage.STATIC)
-        this.reloadNeeded = false
-
-        val vertexBuffer = this.vertexBuffer ?: return
-
-        val buffer: VertexConsumer = Minecraft.getInstance()
+        val vertexConsumer: VertexConsumer = Minecraft.getInstance()
             .renderBuffers()
             .bufferSource()
             .getBuffer(RenderType.debugLineStrip(3.0))
@@ -89,7 +64,9 @@ object ModRenderer {
         val endGreen = ClientConfig.LINE_END_GREEN.get().toFloat()
         val endBlue = ClientConfig.LINE_END_BLUE.get().toFloat()
 
-        for (history in histories.map { it.locations }) {
+        val pose = poseStack.last().pose()
+
+        for (history in this.histories.map { it.locations }) {
             for (i in 0 until history.size - 1) {
                 val percentDone = i.toFloat() / history.size
 
@@ -101,59 +78,67 @@ object ModRenderer {
                 val endPos = history[i + 1]
 
                 if (i == 0) {
-                    renderCube(buffer, startPos, alpha, red, green, blue)
+                    renderCube(vertexConsumer, pose, startPos, alpha, red, green, blue)
                 }
 
                 if (startPos.closerThan(endPos, ClientConfig.teleportDistance.get())) {
-                    renderLine(buffer, startPos, endPos, alpha, red, green, blue)
+                    drawLine(vertexConsumer, pose, startPos, endPos, alpha, red, green, blue)
                 } else {
-                    renderCube(buffer, startPos, alpha, red, green, blue)
-                    renderCube(buffer, endPos, alpha, red, green, blue)
+                    renderCube(vertexConsumer, pose, startPos, alpha, red, green, blue)
+                    renderCube(vertexConsumer, pose, endPos, alpha, red, green, blue)
                 }
             }
         }
-
-        val build = buffer.build()
-        if (build == null) {
-            this.vertexBuffer = null
-            return
-        }
-
-        vertexBuffer.bind()
-        vertexBuffer.upload(build)
-        VertexBuffer.unbind()
     }
 
-    private fun renderLine(
-        buffer: VertexConsumer,
-        x1: Float, y1: Float, z1: Float,
-        x2: Float, y2: Float, z2: Float,
+    private fun drawLine(
+        vertexConsumer: VertexConsumer,
+        pose: Matrix4f,
+        startX: Float,
+        startY: Float,
+        startZ: Float,
+        endX: Float,
+        endY: Float,
+        endZ: Float,
         alpha: Float,
         red: Float,
         green: Float,
         blue: Float
     ) {
-        buffer.addVertex(x1, y1, z1).setColor(red, green, blue, alpha)
-        buffer.addVertex(x2, y2, z2).setColor(red, green, blue, alpha)
+        vertexConsumer.addVertex(
+            pose,
+            startX,
+            startY,
+            startZ
+        ).setColor(red, green, blue, alpha)
+
+        vertexConsumer.addVertex(
+            pose,
+            endX,
+            endY,
+            endZ
+        ).setColor(red, green, blue, alpha)
     }
 
-    private fun renderLine(
-        buffer: VertexConsumer,
-        blockPos1: BlockPos,
-        blockPos2: BlockPos,
+    private fun drawLine(
+        vertexConsumer: VertexConsumer,
+        pose: Matrix4f,
+        startPos: BlockPos,
+        endPos: BlockPos,
         alpha: Float,
         red: Float,
         green: Float,
         blue: Float
     ) {
-        renderLine(
-            buffer,
-            blockPos1.x.toFloat(),
-            blockPos1.y.toFloat(),
-            blockPos1.z.toFloat(),
-            blockPos2.x.toFloat(),
-            blockPos2.y.toFloat(),
-            blockPos2.z.toFloat(),
+        drawLine(
+            vertexConsumer,
+            pose,
+            startPos.x.toFloat(),
+            startPos.y.toFloat(),
+            startPos.z.toFloat(),
+            endPos.x.toFloat(),
+            endPos.y.toFloat(),
+            endPos.z.toFloat(),
             alpha,
             red,
             green,
@@ -163,35 +148,33 @@ object ModRenderer {
 
     private fun renderCube(
         buffer: VertexConsumer,
-        blockPos: BlockPos,
+        pose: Matrix4f,
+        center: BlockPos,
         alpha: Float,
         red: Float,
         green: Float,
         blue: Float
     ) {
         val cubeSize = 0.5f
-        val x1 = blockPos.x - cubeSize / 2
-        val y1 = blockPos.y - cubeSize / 2
-        val z1 = blockPos.z - cubeSize / 2
-        val x2 = blockPos.x + cubeSize / 2
-        val y2 = blockPos.y + cubeSize / 2
-        val z2 = blockPos.z + cubeSize / 2
+        val x1 = center.x - cubeSize / 2
+        val y1 = center.y - cubeSize / 2
+        val z1 = center.z - cubeSize / 2
+        val x2 = center.x + cubeSize / 2
+        val y2 = center.y + cubeSize / 2
+        val z2 = center.z + cubeSize / 2
 
-        renderLine(buffer, x1, y1, z1, x2, y1, z1, alpha, red, green, blue)
-        renderLine(buffer, x1, y1, z1, x1, y2, z1, alpha, red, green, blue)
-        renderLine(buffer, x1, y1, z1, x1, y1, z2, alpha, red, green, blue)
-
-        renderLine(buffer, x2, y1, z1, x2, y2, z1, alpha, red, green, blue)
-        renderLine(buffer, x2, y1, z1, x2, y1, z2, alpha, red, green, blue)
-        renderLine(buffer, x1, y2, z1, x2, y2, z1, alpha, red, green, blue)
-
-        renderLine(buffer, x1, y2, z1, x1, y2, z2, alpha, red, green, blue)
-        renderLine(buffer, x1, y1, z2, x2, y1, z2, alpha, red, green, blue)
-        renderLine(buffer, x1, y1, z2, x1, y2, z2, alpha, red, green, blue)
-
-        renderLine(buffer, x1, y2, z2, x2, y2, z2, alpha, red, green, blue)
-        renderLine(buffer, x2, y1, z2, x2, y2, z2, alpha, red, green, blue)
-        renderLine(buffer, x2, y2, z1, x2, y2, z2, alpha, red, green, blue)
+        drawLine(buffer, pose, x1, y1, z1, x2, y1, z1, alpha, red, green, blue)
+        drawLine(buffer, pose, x1, y1, z1, x1, y2, z1, alpha, red, green, blue)
+        drawLine(buffer, pose, x1, y1, z1, x1, y1, z2, alpha, red, green, blue)
+        drawLine(buffer, pose, x2, y1, z1, x2, y2, z1, alpha, red, green, blue)
+        drawLine(buffer, pose, x2, y1, z1, x2, y1, z2, alpha, red, green, blue)
+        drawLine(buffer, pose, x1, y2, z1, x2, y2, z1, alpha, red, green, blue)
+        drawLine(buffer, pose, x1, y2, z1, x1, y2, z2, alpha, red, green, blue)
+        drawLine(buffer, pose, x1, y1, z2, x2, y1, z2, alpha, red, green, blue)
+        drawLine(buffer, pose, x1, y1, z2, x1, y2, z2, alpha, red, green, blue)
+        drawLine(buffer, pose, x1, y2, z2, x2, y2, z2, alpha, red, green, blue)
+        drawLine(buffer, pose, x2, y1, z2, x2, y2, z2, alpha, red, green, blue)
+        drawLine(buffer, pose, x2, y2, z1, x2, y2, z2, alpha, red, green, blue)
     }
 
 }
