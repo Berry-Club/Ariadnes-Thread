@@ -2,9 +2,9 @@ package dev.aaronhowser.mods.ariadnesthread.item
 
 import dev.aaronhowser.mods.ariadnesthread.config.ServerConfig
 import dev.aaronhowser.mods.ariadnesthread.datagen.ModLanguageProvider
-import dev.aaronhowser.mods.ariadnesthread.item.component.BooleanItemComponent
 import dev.aaronhowser.mods.ariadnesthread.item.component.DimensionItemComponent
 import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
+import dev.aaronhowser.mods.ariadnesthread.registry.ModDataComponents
 import dev.aaronhowser.mods.ariadnesthread.util.ClientUtil
 import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
@@ -24,21 +24,21 @@ class ThreadItem : Item(
     Properties()
         .stacksTo(1)
         .rarity(Rarity.UNCOMMON)
-        .component(BooleanItemComponent.isRecordingComponent, BooleanItemComponent(false))
+        .component(ModDataComponents.IS_RECORDING_COMPONENT, false)
         .component(HistoryItemComponent.historyComponent, HistoryItemComponent())
 ) {
 
     companion object {
 
         fun isRecording(stack: ItemStack): Boolean =
-            stack.get(BooleanItemComponent.isRecordingComponent)?.value ?: false
+            stack.get(ModDataComponents.IS_RECORDING_COMPONENT) ?: false
 
         fun stopRecording(stack: ItemStack) {
-            stack.set(BooleanItemComponent.isRecordingComponent, BooleanItemComponent(false))
+            stack.set(ModDataComponents.IS_RECORDING_COMPONENT, false)
         }
 
         fun startRecording(stack: ItemStack, player: Player) {
-            stack.set(BooleanItemComponent.isRecordingComponent, BooleanItemComponent(true))
+            stack.set(ModDataComponents.IS_RECORDING_COMPONENT, true)
 
             if (getStartingDimension(stack) == null) {
                 setStartingDimension(stack, player.level().dimension().location())
