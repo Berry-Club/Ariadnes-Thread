@@ -8,12 +8,13 @@ import dev.aaronhowser.mods.ariadnesthread.AriadnesThread
 import dev.aaronhowser.mods.ariadnesthread.config.ClientConfig
 import dev.aaronhowser.mods.ariadnesthread.config.StartupConfig
 import dev.aaronhowser.mods.ariadnesthread.item.ThreadItem
-import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
+import dev.aaronhowser.mods.ariadnesthread.registry.ModDataComponents
 import dev.aaronhowser.mods.ariadnesthread.util.ClientUtil
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.RenderStateShard.LineStateShard
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.RenderType.*
+import net.minecraft.core.BlockPos
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
 import net.neoforged.api.distmarker.Dist
@@ -51,7 +52,7 @@ object ModRenderer {
 
     private var reloadNeeded = false
 
-    private val histories: MutableList<HistoryItemComponent> = mutableListOf()
+    private val histories: MutableList<List<BlockPos>> = mutableListOf()
 
     @SubscribeEvent
     fun afterClientTick(event: ClientTickEvent.Post) {
@@ -62,7 +63,7 @@ object ModRenderer {
             ThreadItem.inStartingDimension(it, level)
         }
 
-        val newHistories = threadItems.map { ThreadItem.getHistory(it) }
+        val newHistories = threadItems.mapNotNull { it.get(ModDataComponents.HISTORY) }
 
         if (this.histories.isEmpty() && newHistories.isEmpty()) return
 
@@ -96,7 +97,7 @@ object ModRenderer {
         val cameraPos = event.camera.position
         poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z)
 
-        for (history in this.histories.map { it.locations }) {
+        for (history in this.histories) {
             for (i in 0 until history.size - 1) {
                 val percentDone = i.toFloat() / history.size
 

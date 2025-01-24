@@ -13,7 +13,7 @@
   "ariadnesthread.configuration.Thickness": "Line Thickness",
   "item.ariadnesthread.ariadnes_thread": "Ariadne's Thread",
   "tooltip.ariadnesthread.clear": "Clear history with a sneak right-click",
-  "tooltip.ariadnesthread.locations": "There are %s saved locations",
+  "tooltip.ariadnesthread.locations": "There are %d saved locations",
   "tooltip.ariadnesthread.not_in_starting_dimension": "Not recording! Return to your starting dimension!",
   "tooltip.ariadnesthread.not_recording_1": "§c⏸§r Not recording!",
   "tooltip.ariadnesthread.not_recording_2": "Start with a right-click",

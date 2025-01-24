@@ -2,7 +2,7 @@ package dev.aaronhowser.mods.ariadnesthread.registry
 
 import com.mojang.serialization.Codec
 import dev.aaronhowser.mods.ariadnesthread.AriadnesThread
-import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
+import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.codec.ByteBufCodecs
@@ -26,9 +26,11 @@ object ModDataComponents {
             it.persistent(ResourceKey.codec(Registries.DIMENSION)).networkSynchronized(ResourceKey.streamCodec(Registries.DIMENSION))
         }
 
-    val HISTORY: DeferredHolder<DataComponentType<*>, DataComponentType<HistoryItemComponent>> =
+    val HISTORY: DeferredHolder<DataComponentType<*>, DataComponentType<List<BlockPos>>> =
         DATA_COMPONENT_REGISTRY.registerComponentType("history") {
-            it.persistent(HistoryItemComponent.CODEC).networkSynchronized(HistoryItemComponent.STREAM_CODEC)
+            it
+                .persistent(BlockPos.CODEC.listOf())
+                .networkSynchronized(BlockPos.STREAM_CODEC.apply(ByteBufCodecs.list()))
         }
 
 }

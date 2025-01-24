@@ -2,7 +2,6 @@ package dev.aaronhowser.mods.ariadnesthread.item
 
 import dev.aaronhowser.mods.ariadnesthread.config.ServerConfig
 import dev.aaronhowser.mods.ariadnesthread.datagen.ModLanguageProvider
-import dev.aaronhowser.mods.ariadnesthread.item.component.HistoryItemComponent
 import dev.aaronhowser.mods.ariadnesthread.registry.ModDataComponents
 import dev.aaronhowser.mods.ariadnesthread.util.ClientUtil
 import net.minecraft.ChatFormatting
@@ -24,7 +23,7 @@ class ThreadItem : Item(
         .stacksTo(1)
         .rarity(Rarity.UNCOMMON)
         .component(ModDataComponents.IS_RECORDING, false)
-        .component(ModDataComponents.HISTORY, HistoryItemComponent())
+        .component(ModDataComponents.HISTORY, emptyList())
 ) {
 
     companion object {
@@ -44,29 +43,26 @@ class ThreadItem : Item(
             }
         }
 
-        fun setHistory(stack: ItemStack, history: List<BlockPos>) {
-            stack.set(ModDataComponents.HISTORY, HistoryItemComponent(history))
-        }
-
-        fun getHistory(stack: ItemStack): HistoryItemComponent {
-            return stack.get(ModDataComponents.HISTORY) ?: HistoryItemComponent()
-        }
-
-        fun hasHistory(stack: ItemStack): Boolean = getHistory(stack).locations.isNotEmpty()
-
-        fun clearHistory(stack: ItemStack) {
-            setHistory(stack, emptyList())
-        }
-
         fun addBlockPos(stack: ItemStack, location: BlockPos) {
-            val history = getHistory(stack)
-            val canAdd = history.canAddBlockPos(location)
+            val history = stack.get(ModDataComponents.HISTORY) ?: listOf()
 
-            if (!canAdd) return
+            val mostRecent = history.lastOrNull()
 
-            val list = history.locations.toMutableList()
-            list.add(location)
-            setHistory(stack, list)
+            if (mostRecent == null || !mostRecent.closerThan(location, ServerConfig.MIN_DISTANCE.get())) {
+                stack.set(ModDataComponents.HISTORY, history + location)
+                return
+            }
+
+            for (i in (history.dropLast(1)).indices.reversed()) {
+                val locationIteration = history[i]
+                if (locationIteration.closerThan(location, ServerConfig.MIN_DISTANCE.get())) {
+                    val newHistory = history.subList(0, i + 1) + location
+
+                    stack.set(ModDataComponents.HISTORY, newHistory)
+
+                    break
+                }
+            }
         }
 
         fun getStartingDimension(stack: ItemStack): ResourceKey<Level>? {
@@ -102,7 +98,7 @@ class ThreadItem : Item(
         // Stop recording by sneak-clicking while recording
         if (!isRecording) {
             if (isSneaking) {
-                clearHistory(itemStack)
+                itemStack.set(ModDataComponents.HISTORY, emptyList())
                 return InteractionResultHolder.success(itemStack)
             }
 
@@ -167,7 +163,8 @@ class ThreadItem : Item(
             ).withStyle(ChatFormatting.GRAY)
         )
 
-        val hasHistory = hasHistory(pStack)
+        val history = pStack.get(ModDataComponents.HISTORY)
+        val hasHistory = !history.isNullOrEmpty()
 
         if (!isRecording && hasHistory) {
             pTooltipComponents.add(
@@ -193,16 +190,13 @@ class ThreadItem : Item(
             )
         }
 
-        if (pTooltipFlag.isAdvanced) {
-            val history = getHistory(pStack).locations
-            if (history.isNotEmpty()) {
-                pTooltipComponents.add(
-                    Component.translatable(
-                        ModLanguageProvider.Tooltip.LOCATIONS,
-                        history.size.toString()
-                    ).withStyle(ChatFormatting.GRAY)
-                )
-            }
+        if (pTooltipFlag.isAdvanced && hasHistory) {
+            pTooltipComponents.add(
+                Component.translatable(
+                    ModLanguageProvider.Tooltip.LOCATIONS,
+                    history!!.size
+                ).withStyle(ChatFormatting.GRAY)
+            )
         }
 
     }

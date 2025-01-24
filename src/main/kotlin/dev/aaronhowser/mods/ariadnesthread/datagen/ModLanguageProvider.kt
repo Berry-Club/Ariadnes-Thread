@@ -35,7 +35,7 @@ class ModLanguageProvider(
         add(Tooltip.CLEAR, "Clear history with a sneak right-click")
         add(Tooltip.NOT_IN_STARTING_DIMENSION, "Not recording! Return to your starting dimension!")
         add(Tooltip.STARTING_DIMENSION, "Starting dimension: %s")
-        add(Tooltip.LOCATIONS, "There are %s saved locations")
+        add(Tooltip.LOCATIONS, "There are %d saved locations")
 
         addConfig(ClientConfig.LINE_ALPHA, "Line Opacity")
 
