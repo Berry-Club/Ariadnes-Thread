@@ -24,3 +24,7 @@
 - Fixed the item checking if you're crouching rather than if `isSecondaryUseActive`, so now you can toggle while flying
 - Added config screens
 - Line thickness is in the startup config
+
+### 1.4.0
+
+- The thread now trims any loops in the history. If you get close to any point in the history, it'll remove any points after it.

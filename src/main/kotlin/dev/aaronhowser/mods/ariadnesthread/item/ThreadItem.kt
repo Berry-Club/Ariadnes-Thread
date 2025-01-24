@@ -56,7 +56,7 @@ class ThreadItem : Item(
             for (i in (history.dropLast(1)).indices.reversed()) {
                 val locationIteration = history[i]
                 if (locationIteration.closerThan(location, ServerConfig.MIN_DISTANCE.get())) {
-                    val newHistory = history.subList(0, i + 1) + location
+                    val newHistory = history.subList(0, i + 1)
 
                     stack.set(ModDataComponents.HISTORY, newHistory)
 
